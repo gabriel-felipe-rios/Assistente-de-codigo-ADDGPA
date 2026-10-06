@@ -1,0 +1,11 @@
+{
+  "mov_resolucao": 0.25,
+  "mov_sem_rotulos": false,
+  "mov_sem_setas": false,
+  "mov_sem_contorno": false,
+  "mov_sem_ligacoes": true,
+  "mov_sem_cor": false,
+  "lod_limite": 0.5,
+  "margem": 0.2,
+  "impacto_hub_max_ligacoes": 30.0
+}

@@ -1,0 +1,260 @@
+/* ══════════════════════════════════════ QUADRO DE PROJETOS (grupos) ══
+   Substitui o `.project-grid` antigo (grade solta) por colunas — ver
+   `projetos-kanban.js`. `.project-card`/`.project-icon`/`.project-name`/
+   `.card-actions`/`.card-btn*` continuam os MESMOS nomes de sempre (só a
+   moldura em volta mudou); a única classe nova no cartão em si é
+   `.project-tags`/`.tag-pill` e o botão `.card-btn-desc`. */
+
+/* Cabeçalho de "Meus Projetos": título + busca + os dois botões de ação —
+   cresceu de um `<h2>` + um botão pra isto, então o `.screen-header` genérico
+   (base.css) ganhou este wrapper próprio para os itens da direita. */
+.screen-header-actions { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+
+.kanban-board {
+  display: flex; gap: 16px; align-items: flex-start;
+  overflow-x: auto; overflow-y: hidden; flex: 1; padding-bottom: 6px;
+}
+/* Era 280px — "o dobro", por pedido do usuário: os cartões (e principalmente
+   nomes de projeto compridos) ficavam espremidos demais. */
+.kanban-coluna {
+  --col-tint: 255, 255, 255;
+  background: rgba(var(--white-rgb), 0.03); border: 1px solid rgba(var(--white-rgb), 0.07);
+  border-radius: var(--radius); width: 560px; flex-shrink: 0;
+  display: flex; flex-direction: column; max-height: 100%;
+}
+.kanban-coluna.hidden { display: none; }
+/* A cor do GRUPO mora aqui — no cabeçalho da coluna, não no cartão do
+   projeto (decisão do usuário: cartão sempre na cor normal). `--col-tint`
+   (RGB "r,g,b") vem de `_construirColunaDeGrupo`; "Sem grupo" não define a
+   variável e cai no fallback neutro acima. */
+.kanban-coluna-cabecalho {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-radius: var(--radius) var(--radius) 0 0;
+  background: rgba(var(--col-tint), 0.22);
+  border-bottom: 3px solid rgba(var(--col-tint), 0.65);
+}
+.kanban-coluna-titulo { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+.kanban-coluna-cor { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.kanban-coluna-cor-neutra { background: var(--gray); }
+.kanban-coluna-contagem { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.kanban-coluna-corpo { padding: 10px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.kanban-subgrupo.hidden { display: none; }
+/* O subgrupo é um cabeçalho de verdade, do mesmo jeito que o da coluna — só
+   que mais estreito e com o realce na esquerda em vez de embaixo, pra ficar
+   claramente subordinado ao cabeçalho da coluna sem parecer um selinho solto
+   (era `display:inline-block`, um badge pequeno — lido como "isso é uma tag",
+   não como "isso separa um grupo de cartões"). A faixa estica de borda a
+   borda do corpo da coluna via margem negativa igual ao padding do corpo. */
+.kanban-subgrupo-titulo {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 700; color: var(--text);
+  padding: 6px 10px; margin: 0 -10px 8px;
+  background: rgba(var(--sub-tint, 255,255,255), 0.16);
+  border-left: 3px solid rgb(var(--sub-tint, 149,165,166));
+}
+.kanban-subgrupo-cor {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: rgb(var(--sub-tint, 149,165,166));
+}
+.kanban-cards { display: flex; flex-direction: column; gap: 8px; }
+
+/* O cartão do projeto fica sempre em `--surface` — nunca tingido pela cor do
+   grupo/subgrupo (só a moldura em volta é que carrega a cor, acima). */
+.project-card {
+  background: var(--surface);
+  border-radius: var(--radius); padding: 12px 14px;
+  cursor: pointer; border: 1px solid transparent; user-select: none;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color var(--t), filter var(--t);
+}
+.project-card.hidden { display: none; }
+.project-card:hover { border-color: var(--blue); filter: brightness(1.06); }
+.project-card-topo { display: flex; align-items: center; gap: 8px; }
+.project-card .project-icon { font-size: 18px; line-height: 1; }
+/* Quebra em vez de reticências — a coluna dobrou de largura pra caber nome
+   comprido de verdade, então corta só se passar de DUAS linhas. */
+.project-card .project-name {
+  font-size: 14px; font-weight: 600; flex: 1; min-width: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.project-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.card-btn-desc { background: var(--teal); } .card-btn-desc:hover { background: var(--teal-hover); }
+
+/* ── Tag-pill: desenho do Selo (borda + preenchimento a 12% + texto na cor),
+   nunca preenchimento sólido — ver Padrões de interface/Componentes/Selo.md.
+   `--tag-cor` é escrito inline por quem monta o pill (kanban, tag-picker,
+   modal de gerenciar). Nome próprio (não `.selo-*`): Selo é reservado a
+   conjuntos fechados de status; tag de projeto é aberta, criada pelo
+   usuário — mesma linguagem visual, conceito diferente. */
+.tag-pill {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+  padding: 2px 8px; border-radius: 4px; line-height: 1.6;
+  color: var(--tag-cor); border: 1px solid rgba(var(--tag-cor-rgb, 255,255,255), 0.4);
+  background: rgba(var(--tag-cor-rgb, 255,255,255), 0.12);
+}
+
+/* ── Barra de busca (cabeçalho de "Meus Projetos") ──
+   Sem ícone dentro do campo — a busca de árvore (`busca-arvore.css`, `.bsa-*`)
+   já é assim, texto puro com placeholder, e o emoji de lupa só trazia risco de
+   fonte (some ou vira uma caixinha conforme o sistema — foi exatamente o que
+   aconteceu). 340px (era 260px): com 4 rótulos, "Grupo/Subgrupo" sozinho quase
+   fechava a largura antiga. */
+.busca-projetos-bloco { display: flex; flex-direction: column; gap: 6px; width: 340px; }
+.busca-projetos {
+  width: 100%; background: var(--surface); border: 1px solid rgba(var(--white-rgb), 0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 14px;
+  padding: 8px 12px; outline: none; transition: border-color var(--t);
+}
+.busca-projetos:focus { border-color: var(--blue); }
+.busca-filtros { display: flex; gap: 12px; flex-wrap: wrap; padding-left: 2px; }
+.busca-filtro {
+  display: flex; align-items: center; gap: 4px; font-size: 11.5px;
+  color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap;
+}
+.busca-filtro input { accent-color: var(--blue); cursor: pointer; width: 12px; height: 12px; }
+
+/* ── As três telas que criam/editam a organização de um projeto (Novo
+   Projeto, Importar pasta, Editar Projeto) — todas mais largas do que o
+   `.modal` padrão (380px) porque Grupo+Subgrupo lado a lado, mais o
+   tag-picker, apertavam demais nesse tamanho. `.modal-import` (que já
+   existia) recebeu a mesma largura em `modais.css`, pelo mesmo motivo. */
+/* `.modal.modal-projeto` (composto), não `.modal-projeto` sozinho: as duas
+   classes têm a MESMA especificidade, e `estilos/modais.css` (dono de
+   `.modal`, 380px) importa DEPOIS deste arquivo em `style.css` — sozinha,
+   esta regra perdia a cascata e o modal nunca alargava, apesar da classe
+   estar certinha no HTML. O composto (0,2,0) vence `.modal` (0,1,0) não
+   importa a ordem de import. */
+.modal.modal-projeto { width: 560px; padding: 30px 36px; gap: 16px; }
+
+/* Gerenciar Projetos: DUAS colunas (Grupos | Tags) lado a lado — precisa de
+   bem mais que 380px. Sem esta regra a classe `.modal-wide` (aplicada em
+   `projetos-taxonomia-modal.js`) não tinha efeito nenhum: era usada mas nunca
+   declarada, e o modal ficava preso na largura padrão — o nome do grupo
+   truncava ("Con" em vez de "Computador") e a paleta de cor quase não cabia. */
+.modal.modal-wide { width: 700px; padding: 30px 36px; }
+
+/* ── Picker de grupo/subgrupo/tags (Novo Projeto / Importar / Editar) ──
+   Era `gap: 14px` entre Grupo e Subgrupo — pouco pra dois `<select>` de
+   largura variável ficarem lado a lado sem parecer uma coisa só ("muito
+   encostada", no relato do usuário). */
+.projeto-organizacao { display: flex; flex-direction: column; gap: 14px; }
+.projeto-organizacao-duplo { display: flex; gap: 28px; }
+.projeto-organizacao-duplo > div { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+/* A primeira tentativa (line-height + padding pela classe genérica) não
+   resolveu de verdade — a descendente de "p"/"g" ("Sem grupo") continuava
+   raspando a borda de baixo. `min-height` força a caixa a ter espaço de
+   sobra de verdade (não depende de o motor respeitar `line-height` num
+   `<select>` nativo, que varia por navegador), e os IDs, não uma classe,
+   garantem que ganha de `.arq-preparar-select` não importa a ordem de
+   cascata. Repete nos três modais (Novo Projeto, Importar, Editar). */
+#new-project-grupo, #new-project-subgrupo,
+#import-project-grupo, #import-project-subgrupo,
+#rename-project-grupo, #rename-project-subgrupo {
+  min-height: 44px; padding-top: 10px; padding-bottom: 12px; line-height: 1.5;
+}
+.tag-picker-lista { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.tag-picker-item { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.tag-picker-item input { accent-color: var(--blue); cursor: pointer; }
+.tag-picker-vazio { font-size: 12.5px; color: var(--text-muted); }
+
+/* Seção retrátil de descrição — fechada por padrão (`projetos-descricao.js`
+   parte dela como `.hidden`), por isso não empurra o resto do modal até o
+   usuário pedir. */
+.desc-retratil-toggle {
+  background: transparent; border: 1px dashed rgba(var(--white-rgb), 0.2);
+  border-radius: var(--radius); color: var(--text-muted); font-size: 12.5px;
+  padding: 7px 10px; cursor: pointer; text-align: left; width: 100%;
+}
+.desc-retratil-toggle:hover { color: var(--text); border-color: var(--blue); }
+.desc-retratil-painel.hidden { display: none; }
+
+/* ── Modal "Gerenciar Projetos" ── */
+.gg-corpo { display: flex; gap: 24px; max-height: 60vh; overflow-y: auto; }
+.gg-corpo > div { flex: 1; min-width: 0; }
+.gg-secao-titulo { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+.gg-dica { text-transform: none; letter-spacing: 0; font-size: 11px; margin-left: 6px; }
+.gp-lista-grupos { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.gg-grupo-linha { background: var(--surface); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.gg-grupo-cabecalho { display: flex; align-items: center; gap: 8px; }
+.gg-grupo-cabecalho input[type="text"] {
+  flex: 1; padding: 6px 10px; font-size: 13px; background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.1); border-radius: var(--radius); color: var(--text);
+}
+/* Selo estático (cartão da tag fechado) — só mostra a cor, não é clicável.
+   Tamanho vem inline (width/height) de quem monta o markup. */
+.gg-cor-dot { border-radius: 50%; flex-shrink: 0; }
+
+/* Seletor de cor nativo (grupo e tag) — o círculo colorido em si abre o
+   color-picker do sistema operacional ao clicar, e aceita QUALQUER cor, não
+   só as 8 pré-definidas da linha de atalhos logo abaixo dele. As três regras
+   `-webkit-*` são o que faz um `<input type="color">` (normalmente um
+   retângulo com borda) virar um círculo liso — sem elas ele desenha um
+   quadrado com respiro interno, feio ao lado de um `.gg-cor-dot` redondo. */
+.gg-cor-input {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  cursor: pointer; border: 2px solid rgba(var(--white-rgb), 0.2); padding: 0;
+  background: none; appearance: none; -webkit-appearance: none;
+}
+.gg-cor-input::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+.gg-cor-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+/* Versão pequena — dentro do chip de subgrupo, junto do nome. */
+.gg-cor-input-sm { width: 13px; height: 13px; border-width: 1px; }
+
+.gg-icon-btn {
+  width: 26px; height: 26px; border-radius: 6px; border: none; background: rgba(var(--white-rgb), 0.08);
+  color: var(--text-muted); cursor: pointer; flex-shrink: 0; font-size: 13px;
+}
+.gg-icon-btn:hover { color: var(--text); background: rgba(var(--white-rgb), 0.15); }
+
+/* Linha de atalhos de cor (8 pré-definidas) — clique só preenche a cor,
+   sempre visível (não precisa abrir/fechar nada, ao contrário da versão
+   anterior desta tela, que escondia a paleta atrás de uma classe própria
+   que nunca ganhou estilo nenhum — os quadradinhos existiam no DOM com
+   tamanho zero, por isso "não dava pra escolher a cor do grupo"). */
+.gg-paleta-rapida { display: flex; gap: 5px; padding-left: 30px; }
+.gg-paleta-rapida button {
+  width: 16px; height: 16px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; padding: 0;
+}
+.gg-paleta-rapida button:hover { border-color: rgba(var(--white-rgb), 0.5); }
+/* Subgrupo é uma LINHA, no mesmo formato da linha de grupo (cor + nome
+   editável + apagar) — só que menor e recuada, pra ficar claro que pertence
+   ao grupo logo acima. Era um chip de pílula sem campo de nome (só apagar e
+   recriar pra "renomear"); lia como uma tag solta, não como parte do grupo. */
+.gg-subgrupos-lista { display: flex; flex-direction: column; gap: 6px; padding-left: 30px; margin-top: 8px; }
+.gg-subgrupo-linha {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(var(--white-rgb), 0.05); border-radius: var(--radius); padding: 6px 8px;
+}
+.gp-nome-subgrupo {
+  flex: 1; padding: 5px 8px; font-size: 12.5px; background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.1); border-radius: 6px; color: var(--text);
+}
+/* Compartilhada com "+ nova tag" — mesmo botão pontilhado, mesmo peso visual
+   de "ação secundária de adicionar", os dois lugares onde aparece. */
+.gg-add-subgrupo-chip, .gg-add-subgrupo-btn2 {
+  align-self: flex-start;
+  background: transparent; border: 1px dashed rgba(var(--white-rgb), 0.2); border-radius: 99px;
+  padding: 4px 12px; font-size: 12px; color: var(--text-muted); cursor: pointer;
+}
+.gg-add-grupo {
+  width: 100%; margin-top: 10px; background: transparent; border: 1px dashed rgba(var(--white-rgb), 0.2);
+  border-radius: var(--radius); padding: 9px; font-size: 13px; color: var(--text-muted); cursor: pointer;
+}
+.gg-tags-lista { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.gg-tag-card { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: var(--radius); padding: 8px 10px; cursor: pointer; }
+.gg-tag-card:hover { filter: brightness(1.1); }
+.gg-tag-nome { font-size: 13px; font-weight: 600; }
+.gg-tag-editor {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%;
+  background: var(--surface); border-radius: var(--radius); padding: 8px 10px; border: 1px solid var(--blue);
+}
+.gg-tag-editor.hidden { display: none; }
+.gg-tag-editor input[type="text"] {
+  width: 90px; padding: 5px 8px; font-size: 12.5px; background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.1); border-radius: 6px; color: var(--text);
+}
+.gp-input-inline {
+  padding: 5px 8px; font-size: 12.5px; background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid var(--blue); border-radius: 6px; color: var(--text); width: 130px;
+}

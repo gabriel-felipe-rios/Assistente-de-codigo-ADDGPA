@@ -1,0 +1,82 @@
+Preciso de uma REGRA ou de uma INSTRUÇÃO para a biblioteca do meu assistente de código.
+
+O QUE EU QUERO: [descreva aqui — o que o assistente deve sempre fazer ou nunca fazer, ou o procedimento que precisa ser ensinado]
+
+ANTES DE ESCREVER, decida qual das duas o meu pedido é, e diga qual escolheu:
+
+  REGRA       uma ordem curta e permanente, que vale toda vez que a situação
+              descrita acontecer.
+  INSTRUÇÃO   um documento que ENSINA um procedimento — pode ser longo e ter
+              vários arquivos.
+
+Se o pedido não deixar claro qual das duas é, me pergunte antes de escrever.
+
+ATENÇÃO: é o NÚMERO DE ARQUIVOS da pasta que faz o programa classificar o item —
+não há campo, não há escolha. Um arquivo só é REGRA; o principal mais um
+"Como aplicar.md" é INSTRUÇÃO. Com o principal sozinho, uma instrução vira regra
+e é lida errado.
+
+════════ SE FOR UMA REGRA ════════
+
+Entregue uma PASTA com UM arquivo, com o mesmo nome da pasta:
+
+  <Nome da regra>/
+    <Nome da regra>.md
+
+A pasta tem UM arquivo, e só.
+
+FORMATO DO .md — três seções fixas, nesta ordem, com estes títulos exatos:
+
+  # <Nome da regra>
+
+  ## Descrição
+  <o que esta regra é, em uma ou duas frases>
+
+  ## Quando se aplica
+  <a frase de gatilho: UMA frase, não um parágrafo. É o que o assistente lê para
+   decidir se a regra vale agora, então diga a SITUAÇÃO, não a ordem.>
+
+  ## Regra
+  <a ordem em si, no imperativo. Se houver exceção, ela vai aqui, explícita.>
+
+Não invente seção, não renomeie título, não pule nenhuma das três — o programa lê
+por esses nomes exatos, e o que estiver fora deles não é lido.
+
+ONDE VOU SALVAR
+  Arquivos/Regras e instruções/<Nome da regra>/<Nome da regra>.md
+
+════════ SE FOR UMA INSTRUÇÃO ════════
+
+Entregue uma PASTA com esta forma:
+
+  <Nome da instrução>/
+    <Nome da instrução>.md   (o principal — mesmo nome da pasta; é o que se indexa)
+    Como aplicar.md          (o passo a passo — é ele que faz o item ser uma instrução)
+    Exceções.md              (só se houver caso em que a receita não vale)
+
+FORMATO DO PRINCIPAL — só ele é indexado, e é por ele que o assistente decide se
+vale abrir o resto:
+
+  # <Nome da instrução>
+
+  ## Descrição
+  <o que esta instrução cobre, em uma ou duas frases>
+
+  ## Quando se aplica
+  <a frase de gatilho: UMA frase, dizendo a situação>
+
+  ## O que esta receita cobre
+  <a lista do que está nos outros arquivos, para dar ao assistente o mapa do que
+   vai encontrar se abrir cada um>
+
+  ## Arquivos
+  - "Como aplicar.md" — o passo a passo
+
+Os títulos são exatos. O "Como aplicar.md" é markdown livre com "# Título" na
+primeira linha e quatro partes, sempre: de onde copiar, o que trocar, onde
+registrar, como conferir.
+
+ONDE VOU SALVAR
+  Arquivos/Regras e instruções/<Nome da instrução>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

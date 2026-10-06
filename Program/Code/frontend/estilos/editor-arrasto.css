@@ -1,0 +1,49 @@
+/* ══════════════ EDITOR — ARRASTAR A ABA PARA DIVIDIR ══
+   O fantasma que segue o cursor e o retângulo que mostra onde o arquivo vai
+   cair. Ver `modulos/editor-arrasto.js`. */
+
+/* Durante o arraste nada seleciona e o cursor é o mesmo na janela inteira —
+   sem isto, passar por cima do código seleciona texto no meio do gesto. */
+body.ed-arrastando, body.ed-arrastando * {
+  user-select: none !important;
+  cursor: grabbing !important;
+}
+
+.ed-file-tab { cursor: grab; }
+
+/* Segue o ponteiro. `pointer-events: none` é obrigatório: sem ele o fantasma
+   fica debaixo do cursor e o `elementFromPoint` do alvo passa a ser ele mesmo. */
+.ed-arr-fantasma {
+  position: fixed;
+  z-index: 500;
+  pointer-events: none;
+  padding: 5px 11px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--blue);
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(var(--black-rgb), 0.5);
+  opacity: 0.92;
+}
+
+/* Onde vai cair. Retângulo translúcido, sem borda pesada: ele cobre o código, e
+   uma moldura grossa esconderia justamente o que se está tentando ver. */
+.ed-arr-overlay {
+  position: fixed;
+  z-index: 490;
+  pointer-events: none;
+  background: rgba(var(--blue-rgb), 0.12);
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  transition: left .08s ease, width .08s ease;
+}
+.ed-arr-overlay.hidden { display: none; }
+
+/* Reordenar dentro da barra: um traço fino entre as abas, não um retângulo. */
+.ed-arr-overlay--insercao {
+  background: var(--blue);
+  border: 0;
+  border-radius: 1px;
+  transition: left .06s ease;
+}

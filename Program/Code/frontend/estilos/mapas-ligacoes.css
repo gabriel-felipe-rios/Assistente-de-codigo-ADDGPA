@@ -1,0 +1,130 @@
+/* ═════════════════════════════════════ MAPAS: Ligações ══ */
+/* Nós, arestas, faixas e o aviso de corte da sub-aba Ligações.
+   Sem valor de cor solto: só tokens de `base.css`. */
+
+/* O wrapper e quem recebe a CSS transform do zoom/pan — nao um `transform` de
+   SVG num <g> com ~2.500 filhos, que re-rasterizava tudo a cada tick.
+
+   ⚠️ `will-change` NAO fica aqui: ele e ligado no inicio do gesto e DESLIGADO no
+   fim, por JS. Permanente, ele faz o motor manter a camada com o raster da
+   escala antiga — era por isso que ampliar 8x mostrava um bitmap esticado que
+   nunca voltava a ficar nitido. */
+.ligacoes-pan-wrap {
+  position: absolute; top: 0; left: 0;
+  transform-origin: 0 0;
+}
+
+/* ── Simplificacoes ──
+   Um vocabulario so, ligado por dois motivos diferentes: durante o GESTO (o que
+   o usuario escolheu na aba Configuracoes) e quando esta AFASTADO demais para o
+   detalhe significar alguma coisa. Antes era um pacote fixo, `.lig-lod`, e o
+   usuario reclamou — com razao — que a diferenca era "pouquissima".
+
+   A ordem de custo, do mais caro para o mais barato de tirar: as pontas de seta
+   (uma por aresta, e marcador e o elemento mais caro de rasterizar), o texto
+   (com contorno de leitura, que e uma segunda passada de pintura), o contorno
+   das caixas, e por fim as proprias linhas. */
+.lig-sem-rotulos  .lig-no text { display: none; }
+.lig-sem-setas    .lig-aresta  { marker-end: none; }
+.lig-sem-contorno .lig-no rect { stroke: none; }
+.lig-sem-ligacoes .lig-aresta  { display: none; }
+/* Sem cor o desenho perde a referencia de linguagem, entao e a opcao mais
+   agressiva — mas tambem a que mais alivia, porque tira o preenchimento
+   variavel de cada caixa. */
+.lig-sem-cor      .lig-no rect { fill: var(--surface); }
+
+.ligacoes-svg { display: block; }
+
+/* Sem `background` próprio: o fundo é o do `.mapa-container` em volta, que desde
+   23/08/2026 é `--bg` nas nove sub-abas de Mapas. Este `background:
+   var(--surface-dark)` era o último sobrevivente do padrão antigo — a tela
+   ficava visivelmente mais escura que as vizinhas. */
+#ligacoes-container { cursor: grab; }
+#ligacoes-container.arrastando { cursor: grabbing; }
+
+/* ── Nós ── */
+.lig-no { cursor: pointer; }
+/* Sem `transition`: com ~200 nos na tela, a transicao de hover era reavaliada
+   a cada mousemove do arrasto e competia com o proprio pan. */
+.lig-no rect {
+  stroke: rgba(var(--black-rgb), 0.45);
+  stroke-width: 1;
+}
+.lig-no text {
+  font-size: 11px; fill: var(--text); pointer-events: none;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  paint-order: stroke;
+  stroke: rgba(var(--black-rgb), 0.55); stroke-width: 2.5px; stroke-linejoin: round;
+}
+.lig-no:hover rect { stroke: var(--text); stroke-width: 2; }
+
+/* O foco atual precisa se achar de relance: é o ponto de referência de toda a
+   navegação, e o usuário chega nele depois de vários cliques seguidos. */
+.lig-no--foco rect { stroke: var(--teal); stroke-width: 2.5; }
+
+/* Pasta não é arquivo: caixa vazada, para não parecer clicável do mesmo jeito. */
+.lig-no--pasta rect { fill: var(--surface); stroke: rgba(var(--white-rgb), 0.18); }
+.lig-no--pasta text { fill: var(--text-muted); }
+
+/* ── Arestas ── */
+/* As arestas nao sao clicaveis, mas entravam no hit-testing a cada mousemove
+   do pan — com 1.700 curvas, isso sozinho ja segurava o gesto. */
+.lig-aresta { fill: none; stroke-width: 1.2; pointer-events: none; }
+.lig-seta-ponta { fill: rgba(var(--white-rgb), 0.35); }
+
+.lig-aresta--normal   { stroke: rgba(var(--white-rgb), 0.22); }
+/* Quem aponta para o foco entra por outra cor: "quem me usa" e "quem eu uso"
+   são perguntas diferentes e não podem sair do mesmo traço. */
+.lig-aresta--entrada  { stroke: rgba(var(--blue-rgb), 0.65); }
+/* Ciclo é o único caso em que a aresta contradiz a leitura da tela — precisa
+   gritar, não se esconder. */
+.lig-aresta--ciclo    { stroke: var(--red); stroke-dasharray: 5 4; stroke-width: 1.6; }
+/* Travessia de camada é a informação que a Arquitetura existe para dar. */
+.lig-aresta--travessia { stroke: rgba(var(--teal-rgb), 0.9); stroke-width: 2; }
+
+/* ── Faixas (Arquitetura e Ciclos) ── */
+.lig-banda {
+  fill: rgba(var(--white-rgb), 0.03);
+  stroke: rgba(var(--white-rgb), 0.07);
+}
+/* O titulo e desenhado depois das arestas (ver mapas-ligacoes-desenho.js), e o
+   contorno na cor do fundo abre um vao em volta das letras: sem ele, uma linha
+   que passe rente ainda risca o nome. */
+.lig-banda-titulo {
+  font-size: 11px; font-weight: 600; fill: var(--text-muted);
+  letter-spacing: 0.4px; text-transform: uppercase;
+  paint-order: stroke;
+  stroke: var(--surface-dark); stroke-width: 4px; stroke-linejoin: round;
+}
+
+/* ── Faixa de aviso ── */
+/* Fica sobre o desenho, no canto: é sobre o desenho que ela fala. Some sozinha
+   quando não há corte nenhum — aviso permanente vira moldura e some da vista. */
+/* Canto inferior ESQUERDO: o direito e do painel de controles, que e absolute
+   no mesmo bloco conteiner (#tab-mapas) e tem z-index 100. O aviso ficava
+   literalmente atras dele e nunca era visto. */
+.ligacoes-aviso {
+  position: absolute; left: 16px; bottom: 16px; z-index: 3;
+  max-width: 44%;
+  padding: 6px 12px; border-radius: var(--radius);
+  background: rgba(var(--black-rgb), 0.55);
+  border: 1px solid rgba(var(--amber-rgb), 0.45);
+  color: var(--amber);
+  font-size: 11px; line-height: 1.5;
+  pointer-events: none;
+}
+
+/* ── Busca da vista Pastas ── */
+/* O `.bsa-input` estica (flex: 1) para encher a barra de uma árvore; aqui ele
+   divide a linha com o toggle e o Analisar, e não pode empurrá-los. */
+.ligacoes-busca { flex: 0 1 240px; min-width: 140px; }
+
+/* ── Selects do painel de controles ── */
+.mapas-ctrl-select {
+  flex: 1; min-width: 0; max-width: 240px;
+  background: var(--surface-dark); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), 0.12); border-radius: 5px;
+  padding: 3px 6px; font-size: 11px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+.mapas-ctrl-select:focus { outline: none; border-color: var(--teal); }

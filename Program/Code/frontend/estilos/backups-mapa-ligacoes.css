@@ -1,0 +1,112 @@
+/* ═══ BACKUPS → Mapa: as Ligações ══════════════════════════════════════════
+   As três leituras que saem do `grafo.json`.
+
+   ⚠️ LIGAÇÃO NÃO É IMPORT. O que estes desenhos mostram é menção de
+   identificador — função global chamada de outro arquivo, ponte entre o back e
+   o front, id declarado no HTML e lido no JS. Quem quer `import` olha o
+   Pipeline. As duas leituras vêm de bases diferentes, e por isso os desenhos
+   são separados. */
+/* ── Ligações ───────────────────────────────────────────────────────────── */
+.bm-seta { stroke-width: 1; }
+.bm-seta-mantida   { stroke: rgba(var(--white-rgb), .14); }
+.bm-seta-exclusiva { stroke: rgba(var(--teal-rgb), .9); stroke-width: 1.6; }
+.bm-seta-ciclo     { stroke: rgba(var(--red-rgb), .8); stroke-dasharray: 4 3; }
+.bm-seta-travessia { stroke: rgba(var(--amber-rgb), .85); stroke-dasharray: 5 3; }
+/* A seta que ENTRA no arquivo em foco, no layout Foco local. Ela é a metade da
+   pergunta que a leitura faz, e não tinha marca nenhuma. */
+.bm-seta-entrada   { stroke: rgba(var(--blue-rgb), .85); stroke-width: 1.6; }
+.bm-no-caixa {
+  fill: var(--surface); stroke: rgba(var(--white-rgb), .16); rx: 5;
+}
+.bm-no.bm-ausente .bm-no-caixa { fill: none; stroke-dasharray: 3 3; }
+/* ⚠️ O NÓ DE PASTA NÃO TINHA UMA LINHA DE CSS. Ele abre a gaveta no clique e era
+   visualmente idêntico a um arquivo — sem traço próprio, sem cursor de mão. Só o
+   `<title>` avisava, e ninguém passa o mouse em tudo para descobrir o que é
+   clicável. */
+.bm-no-pasta { cursor: pointer; }
+.bm-no-pasta .bm-no-caixa { stroke: rgba(var(--white-rgb), .45); stroke-width: 1.4; }
+.bm-no-pasta:hover .bm-no-caixa { fill: var(--surface-hover); }
+/* Mesma contra-escala do rótulo do Treemap, e pelo mesmo motivo. */
+.bm-no-rot {
+  font-size: calc(11px / var(--bm-k, 1)); color: var(--text);
+  /* A `line-height` NÃO é dividida: ela é a altura da caixa do nó, em unidades
+     do desenho, e é o que centraliza o texto na vertical. Dividida, o rótulo
+     subiria para o topo da caixa a cada nível de zoom. */
+  line-height: 22px; padding-left: calc(7px / var(--bm-k, 1));
+}
+.bm-banda { fill: rgba(var(--white-rgb), .03); }
+.bm-banda-rot { fill: var(--text-muted); font-size: 11px; }
+
+/* ⚠️ A MATRIZ NÃO ROLA — ela move. É o modelo da Matriz de Dependências
+   (`.mapa-container--dsm`): `overflow:hidden`, `translate + scale` por dentro,
+   roda amplia e arrastar move. Uma matriz não é lista: não há ordem de leitura,
+   e o que se faz nela é caçar um cruzamento. Rolagem para isso é o gesto
+   errado — e era por isso que "não dava para dar zoom nem pan". */
+.bm-matriz-palco {
+  position: relative;          /* a âncora do `.bm-zoomavel` absoluto */
+  overflow: hidden; flex: 1; min-height: 0;
+  container-type: inline-size; cursor: grab;
+}
+.bm-matriz-palco.arrastando { cursor: grabbing; }
+.bm-matriz-palco .bm-zoomavel { position: absolute; top: 0; left: 0; padding: 14px 18px; }
+.bm-matriz { border-collapse: collapse; font-size: 11px; }
+.bm-matriz th, .bm-matriz td { border: 1px solid rgba(var(--white-rgb), .06); }
+/* Sem `position: sticky`: com o pan livre o conteúdo inteiro anda junto, e um
+   cabeçalho grudado ficaria parado sobre uma matriz que se moveu. O original
+   também não tem. */
+.bm-mx-linha {
+  text-align: right; padding: 2px 8px; color: var(--text-muted);
+  white-space: nowrap; cursor: pointer;
+}
+/* Cabeçalho na vertical, como na Matriz de Dependências: é o que acaba com o
+   truncamento sem cortar nome nenhum. */
+.bm-mx-col {
+  height: 132px; white-space: nowrap; color: var(--text-muted);
+  vertical-align: bottom; padding: 4px 0; cursor: pointer;
+}
+.bm-mx-col span { writing-mode: vertical-rl; transform: rotate(180deg); }
+.bm-mx-linha:hover, .bm-mx-col:hover { color: var(--text); background: var(--surface-hover); }
+.bm-mx-vazia { width: 17px; height: 17px; }
+.bm-mx-cheia {
+  width: 17px; height: 17px; text-align: center;
+  background: rgba(var(--bm-cor, var(--cinza-rgb)), .7);
+  color: var(--text); font-size: 9px;
+}
+/* O destaque é o MESMO da Matriz de Dependências (`mapas.css`), traço por
+   traço: contorno branco na linha clicada, contorno e fundo azuis no que ela
+   alcança. O verde translúcido que estava aqui era um terceiro vocabulário para
+   a mesma leitura — quem aprende a ler uma matriz no programa não deve
+   precisar reaprender na outra. */
+.bm-matriz .bm-mx-cheia.hl, .bm-matriz .bm-mx-vazia.hl {
+  outline: 2px solid rgba(var(--white-rgb), .6); outline-offset: -2px;
+}
+.bm-matriz .bm-mx-linha.hl, .bm-matriz .bm-mx-col.hl {
+  background: var(--surface-hover); color: var(--text);
+}
+.bm-matriz .bm-mx-cheia.hl-cruz, .bm-matriz .bm-mx-vazia.hl-cruz {
+  outline: 1px solid rgba(var(--blue-rgb), .55); outline-offset: -1px;
+  background: rgba(var(--blue-rgb), .10);
+}
+/* A célula com ligação não perde a própria cor por causa do fundo do cruz. */
+.bm-matriz .bm-mx-cheia.hl-cruz { background: rgba(var(--bm-cor, var(--cinza-rgb)), .7); }
+.bm-matriz .bm-mx-linha.hl-cruz, .bm-matriz .bm-mx-col.hl-cruz {
+  color: var(--text); background: rgba(var(--blue-rgb), .18);
+}
+/* Quem foi clicado, por escrito: numa matriz grande o nome do cabeçalho aceso
+   fica longe do cruzamento que se está lendo. */
+.bm-mx-caminho {
+  flex-shrink: 0; padding-top: 8px; min-height: 20px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11.5px; color: var(--text-muted);
+}
+
+.bm-pa-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 12px; container-type: inline-size; }
+.bm-pa-cartao { border: 1px solid rgba(var(--white-rgb), .08); border-radius: var(--radius); padding: 10px 12px; }
+.bm-pa-cartao.mudou { border-color: rgba(var(--amber-rgb), .5); }
+.bm-pa-titulo { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.bm-pa-selo { font-size: 10px; font-weight: 700; color: var(--amber-text); background: var(--amber); border-radius: 99px; padding: 1px 7px; }
+.bm-pa-par { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bm-pa-lista-h { font-size: 10.5px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin: 6px 0 2px; }
+.bm-pa-item { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11px; color: var(--sky-light); }
+.bm-pa-nada { font-size: 11px; color: var(--text-muted); font-style: italic; }
+

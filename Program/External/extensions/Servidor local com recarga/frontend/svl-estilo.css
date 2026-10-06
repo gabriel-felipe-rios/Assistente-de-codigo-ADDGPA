@@ -1,0 +1,46 @@
+/* ══════ SERVIDOR LOCAL COM RECARGA — o estilo da linha e do seletor ══
+   ⚠️ TODO SELETOR PREFIXADO com `svl-`. Não há isolamento de CSS no programa:
+   um seletor solto aqui pintaria a tela inteira.
+   ⚠️ NENHUMA COR EM HEXADECIMAL. O programa tem cinco temas, um deles claro,
+   e uma cor fixa fica ilegível em pelo menos um. Tudo em `var(--…)`, e
+   transparência pela variante `-rgb`. */
+
+.svl-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.05);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-size: 13px;
+}
+
+.svl-rot {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.svl-linha code {
+  background: rgba(var(--black-rgb), 0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.svl-nota { color: var(--text-muted); }
+
+.svl-esp { flex: 1; }
+
+.svl-tam {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.svl-tam .xt-campo-select { padding: 5px 8px; font-size: 12px; }

@@ -1,0 +1,8 @@
+{
+  "subagente_timeout_enabled": false,
+  "subagente_timeout_min": 5,
+  "debounce_t1_segundos": 10,
+  "debounce_t2_segundos": 30,
+  "debounce_t3_segundos": 90,
+  "timeout_agente_minutos": 5
+}

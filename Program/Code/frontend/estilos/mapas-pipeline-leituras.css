@@ -1,0 +1,393 @@
+/* ══════════════════ AGENTES — VISUALIZAR PIPELINE: AS SEIS LEITURAS ══
+   A metade de baixo de `mapas-pipeline.css`, separada porque o
+   arquivo passou de 700 linhas e a AMF manda dividir acima de 500.
+
+   O corte não é arbitrário: lá ficam a casca e as peças que as seis leituras
+   DIVIDEM (o nó de arquivo, a etiqueta de "por onde", o pino, as nove cores);
+   aqui fica o que é próprio de CADA leitura. Mexer numa leitura não deveria
+   fazer passar os olhos pela casca, e vice-versa.
+
+   Depende do arquivo irmão: `--vp-cor` e `--vp-cor-rgb` vêm das classes
+   `.vp-cadeia-N`, que moram lá. Os dois entram em sequência no `style.css`. */
+
+/* ═══════════════════════════════ 1. Raias por camada ══
+   Uma faixa por camada; a coluna é a PROFUNDIDADE no fluxo. O porquê de não
+   ser nem "um arquivo por coluna" nem "uma fase por coluna" está em
+   `mapas-pipeline-raias.js` — as duas alternativas foram tentadas e as
+   duas estouram: a primeira em largura, a segunda em colapso de coluna. */
+.vp-raias { overflow-x: auto; }
+.vp-raias svg { display: block; }
+
+.vp-raia-divisa { stroke: rgba(var(--white-rgb),0.06); }
+.vp-raia-rotulo {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px;
+}
+.vp-no-fase {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+  fill: var(--text-muted); text-anchor: end;
+}
+
+.vp-no-caixa { fill: var(--surface-dark); stroke-width: 1.4; }
+.vp-no-texto {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11px;
+  fill: var(--sky-light);
+}
+.vp-no-texto.cam-backend { fill: var(--green-light); }
+.vp-no-texto.cam-markup  { fill: var(--violeta-light); }
+.vp-no-texto.cam-outro   { fill: var(--text-muted); }
+
+/* A aresta comum é NEUTRA de propósito, não da cor da cadeia: o laranja
+   precisa querer dizer "travessia" e nada mais, e uma das nove cadeias é
+   justamente âmbar. Se a aresta normal fosse colorida, na cadeia âmbar as
+   duas coisas ficariam iguais. */
+.vp-aresta { stroke: rgba(var(--white-rgb),0.34); stroke-width: 1.7; fill: none; }
+.vp-aresta.travessia { stroke: var(--amber); stroke-width: 2.2; stroke-dasharray: 7 4; }
+.vp-aresta.ponta { fill: rgba(var(--white-rgb),0.34); stroke: none; }
+.vp-aresta.ponta.travessia { fill: var(--amber); stroke: none; stroke-dasharray: none; }
+
+.vp-raia-vezes rect { fill: var(--vp-cor, var(--teal)); }
+.vp-raia-vezes text {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 10px; font-weight: 700; text-anchor: middle;
+  fill: var(--amber-text);
+}
+
+/* ═══════════════════════════════ 2. Trilho numerado ══ */
+.vp-faixa { margin-bottom: 14px; }
+.vp-faixa-cab { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.vp-faixa-pilula {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  color: var(--text);
+  background: rgba(var(--white-rgb),0.09);
+  padding: 3px 10px; border-radius: 99px;
+}
+.vp-faixa-linha { flex: 1; height: 1px; background: rgba(var(--white-rgb),0.08); }
+.vp-faixa-qtd { font-size: 10px; color: var(--text-muted); }
+
+.vp-linha-tempo {
+  margin-left: 14px; padding-left: 26px;
+  border-left: 2px solid rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.3);
+}
+.vp-parada {
+  position: relative;
+  padding: 8px 0 9px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+}
+.vp-parada-l1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.vp-parada-l2 { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin: 6px 0 0 2px; }
+/* A bolha mostra a FAIXA de passos que a ligação cobre (15–18), não um número
+   só: agrupado, um item vale por vários passos do arquivo. */
+.vp-parada-bolha {
+  position: absolute; left: -38px; top: 10px;
+  min-width: 24px; height: 22px; padding: 0 5px;
+  border-radius: 99px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  color: var(--amber-text); background: var(--vp-cor, var(--teal));
+  box-shadow: 0 0 0 3px var(--surface-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════ 3. Sequência ══
+   Saiu a tabela de `● ─ ▶` com dezenas de colunas de nome girado e a frase
+   cortada na borda. Cada arquivo é uma linha de vida; a seta é desenhada, o
+   "por onde" fica em cima dela e a frase embaixo — dentro da largura da seta,
+   então nada mais escapa para fora da tela. */
+.vp-seq { overflow-x: auto; padding-bottom: 6px; }
+.vp-seq-tabela { display: inline-block; min-width: 100%; }
+.vp-seq-cab { display: flex; padding-left: 40px; margin-bottom: 10px; align-items: flex-end; }
+.vp-seq-coluna { width: 176px; display: flex; justify-content: center; }
+.vp-seq-arquivo {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 10.5px;
+  color: var(--sky-light);
+  background: rgba(var(--white-rgb),0.06);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-top: 3px solid rgba(var(--blue-rgb),0.85);
+  border-radius: 6px;
+  padding: 5px 8px; max-width: 168px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
+}
+.vp-seq-arquivo.cam-backend { color: var(--green-light); border-top-color: rgba(var(--green-rgb),0.85); }
+.vp-seq-arquivo.cam-markup  { color: var(--violeta-light); border-top-color: rgba(var(--purple-rgb),0.85); }
+.vp-seq-arquivo.cam-outro   { color: var(--text-muted); border-top-color: rgba(var(--cinza-rgb),0.85); }
+
+.vp-seq-corpo { position: relative; padding-left: 40px; }
+.vp-seq-vidas { position: absolute; inset: 0; left: 40px; pointer-events: none; }
+.vp-seq-vida {
+  position: absolute; top: 0; bottom: 0; width: 1px;
+  background: repeating-linear-gradient(to bottom,
+    rgba(var(--white-rgb),0.16) 0 5px, transparent 5px 10px);
+}
+.vp-seq-linha { position: relative; height: 54px; }
+.vp-seq-linha:hover { background: rgba(var(--white-rgb),0.035); border-radius: 6px; }
+.vp-seq-n {
+  position: absolute; left: -36px; top: 18px; width: 28px; text-align: right;
+  font-size: 10.5px; color: var(--text-muted); font-variant-numeric: tabular-nums;
+}
+.vp-seq-seta {
+  position: absolute; top: 28px; height: 2px;
+  background: var(--vp-cor, var(--teal)); border-radius: 2px;
+}
+.vp-seq-seta.travessia {
+  background: repeating-linear-gradient(to right, var(--amber) 0 6px, transparent 6px 10px);
+}
+/* Bolinha na origem, triângulo no destino — as duas pontas dizem o sentido
+   sem precisar de rótulo. */
+.vp-seq-seta::before {
+  content: ''; position: absolute; left: -4px; top: -3px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--vp-cor, var(--teal));
+}
+.vp-seq-seta.travessia::before { background: var(--amber); }
+.vp-seq-seta::after {
+  content: ''; position: absolute; top: -4px;
+  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+}
+.vp-seq-seta.para-direita::after { right: -1px; border-left: 9px solid var(--vp-cor, var(--teal)); }
+.vp-seq-seta.para-esquerda::after { left: -1px; border-right: 9px solid var(--vp-cor, var(--teal)); }
+.vp-seq-seta.para-esquerda::before { left: auto; right: -4px; }
+.vp-seq-seta.travessia.para-direita::after { border-left-color: var(--amber); }
+.vp-seq-seta.travessia.para-esquerda::after { border-right-color: var(--amber); }
+.vp-seq-rotulo {
+  position: absolute; top: 7px; text-align: center;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 10px;
+  color: var(--yellow-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.vp-seq-frase {
+  position: absolute; top: 34px; text-align: center;
+  font-size: 10.5px; color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════ 4. Cadeias (visão geral) ══
+   Um trilho horizontal por cadeia, uma embaixo da outra: é a leitura que
+   mostra que elas são INDEPENDENTES — nenhuma seta sai de uma faixa e entra
+   na de baixo. Cada arquivo aparece uma vez só, como estação; antes o vagão
+   repetia origem e destino, então o mesmo nome saía duas vezes por passo. */
+.vp-visao-geral { display: flex; flex-direction: column; gap: 10px; }
+.vp-vg-linha {
+  display: flex; align-items: stretch; gap: 12px;
+  background: rgba(var(--black-rgb),0.18);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+  border-left: 4px solid var(--vp-cor, var(--teal));
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+.vp-vg-cab { width: 190px; flex-shrink: 0; }
+.vp-vg-nome { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; }
+.vp-vg-meta {
+  font-size: 10px; color: var(--text-muted); margin-top: 3px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.vp-vg-nums { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.vp-vg-nums .vp-conta-travessias { color: var(--amber); }
+
+.vp-trilho-h { display: flex; align-items: flex-start; flex-wrap: wrap; flex: 1; min-width: 0; }
+.vp-estacao {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  width: 116px; padding: 3px 2px;
+}
+.vp-estacao-bolha {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  color: var(--amber-text); background: var(--vp-cor, var(--teal));
+  flex-shrink: 0;
+}
+/* Vazado = onde a cadeia começa. Mesma regra da Fila: dois estados do mesmo
+   tipo dividem a cor e se distinguem pela forma. */
+.vp-estacao-bolha.inicio {
+  background: transparent;
+  border: 2px dashed var(--vp-cor, var(--teal));
+  color: var(--vp-cor, var(--teal));
+}
+.vp-estacao-nome {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 9.5px;
+  color: var(--sky-light); text-align: center; line-height: 1.3; word-break: break-word;
+}
+.vp-estacao-nome.cam-backend { color: var(--green-light); }
+.vp-estacao-nome.cam-markup  { color: var(--violeta-light); }
+.vp-estacao-nome.cam-outro   { color: var(--text-muted); }
+
+.vp-elo { display: flex; flex-direction: column; align-items: center; width: 58px; padding-top: 2px; }
+.vp-elo-n { font-size: 9px; color: var(--text-muted); margin-bottom: 2px; height: 11px; }
+.vp-elo-linha {
+  position: relative; width: 50px; height: 2px;
+  background: rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.55);
+}
+.vp-elo-linha::after {
+  content: ''; position: absolute; right: -1px; top: -4px;
+  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  border-left: 8px solid rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.95);
+}
+.vp-elo-linha.travessia {
+  background: repeating-linear-gradient(to right, var(--amber) 0 5px, transparent 5px 9px);
+}
+.vp-elo-linha.travessia::after { border-left-color: var(--amber); }
+
+.vp-mais {
+  font-size: 10px; color: var(--text-muted);
+  background: rgba(var(--white-rgb),0.06);
+  border: 1px dashed rgba(var(--white-rgb),0.18);
+  border-radius: 99px;
+  padding: 3px 10px; margin: 4px 0 0 6px;
+  cursor: pointer; font-family: inherit; align-self: flex-start;
+}
+.vp-mais:hover { color: var(--text); background: rgba(var(--white-rgb),0.12); }
+
+/* ═══════════════════════════════ 5. Fases (quadro) ══
+   Uma coluna por fase, com TODAS as cadeias juntas — a tarja do cartão diz de
+   qual cadeia o passo é. Sem ela, a coluna "Fase 2" pareceria um fluxo só. */
+.vp-legenda { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+.vp-legenda-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10.5px; color: var(--text-muted);
+  padding: 3px 10px 3px 3px; border-radius: 99px;
+  background: rgba(var(--white-rgb),0.05);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  cursor: pointer; font-family: inherit;
+}
+.vp-legenda-item:hover { background: rgba(var(--white-rgb),0.1); color: var(--text); }
+.vp-legenda-item.apagada { opacity: 0.35; }
+
+.vp-quadro { display: flex; gap: 12px; align-items: flex-start; }
+/* A coluna rola por dentro em vez de esticar a página: com 199 passos, a
+   coluna da fase 1 sozinha tinha setenta e cinco cartões. */
+.vp-coluna {
+  /* Largura e altura viraram variáveis porque esta coluna passou a ser desenhada
+     em DOIS contextos: a sub-aba Assistente, para a qual os números abaixo
+     foram calibrados, e o Mapa da mudança de Backups, que a mostra em dois
+     painéis lado a lado, com outro cromo em volta. O fallback é o valor de
+     sempre, então aqui nada muda. */
+  width: var(--vp-coluna-w, 266px); flex-shrink: 0;
+  background: rgba(var(--black-rgb),0.2);
+  border-radius: var(--radius);
+  padding: 8px;
+  /* Altura em `vh` e não em `%`: o pai (`#vp-area`) tem altura automática por
+     causa do zoom, e porcentagem sobre altura automática não resolve. */
+  max-height: var(--vp-coluna-max-h, calc(100vh - 330px));
+  display: flex; flex-direction: column;
+}
+.vp-coluna-cab {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 4px 8px; margin-bottom: 8px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+  flex-shrink: 0;
+}
+.vp-coluna-titulo { font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; }
+.vp-coluna-qtd {
+  font-size: 10px; color: var(--text-muted);
+  background: rgba(var(--white-rgb),0.08);
+  border-radius: 99px; padding: 2px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.vp-coluna-corpo { overflow-y: auto; padding-right: 3px; }
+
+.vp-cartao {
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-left: 4px solid var(--vp-cor, var(--teal));
+  border-radius: 6px;
+  padding: 8px 10px; margin-bottom: 8px;
+  background: rgba(var(--white-rgb),0.035);
+}
+.vp-cartao:hover { background: rgba(var(--white-rgb),0.07); }
+.vp-cartao-topo { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; flex-wrap: wrap; }
+.vp-cartao-n {
+  font-size: 9.5px; font-weight: 700;
+  color: var(--amber-text); background: var(--vp-cor, var(--teal));
+  border-radius: 99px; padding: 1px 7px;
+}
+/* Origem e destino em LINHAS separadas. Numa linha só, o nome quebrava no
+   meio e a seta ficava perdida entre dois pedaços de caminho. */
+.vp-cartao-fluxo { display: flex; flex-direction: column; gap: 2px; margin-bottom: 7px; }
+.vp-cartao-arq {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 10.5px;
+  color: var(--sky-light); word-break: break-all;
+  padding-left: 7px; border-left: 3px solid rgba(var(--blue-rgb),0.85);
+}
+.vp-cartao-arq.cam-backend { color: var(--green-light); border-left-color: rgba(var(--green-rgb),0.85); }
+.vp-cartao-arq.cam-markup  { color: var(--violeta-light); border-left-color: rgba(var(--purple-rgb),0.85); }
+.vp-cartao-arq.cam-outro   { color: var(--text-muted); border-left-color: rgba(var(--cinza-rgb),0.85); }
+.vp-cartao-meio { font-size: 11px; padding-left: 3px; line-height: 1; }
+
+/* ═══════════════════════════════ 6. Markdown ══ */
+.vp-md { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.vp-md-barra {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 12px;
+  background: rgba(var(--black-rgb),0.28);
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  flex-shrink: 0;
+}
+.vp-md-caminho {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11px;
+  color: var(--text-muted); flex: 1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.vp-md-tamanho { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.vp-md-corpo {
+  flex: 1; overflow: auto; display: flex;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px; line-height: 1.65;
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.vp-md-gutter {
+  padding: 12px 10px; text-align: right;
+  color: rgba(var(--white-rgb),0.22);
+  background: rgba(var(--black-rgb),0.18);
+  user-select: none; font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.vp-md-texto { padding: 12px 16px; white-space: pre; flex: 1; }
+.vp-md-h { color: var(--blue); font-weight: 700; }
+.vp-md-arq { color: var(--sky-light); }
+.vp-md-via { color: var(--yellow-soft); }
+.vp-md-cmt { color: var(--cinza); }
+
+/* ═══════════════════════════════ Modal "Como ler" ══
+   Esqueleto do projeto: `.modal-overlay` + `.modal-prompt` (680px, 80vh). O
+   `.modal-prompt-content` não serve aqui porque é monoespaçado e `pre-wrap` —
+   o conteúdo é uma grade de cartões, não um prompt. */
+.vp-ajuda { width: 940px; }
+.vp-ajuda-corpo { flex: 1; overflow: auto; padding: 16px 20px 20px; }
+.vp-ajuda-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vp-ajuda-cartao {
+  display: flex; gap: 12px; padding: 12px;
+  border-radius: var(--radius);
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+}
+.vp-ajuda-mini {
+  width: 74px; height: 60px; flex-shrink: 0;
+  border-radius: 6px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  display: flex; align-items: center; justify-content: center;
+}
+.vp-ajuda-texto h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.vp-ajuda-linha { font-size: 11.5px; color: var(--text-muted); line-height: 1.55; }
+.vp-ajuda-quando { font-size: 11px; color: var(--teal); margin-top: 5px; }
+
+/* O vocabulário desenhado. É o que faltava: os cartões dizem PARA QUE serve
+   cada leitura, mas quem nunca viu não sabe o que é a tarja, o tracejado
+   laranja ou o `+arquivo` — e essas peças valem nas seis. */
+.vp-voc { margin-top: 16px; border-top: 1px solid rgba(var(--white-rgb),0.08); padding-top: 14px; }
+.vp-voc h4 {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 12px;
+}
+.vp-voc-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+.vp-voc-linha { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--text-muted); line-height: 1.45; }
+.vp-voc-amostra { width: 62px; flex-shrink: 0; display: flex; justify-content: center; }
+
+/* Janela estreita: a grade de duas colunas não cabe em 1366px com o modal em
+   940px, então ela cai para uma coluna e o modal encolhe junto. */
+@media (max-width: 1010px) {
+  .vp-ajuda-grade, .vp-voc-grade { grid-template-columns: 1fr; }
+}

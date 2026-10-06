@@ -1,0 +1,7 @@
+ANTES DE ESCREVER QUALQUER ARQUIVO, me pergunte o que esta extensão deve fazer:
+o que ela acrescenta, onde aparece e quando age. Só depois da minha resposta,
+entregue a pasta inteira — o conteúdo de cada arquivo, com o caminho de cada um
+a partir de Program/External/extensions/<Nome da extensão>/.
+
+ONDE VOU SALVAR
+  Program/External/extensions/<Nome da extensão>/

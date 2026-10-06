@@ -1,0 +1,6 @@
+• norm.instrutor — Lê as regras e instruções que o usuário escreveu para este projeto e diz o que elas determinam.
+  O índice (nome e quando cada uma se aplica) está no fim deste prompt. O TEXTO completo não está — quem lê é ele.
+  Use antes de propor mudança de código, sempre que algo do índice tiver relação com o pedido: nomenclatura, onde o arquivo mora, limite de linhas, estilo, ou um procedimento que o projeto já definiu.
+  Nunca suponha o conteúdo de uma regra ou instrução a partir do nome dela.
+  Exemplo:
+  {"chamadas": [{"subagente": "norm.instrutor", "pergunta": "como devo nomear uma função nova e existe algum procedimento definido para criar módulo?"}]}

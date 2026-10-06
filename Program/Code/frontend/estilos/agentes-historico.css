@@ -1,0 +1,189 @@
+/* ══════════════════ Automação › Histórico ══════════════════════════════════
+   Trilha de ciclos à esquerda, detalhe do ciclo à direita — o componente
+   "Trilha de itens" (Padrões de interface › Componentes), terceiro uso
+   registrado depois de Documentação e Visualizar pipeline.
+
+   ⚠️ As cores dos desfechos são as MESMAS do Selo, e não uma paleta nova:
+   verde concluída, TEAL dispensada, âmbar pulada, vermelha erro. Âmbar quer
+   dizer "faltou alguma coisa" no programa inteiro — dispensada é o contrário
+   disso, e por isso não é âmbar. */
+
+.hist-layout { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+
+.hist-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 14px; flex-shrink: 0;
+}
+.hist-header-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.hist-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.hist-sub { font-size: 11.5px; color: var(--text-muted); max-width: 62ch; }
+.hist-header-acoes { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* ── As duas colunas ─────────────────────────────────────────────────────── */
+.hist-corpo { display: flex; gap: 12px; flex: 1; min-height: 0; }
+
+.hist-trilha {
+  width: 236px; flex-shrink: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 5px; padding-right: 3px;
+}
+.hist-trilha-titulo {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--text-muted); padding: 2px 4px 4px; flex-shrink: 0;
+}
+.hist-trilha-item {
+  text-align: left;
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 7px 9px; cursor: pointer; font-family: inherit;
+  color: var(--text-muted); flex-shrink: 0;
+  transition: background var(--t), border-color var(--t);
+}
+.hist-trilha-item:hover { background: rgba(var(--white-rgb),0.07); }
+.hist-trilha-item.ativo {
+  background: rgba(var(--teal-rgb),0.16);
+  border-color: rgba(var(--teal-rgb),0.5);
+  color: var(--text);
+}
+/* Ciclo que não chegou ao fim se distingue na própria trilha: procurá-lo
+   abrindo um por um é o que a tarja evita. */
+.hist-trilha-item.travou { border-left-color: var(--red); }
+
+/* Ciclo AINDA RODANDO. A cor é a mesma de "processando" da sub-aba Visualizar —
+   os dois painéis falam do mesmo estado, e duas cores para ele fariam parecer
+   duas coisas. A pulsação é a mesma linguagem do resto do programa: o que se
+   mexe está acontecendo agora. */
+.hist-trilha-item.rodando {
+  border-left-color: var(--blue, var(--teal));
+  animation: hist-pulso 1.6s ease-in-out infinite;
+}
+@keyframes hist-pulso { 50% { opacity: 0.65; } }
+.hist-rodando { color: var(--blue, var(--teal)); font-weight: 600; }
+
+/* Respeita quem pediu menos movimento no sistema — a informação continua na
+   cor e no texto, que não dependem da animação. */
+@media (prefers-reduced-motion: reduce) {
+  .hist-trilha-item.rodando { animation: none; }
+}
+
+.hist-trilha-l1 { font-size: 11.5px; font-weight: 700; color: var(--text); }
+.hist-trilha-l2 { font-size: 10px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.hist-trilha-l3 { font-size: 10px; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+/* ── O detalhe ───────────────────────────────────────────────────────────── */
+.hist-detalhe {
+  flex: 1; min-width: 0; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.hist-detalhe-cab {
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+  border-radius: var(--radius);
+  padding: 10px 12px; flex-shrink: 0;
+}
+.hist-detalhe-titulo { font-size: 13px; font-weight: 700; color: var(--text); }
+.hist-detalhe-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.hist-nota {
+  font-size: 10.5px; color: var(--text-muted); margin: 8px 0 0;
+  padding-top: 8px; border-top: 1px solid rgba(var(--white-rgb),0.06);
+  line-height: 1.5;
+}
+
+/* ── A legenda. Selo sem legenda é decoração. ────────────────────────────── */
+.hist-legenda-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  font-size: 10.5px; color: var(--text-muted);
+  padding: 0 2px 2px; flex-shrink: 0;
+}
+.hist-legenda-item { display: inline-flex; align-items: center; gap: 5px; }
+.hist-legenda-dica { flex: 1; min-width: 220px; opacity: 0.8; }
+.hist-ponto {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  background: currentColor;
+}
+
+/* ── Uma rotina ──────────────────────────────────────────────────────────── */
+.hist-rotina {
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+  border-left: 3px solid rgba(var(--white-rgb),0.14);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+.hist-rotina.hist-ok          { border-left-color: var(--green); }
+.hist-rotina.hist-dispensada  { border-left-color: var(--teal); }
+.hist-rotina.hist-pulada      { border-left-color: var(--amber); }
+.hist-rotina.hist-erro        { border-left-color: var(--red); }
+.hist-rotina.hist-com-erros   { border-left-color: var(--amber); }
+
+.hist-rotina-cab {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 11px; cursor: pointer; list-style: none;
+}
+.hist-rotina-cab::-webkit-details-marker { display: none; }
+.hist-rotina-cab::before {
+  content: '▸'; font-size: 9px; color: var(--text-muted); flex-shrink: 0;
+  transition: transform var(--t);
+}
+.hist-rotina[open] .hist-rotina-cab::before { transform: rotate(90deg); }
+.hist-rotina-nome { font-size: 12px; font-weight: 600; color: var(--text); }
+.hist-rotina-meta {
+  font-size: 10.5px; color: var(--text-muted); margin-left: auto;
+  font-variant-numeric: tabular-nums; text-align: right;
+}
+
+.hist-selo {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; padding: 2px 7px; border-radius: 99px; flex-shrink: 0;
+}
+.hist-selo.hist-ok         { background: rgba(var(--green-rgb),0.18); color: var(--green); }
+.hist-selo.hist-dispensada { background: rgba(var(--teal-rgb),0.18);  color: var(--teal); }
+.hist-selo.hist-pulada     { background: rgba(var(--amber-rgb),0.18); color: var(--amber); }
+.hist-selo.hist-erro       { background: rgba(var(--red-rgb),0.18);   color: var(--red); }
+.hist-selo.hist-parcial    { background: rgba(var(--white-rgb),0.1);  color: var(--text-muted); }
+.hist-selo.hist-com-erros  { background: rgba(var(--amber-rgb),0.18); color: var(--amber); }
+
+/* A cor do texto, para a legenda e as contas da trilha herdarem por
+   `currentColor` — é o que faz o pontinho não precisar de regra própria. */
+.hist-ok         { color: var(--green); }
+.hist-dispensada { color: var(--teal); }
+.hist-pulada     { color: var(--amber); }
+.hist-erro       { color: var(--red); }
+.hist-parcial    { color: var(--text-muted); }
+.hist-com-erros  { color: var(--amber); }
+
+.hist-rotina-corpo { padding: 0 11px 9px 30px; }
+.hist-motivo { font-size: 11px; color: var(--text-muted); margin: 0 0 6px; }
+
+/* ── Os arquivos de uma rotina ───────────────────────────────────────────── */
+.hist-arquivos {
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 320px; overflow-y: auto;
+}
+.hist-arq {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 11px; padding: 2px 0;
+}
+.hist-arq-marca {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.3px; flex-shrink: 0;
+  width: 108px; text-align: right;
+}
+/* Trabalho FEITO fica neutro; trabalho POUPADO fica teal — a mesma regra do
+   selo, um nível abaixo. Ver o gêmeo: ele é economia, não geração. */
+.hist-arq-feito   { color: var(--text-muted); }
+.hist-arq-poupado { color: var(--teal); }
+.hist-arq-pulado  { color: var(--amber); }
+.hist-arq-erro    { color: var(--red); }
+.hist-arq-outro   { color: var(--text-muted); opacity: 0.75; }
+
+.hist-arq-nome {
+  color: var(--text); font-size: 10.5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hist-arq-detalhe { font-size: 10px; color: var(--text-muted); opacity: 0.85; }
+.hist-arq-mais {
+  font-size: 10.5px; color: var(--text-muted); font-style: italic;
+  padding-top: 5px;
+}

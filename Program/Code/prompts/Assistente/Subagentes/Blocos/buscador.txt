@@ -1,0 +1,4 @@
+• buscador — Encontra ONDE algo existe no código: função, classe, variável, texto. Devolve caminho, linha e trecho.
+  Use para: "Onde é definida a função X?", "Quem usa essa variável?", "Em que arquivo está Y?"
+  Exemplo:
+  {"chamadas": [{"subagente": "buscador", "pergunta": "Onde é definida a função send_message?"}]}

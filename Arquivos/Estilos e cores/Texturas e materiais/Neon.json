@@ -1,0 +1,16 @@
+{
+  "nome": "Neon",
+  "descricao": "Contorno e texto que brilham com halo da própria cor, sobre fundo escuro. Só funciona em paleta escura.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "bordas de elemento ativo",
+    "títulos curtos",
+    "indicadores de estado"
+  ],
+  "nao_use_em": [
+    "paletas claras — o halo some",
+    "texto corrido",
+    "áreas grandes preenchidas"
+  ],
+  "css": "color: var(--primaria);\nborder: 1px solid var(--primaria);\ntext-shadow: 0 0 8px color-mix(in srgb, var(--primaria) 70%, transparent);\nbox-shadow: 0 0 12px -2px color-mix(in srgb, var(--primaria) 60%, transparent),\n            inset 0 0 10px -6px color-mix(in srgb, var(--primaria) 60%, transparent);"
+}

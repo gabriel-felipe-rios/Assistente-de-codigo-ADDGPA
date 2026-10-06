@@ -1,0 +1,6 @@
+{
+  "nome": "Plugin base",
+  "versao": "1",
+  "descricao": "Varre os projetos em segundo plano e guarda, por projeto e por dia, o que foi criado, editado, apagado e movido — o histórico que os outros plugins leem.",
+  "tipo": "automático"
+}

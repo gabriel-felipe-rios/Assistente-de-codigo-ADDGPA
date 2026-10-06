@@ -1,0 +1,10 @@
+[TEXTURAS E MATERIAIS] Cada material abaixo vem com três campos, e os três são ordem, não descrição.
+- `css` é um bloco de declarações CSS PRONTO. Copie-o LITERALMENTE para dentro da regra do elemento onde o material se aplica. Não reescreva, não simplifique, não troque as funções (`color-mix`, `repeating-linear-gradient`, `url(data:image/svg+xml...)` vão inteiras). Se o material foi escolhido, essas declarações têm de aparecer no CSS da resposta.
+- `aplica_em` diz ONDE aquele material vai. Ele manda. Se diz "fundo da página", o material vai no fundo da página; se diz "cartões de conteúdo", vai nos cartões.
+- `nao_use_em` é veto. O que está nessa lista não recebe o material, nunca.
+Regras que valem para todos:
+- Um material por tipo de superfície. Nunca empilhe dois no mesmo elemento — se dois disputam a mesma superfície, o de `aplica_em` mais específico ganha e o outro vai para a superfície seguinte da lista dele.
+- A textura muda só o ACABAMENTO. As cores continuam vindo da paleta e o layout continua vindo do estilo: o `css` do material usa `var(--fundo)`, `var(--superficie)`, `var(--texto)` e afins, e essas variáveis são as da paleta desta resposta.
+- Se houver comentário do usuário num material, ele SOBREPÕE tudo acima para aquele material — e só para ele.
+- Textura não pode custar legibilidade: se o acabamento reduz o contraste do texto por cima, reduza o acabamento, nunca o contraste.
+- Material escolhido que não aparece na resposta é erro. Antes de terminar, confira: cada material escolhido tem o `css` dele em alguma regra?

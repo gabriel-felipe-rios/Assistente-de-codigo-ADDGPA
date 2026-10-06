@@ -1,0 +1,136 @@
+/* ── Tree-sitter: layout master-detail ── */
+.ts-layout {
+  display: flex; flex: 1; min-height: 0; overflow: hidden;
+}
+/* Compartilhado com Relações (analise-template.js). Já foi 200px fixos, com a
+   justificativa de que a árvore cortaria o nome com reticências de qualquer
+   jeito — só que a árvore aqui tem seis níveis de indentação, e em 200px o que
+   sobrava era a indentação: o nome do arquivo era cortado antes do primeiro
+   caractere útil. Agora usa `--painel-arvore-largo`, o mesmo valor das outras
+   telas de árvore hierárquica (ver tokens-fixos.css). As reticências continuam
+   existindo em `.arvp-nome` (arvore-pastas.css) — elas são o último recurso,
+   não o plano.
+   `column` no painel, não no list, para a barra de ⊞/⊟/↻ ficar fixa acima da
+   árvore rolável. */
+.ts-file-panel {
+  flex: 0 0 var(--painel-arvore-largo); border-right: 1px solid rgba(var(--white-rgb),0.07);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.ts-file-list { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+/* `.ts-file-item` saiu com a árvore antiga — a linha ativa agora é `.arvp-ativo`. */
+.ts-sym-panel {
+  flex: 0 0 300px; border-right: 1px solid rgba(var(--white-rgb),0.07);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.ts-code-panel {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.ts-code-content {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;
+}
+.ts-code-header {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07); flex-shrink: 0;
+  background: rgba(var(--black-rgb),0.12);
+}
+.ts-code-sym-name { font-size: 13px; font-weight: 600; color: var(--text); font-family: monospace; flex: 1; }
+.btn-copy-code {
+  flex-shrink: 0; background: transparent; border: 1px solid rgba(var(--white-rgb),0.12);
+  color: var(--text-muted); border-radius: 4px; padding: 2px 7px; font-size: 13px;
+  cursor: pointer; transition: background var(--t), color var(--t); margin-left: auto;
+}
+.btn-copy-code:hover  { background: rgba(var(--white-rgb),0.08); color: var(--text); }
+.btn-copy-code.copied { background: rgba(var(--green-rgb),0.15); color: var(--green); border-color: rgba(var(--green-rgb),0.3); }
+.ts-code-lines {
+  flex: 1; overflow-y: auto; font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px; padding: 4px 0;
+}
+.ts-code-line {
+  display: flex; align-items: stretch; min-height: 20px;
+  transition: background var(--t);
+}
+.ts-code-line:hover { background: rgba(var(--white-rgb),0.04); }
+.ts-code-line.highlight { background: rgba(var(--blue-rgb),0.12); border-left: 3px solid var(--blue); }
+.ts-code-linenum {
+  min-width: 40px; text-align: right; padding: 2px 8px;
+  color: rgba(var(--white-rgb),0.25); background: rgba(var(--black-rgb),0.2);
+  flex-shrink: 0; user-select: none; font-size: 11px; line-height: 1.6;
+}
+.ts-code-line.highlight .ts-code-linenum { color: var(--blue); }
+.ts-code-text { padding: 2px 12px; color: var(--text-muted); white-space: pre; line-height: 1.6; }
+.ts-code-line.highlight .ts-code-text { color: var(--text); }
+
+/* Barra de filtros */
+.ts-filter-bar {
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07); flex-shrink: 0;
+}
+.ts-filter-btn {
+  background: rgba(var(--white-rgb),0.05); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 12px; color: var(--text-muted); font-size: 11px;
+  padding: 3px 10px; cursor: pointer; white-space: nowrap;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.ts-filter-btn:hover { background: rgba(var(--white-rgb),0.1); color: var(--text); }
+.ts-filter-btn.active {
+  background: rgba(var(--blue-rgb),0.2); color: var(--blue);
+  border-color: rgba(var(--blue-rgb),0.4);
+}
+
+/* Lista de símbolos */
+.ts-symbol-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+.ts-sym-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 14px; border-radius: 4px; cursor: default;
+  transition: background var(--t);
+}
+.ts-sym-row:hover { background: rgba(var(--white-rgb),0.05); }
+.ts-sym-icon { font-size: 13px; flex-shrink: 0; }
+.ts-sym-name { font-size: 13px; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ts-line-num { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+
+/* Badges */
+.ts-lang-badge {
+  font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px;
+  background: rgba(var(--blue-rgb),0.18); color: var(--blue);
+  margin-left: 6px; flex-shrink: 0;
+}
+.ts-folder-count {
+  font-size: 10px; color: var(--text-muted); margin-left: auto; padding-right: 8px; flex-shrink: 0;
+}
+
+/* Detail panels */
+.ts-detail-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 13px;
+}
+.ts-detail-content {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;
+}
+.ts-detail-header {
+  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07); flex-shrink: 0;
+}
+.ts-detail-filename { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Botoes de copiar do cabecalho (Mapa de I/O e Relacoes).
+
+   ⚠️ A primeira versao copiou a regra da `.doc-viewer-toolbar` da Documentacao —
+   botoes com `flex-shrink: 0` e o nome cedendo espaco — e QUEBROU. Aquela barra
+   mora num painel que ocupa a tela toda; esta, no painel do meio do Mapa de I/O,
+   que tem 300px. Com tres botoes de ~130px o nome nao "cedeu": foi espremido ate
+   zero, e o terceiro botao saiu da area visivel sem deixar rastro.
+
+   O conserto tem duas partes, e as duas sao necessarias:
+
+   1. `flex-wrap` no cabecalho. E a rede de seguranca: faltando espaco, os botoes
+      descem para a linha de baixo em vez de sumirem. Cortar um controle da vista
+      e pior do que gastar 20px de altura.
+   2. `flex: 1 1 200px` no nome. Ele passa a PEDIR 200px em vez de aceitar
+      qualquer coisa; abaixo disso a barra prefere quebrar a linha a apaga-lo.
+      So `min-width: 0` deixava o navegador escolher o zero.
+
+   A largura do painel do meio no Mapa de I/O tambem cresceu — ver mapaio.css. */
+.ts-detail-header { flex-wrap: wrap; }
+.ts-detail-filename { flex: 1 1 200px; min-width: 0; }
+.ts-detail-actions { display: flex; gap: 6px; align-items: center; margin-left: auto; flex-shrink: 0; }

@@ -1,0 +1,29 @@
+Esta tarefa é uma varredura de segurança. Pesquise o que está pedido abaixo procurando
+risco de segurança, e não a solução do problema.
+
+O que procurar, nesta ordem:
+
+1. Caminho de arquivo montado a partir de algo que veio da tela, sem passar pela
+   contenção que o projeto já tem.
+2. Argumento, comando ou consulta montado por concatenação com texto de fora.
+3. Segredo escrito no código: chave, token, senha, URL com credencial.
+4. Leitura ou escrita fora da pasta de trabalho do projeto.
+5. `except` largo que engole a falha e segue como se tivesse dado certo.
+6. Dado de fora usado sem conferência de tipo, tamanho ou formato.
+
+Como pesquisar:
+
+- Use o buscador para achar os pontos e o leitor para conferir cada um antes de citar.
+  Um ponto que você não leu não entra no relatório.
+- Use o analista para saber quem chama o trecho: um risco só existe se houver caminho
+  até ele a partir de algo que o usuário controla.
+{acrescimos_das_extensoes}
+
+Como não mentir:
+
+- Você não roda o código. Falha que só aparece executando — corrida entre threads,
+  disputa por arquivo, se um payload real passa — você não tem como confirmar. Se
+  suspeitar de uma, escreva a suspeita em "observacoes" e diga que não foi verificada.
+  Não a coloque em "arquivos" como se fosse achado.
+- Não invente vulnerabilidade para o relatório não sair vazio. Uma varredura que não
+  achou nada é um resultado válido: diga o que você conferiu e onde.

@@ -1,0 +1,27 @@
+TIPO 2 · MUDA UMA TELA — acrescenta função numa tela que já existe.
+Recursos deste tipo: Painel · Comando num menu, numa barra ou num cartão ·
+Marca no código · Opções.
+
+- Painel: "recurso": "painel", com o "lugar" — terminal.painel, terminal.barra,
+  editor.painel, editor.rodape, chat.painel, fila.painel, quadro.painel ou
+  oficina.painel. O programa entrega um <div> só seu: desenhe DENTRO dele, nunca
+  fora, nunca subindo pelo parentNode. Seja idempotente: o mesmo container volta
+  a cada repintura, e desenhar sem checar duplica o conteúdo.
+- Comando num menu, numa barra ou num cartão: "recurso": "comando", com
+  "lugares" — editor.menu, editor.aba.menu, arvore.menu ou
+  trabalhos.quadro.cartao. Ali a forma é "itens": você devolve uma lista de
+  itens ({ icone, rotulo, fazer }) e o programa desenha no componente dele.
+  Devolver [] é o normal quando o item não se aplica; item cinza
+  (ativo: false) leva "motivo".
+- Marca no código: "recurso": "marca", no lugar editor.decorador. O gancho é
+  síncrono e tem 150 ms: devolva do cache e busque o que for caro fora dele. A
+  marca muda cor, fundo, sublinhado e riscado — nunca largura nem altura
+  (nada de padding, margin, font-size, letter-spacing ou inline-block): o texto
+  do Editor desalinha sem erro nenhum.
+- Cada encaixe é UM arquivo em frontend/encaixes/, registrado com
+  xtRegistrarEncaixe(EU.slug, EU.ponto, …); o slug e o ponto vêm do dataset.
+- Um lugar por extensão: dois itens no mesmo lugar, o segundo é recusado —
+  junte os dois num arquivo só.
+- Todo arquivo de encaixe confere que a global da casca ainda existe antes de
+  chamá-la (typeof window.pfxFuncao === 'function'): uma pintura em voo pode
+  chegar depois do desligar.

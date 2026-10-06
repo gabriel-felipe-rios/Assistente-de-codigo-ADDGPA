@@ -1,0 +1,16 @@
+{
+  "nome": "Prévia de imagem",
+  "versao": "2",
+  "descricao": "Sublinha todo caminho de imagem escrito no código e abre, numa modal, todas as imagens do arquivo desenhadas.",
+  "prefixo": "img",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "marca", "id": "img.caminhos", "lugar": "editor.decorador",
+      "arquivo": "frontend/encaixes/decorador.js" },
+    { "recurso": "comando", "id": "img.menu-da-aba", "lugares": ["editor.aba.menu"],
+      "arquivo": "frontend/encaixes/aba.js" },
+    { "recurso": "comando", "id": "img.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js" }
+  ],
+  "escreve_fora": []
+}

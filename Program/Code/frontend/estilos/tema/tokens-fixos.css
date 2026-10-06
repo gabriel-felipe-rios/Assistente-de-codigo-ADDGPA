@@ -1,0 +1,129 @@
+/* ══════════════════════════════════════════════════ TOKENS FIXOS ══
+   Os tokens que NÃO mudam com o tema. Ficam fora dos arquivos `tema-*.css` de
+   propósito: repeti-los em cada tema seria recriar, em menor escala, a
+   duplicação que a obra "Constantes e código repetido" existe para tirar.
+
+   O critério para entrar aqui é simples: **o valor depende do fundo?** Se não
+   depende, é fixo. Raio de canto e duração de transição são geometria e tempo,
+   não cor. O terminal embutido é um caso à parte, explicado abaixo.
+
+   Carregado por `@import` em `style.css`, ANTES do <link> do tema — assim um
+   tema pode sobrescrever qualquer coisa daqui se um dia precisar, sem que este
+   arquivo tenha que saber que temas existem. */
+
+:root {
+  /* ── Geometria e tempo ────────────────────────────────────────────────── */
+  --radius:       8px;
+  --t:            0.15s ease;
+
+  /* Largura da coluna esquerda nas telas cuja árvore espelha a HIERARQUIA de
+     pastas do código (Documentação → Documentação técnica/Resumo de
+     pastas/Comentários; Análise → Mapa de I/O/Relações/Tree-sitter). Essas
+     árvores chegam a seis níveis de indentação, e nas larguras antigas
+     (200–300px) o nome do arquivo era cortado antes de começar: sobrava a
+     indentação e o ícone.
+
+     É um token, e não um número repetido em quatro CSS, porque o pedido do
+     usuário foi literalmente "o mesmo espaçamento" nas sete telas — se o valor
+     mora em sete lugares, na próxima vez que ele mudar só alguns vão mudar.
+
+     ⚠️ NÃO vale para toda coluna esquerda: as listas PLANAS (Glossário,
+     Pipeline, Índice de navegação, Bibliotecas, Índice de Símbolos, LSP,
+     Duplicados) não têm pasta nem subpasta e continuam na largura própria
+     delas. Alargar ali só rouba espaço do conteúdo. */
+  --painel-arvore-largo: 400px;
+
+  /* ── Terminal embutido (estilo GitHub Dark) ───────────────────────────────
+     ⚠️ NÃO acompanha o tema, e isso é deliberado. O terminal reproduz a saída
+     de um console de verdade, com as cores ANSI que o próprio programa
+     executado emite — vermelho de erro, cinza de rodapé. Clarear esse fundo
+     no tema Papel deixaria a saída ilegível, porque as cores que chegam nela
+     foram escolhidas para fundo escuro por quem escreveu o programa, não por
+     este aplicativo. É a mesma razão pela qual todo editor de código mantém o
+     terminal escuro mesmo em tema claro. */
+  --terminal-bg:      #0d1117;
+  --terminal-text:    #c9d1d9;
+  --terminal-muted:   #484f58;
+  --terminal-out:     #9fb1c1;
+  --terminal-err:     #ff8b7a;
+  --terminal-explain: #c7d5e0;
+
+  /* ── Paleta ANSI da saída do terminal (GitHub Dark) ───────────────────────
+     As 16 cores que um programa pode pedir por código ANSI (`\e[31m` e afins),
+     traduzidas para HTML pela `ansi_up`. Ficam aqui, e não nos temas, pela
+     mesma razão do fundo acima: quem escolheu essas cores foi o programa
+     executado, contando com um console escuro. Puxá-las dos tokens de tema
+     faria o tema Papel pintar um vermelho pensado para fundo claro sobre o
+     fundo #0d1117 do terminal. */
+  --ansi-black:          #484f58;
+  --ansi-red:            #ff7b72;
+  --ansi-green:          #3fb950;
+  --ansi-yellow:         #d29922;
+  --ansi-blue:           #58a6ff;
+  --ansi-magenta:        #bc8cff;
+  --ansi-cyan:           #39c5cf;
+  --ansi-white:          #b1bac4;
+  --ansi-bright-black:   #6e7681;
+  --ansi-bright-red:     #ffa198;
+  --ansi-bright-green:   #56d364;
+  --ansi-bright-yellow:  #e3b341;
+  --ansi-bright-blue:    #79c0ff;
+  --ansi-bright-magenta: #d2a8ff;
+  --ansi-bright-cyan:    #56d4dd;
+  --ansi-bright-white:   #f0f6fc;
+
+  /* Realce da busca na saída — também preso ao fundo escuro do terminal */
+  --terminal-achado:       rgba(210, 153, 34, 0.35);
+  --terminal-achado-atual: rgba(255, 166, 87, 0.75);
+
+  /* ── Editor de código ─────────────────────────────────────────────────────
+     ⚠️ AQUI O FUNDO E O TEXTO ACOMPANHAM O TEMA, e SÓ as cores de sintaxe são
+     fixas. É a diferença para o bloco do terminal logo acima, e ela tem motivo
+     em cada metade:
+
+     · **Fundo pelo tema.** A primeira versão usava `--terminal-bg` (#0d1117) e
+       o usuário recusou em 30/08/2026: o painel do Editor ficava visivelmente
+       mais escuro que o mesmo painel da aba Documentação, e duas telas irmãs
+       com fundos diferentes leem como defeito, não como escolha. No terminal o
+       preto se justifica porque as cores vêm do programa executado; aqui as
+       cores são nossas e podem ser afinadas para o fundo do tema.
+
+     · **Sintaxe fixa.** As doze cores abaixo não mudam com o tema porque uma
+       paleta de sintaxe é um conjunto afinado entre si, e trocá-la por tema
+       significaria manter três conjuntos completos. É a mesma razão pela qual
+       todo editor de código trata "tema da interface" e "tema do código" como
+       duas escolhas separadas.
+
+     ⚠️ Isto assume TEMA ESCURO. Os três temas de hoje (Ardósia, Carvão, Papel)
+     — só o Papel é claro, e sobre ele estas doze cores perdem contraste. Se o
+     Papel passar a importar de verdade para o Editor, a saída é um segundo
+     conjunto DESTES MESMOS NOMES dentro de `tema-papel.css`, nunca uma cor
+     solta no CSS da aba.
+
+     Os valores saem de `prism-tomorrow.css` (Program/External/libraries/
+     prism-master/themes/), ajustados para casar com a paleta ANSI acima — assim
+     o código no Editor e a saída no Terminal não parecem dois programas. */
+  --editor-bg:          var(--bg);
+  --editor-text:        var(--text);
+  --editor-gutter:      var(--text-muted);
+  --editor-linha-atual: rgba(255,255,255,0.045);
+
+  --editor-token-comentario:  #6a7d8f;  /* mais claro que --terminal-muted: aqui é para LER, não para ignorar */
+  --editor-token-texto:       #c3e88d;
+  --editor-token-palavra:     #ff7b72;  /* = --ansi-red */
+  --editor-token-funcao:      #d2a8ff;  /* = --ansi-bright-magenta */
+  --editor-token-numero:      #79c0ff;  /* = --ansi-bright-blue */
+  --editor-token-classe:      #d29922;  /* = --ansi-yellow */
+  --editor-token-operador:    #ff7b72;
+  --editor-token-variavel:    #79c0ff;
+  --editor-token-pontuacao:   #8b949e;
+  --editor-token-atributo:    #39c5cf;  /* = --ansi-cyan */
+  --editor-token-tag:         #7ee787;
+  --editor-token-inserido:    #3fb950;
+  --editor-token-removido:    #ff7b72;
+
+  /* Realce do Ctrl+F. Gêmeos dos `--terminal-achado*`, e com os mesmos valores:
+     é a mesma ação em duas telas, e cor diferente faria parecer outra coisa. */
+  --editor-achado:       rgba(210, 153, 34, 0.35);
+  --editor-achado-atual: rgba(255, 166, 87, 0.75);
+}

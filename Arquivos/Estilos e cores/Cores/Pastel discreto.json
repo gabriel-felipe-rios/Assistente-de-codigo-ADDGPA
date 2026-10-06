@@ -1,0 +1,81 @@
+{
+  "nome": "Pastel discreto",
+  "descricao": "Paleta clara e macia de tons dessaturados. Fundo lavanda-claro, texto arroxeado e acentos pastel — presentes, mas nunca gritados.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(0,0,0,0.10). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#F7F6FB",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#FFFFFF",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#EFEDF7",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#E7E4F2",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#3A3750",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#7C7894",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#6F63B8",
+      "apelido": "lavanda",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#5A4F9C",
+      "apelido": "lavanda (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#5C9E7A",
+      "apelido": "sálvia",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#4A8464",
+      "apelido": "sálvia (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#C96A7D",
+      "apelido": "rosa antigo",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#AC5566",
+      "apelido": "rosa antigo (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#6F8FC4",
+      "apelido": "azul poeira",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#5A76A8",
+      "apelido": "azul poeira (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#A47FB8",
+      "apelido": "malva",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#8B679E",
+      "apelido": "malva (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

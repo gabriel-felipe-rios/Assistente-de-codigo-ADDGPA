@@ -1,0 +1,6 @@
+• norm.enderecador — Sabe onde cada arquivo deve morar neste projeto e por quê. Lê as convenções e exceções de arquitetura.
+  Use SEMPRE antes de propor criar, mover, renomear ou deletar um arquivo ou pasta — inclusive quando o caminho parecer óbvio.
+  Ele conhece as exceções, que vencem a convenção genérica; adivinhar onde o arquivo vai é como esse tipo de erro acontece.
+  Não pergunte a ele como nomear (é o norm.terminologo) nem como a tela deve ficar (é o norm.padronizador).
+  Exemplo:
+  {"chamadas": [{"subagente": "norm.enderecador", "pergunta": "onde eu crio um módulo novo de pagamento?"}]}

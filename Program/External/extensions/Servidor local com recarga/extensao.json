@@ -1,0 +1,22 @@
+{
+  "nome": "Servidor local com recarga",
+  "versao": "2",
+  "descricao": "Na aba Terminal, escolha rodar como Servidor local: o ▶ Executar sobe um servidor HTTP na pasta do projeto, abre a página no navegador no tamanho escolhido e recarrega a cada Ctrl+S.",
+  "prefixo": "svl",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "painel", "id": "svl.rodar-como", "lugar": "terminal.barra",
+      "arquivo": "frontend/encaixes/barra.js" },
+    { "recurso": "painel", "id": "svl.painel", "lugar": "terminal.painel",
+      "arquivo": "frontend/encaixes/painel.js" },
+    { "recurso": "comando", "id": "svl.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js" },
+    { "recurso": "reacao", "id": "svl.ao-rodar", "evento": "terminal.vai_rodar",
+      "pode_barrar": true, "arquivo": "frontend/eventos/vai_rodar.js" },
+    { "recurso": "reacao", "id": "svl.ao-fechar-projeto", "evento": "projeto.fechou",
+      "arquivo": "frontend/eventos/fechou.js" },
+    { "recurso": "reacao", "id": "svl.ao-salvar", "evento": "editor.salvou",
+      "arquivo": "frontend/eventos/salvou.js" }
+  ],
+  "escreve_fora": []
+}

@@ -1,0 +1,128 @@
+/* ═══ ACESSO RÁPIDO — a barra que abre por tecla em qualquer aba ═══════════
+   Flutua por cima de tudo, sem fundo escuro — o desenho é o do command palette
+   do VS Code. Nasceu dentro da aba Editor, como a abertura rápida do Ctrl+P
+   (`editor-busca.css`), e a promoção a widget global trouxe o bloco inteiro
+   para cá, com o prefixo `.acr-` no lugar do antigo.
+
+   ⚠️ O `@import` deste arquivo em `style.css` fica LOGO DEPOIS do de
+   `editor-busca.css`, na posição em que o bloco estava. Em CSS a ordem é a
+   regra de desempate, e reordenar é trocar qual regra vence.
+
+   ⚠️ NENHUMA COR NOVA AQUI. Tudo por token declarado em `estilos/tema/`
+   (`base.css` e o tema em uso), que é o único lugar que declara token — este
+   arquivo não declara `:root` e não inventa cor "só para esta tela".
+
+   ⚠️ `z-index: 430`: acima do menu de contexto (400) e do popup de
+   autocomplete (420), abaixo do fantasma de arraste (490/500). É ACIMA do
+   modal (100) também, e é por isso que a barra não abre com um modal aberto e
+   se fecha se um abrir por cima — ver `acesso-rapido.js`. Não há faixa de
+   z-index registrada para overlay global no projeto; 430 é escolha desta obra.
+
+   ⚠️ A cadeia de rolagem: a casca é `flex` com `min-height: 0`, e SÓ a
+   `.acr-lista` rola. O `min-height: 0` é a parte que se esquece, e é a que
+   quebra.                                                                  */
+.acr {
+  position: fixed; z-index: 430;
+  max-width: 92vw;
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), 0.18);
+  border-radius: 10px; box-shadow: 0 20px 60px rgba(var(--black-rgb), 0.6);
+  overflow: hidden;
+}
+
+/* ── Os três tamanhos ──
+   "Média" é exatamente o que a barra sempre teve (520px / 60vh): é o que faz a
+   promoção não mudar nada para quem já usava o Ctrl+P. O `max-width: 92vw` da
+   casca vale nos três — sem ele, "Grande" numa janela estreita põe a barra
+   para fora da tela. */
+.acr--pequena { width: 420px; max-height: 40vh; }
+.acr--media   { width: 520px; max-height: 60vh; }
+.acr--grande  { width: 720px; max-height: 75vh; }
+
+/* ── As nove posições ──
+   Mesmo sistema `<vertical>-<horizontal>` das notificações, e as mesmas nove
+   chaves. `superior-centro` é o padrão, e é onde a barra sempre abriu. */
+.acr--superior-esquerda { top: 80px; left: 24px; }
+.acr--superior-centro   { top: 80px; left: 50%; transform: translateX(-50%); }
+.acr--superior-direita  { top: 80px; right: 24px; }
+.acr--meio-esquerda     { top: 50%; left: 24px; transform: translateY(-50%); }
+.acr--meio-centro       { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.acr--meio-direita      { top: 50%; right: 24px; transform: translateY(-50%); }
+.acr--inferior-esquerda { bottom: 40px; left: 24px; }
+.acr--inferior-centro   { bottom: 40px; left: 50%; transform: translateX(-50%); }
+.acr--inferior-direita  { bottom: 40px; right: 24px; }
+
+.acr-input {
+  width: 100%; background: var(--surface-dark); border: none;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.10);
+  color: var(--text); font-size: 14px; padding: 12px 16px; outline: none;
+  box-sizing: border-box;
+}
+.acr-modos { display: flex; gap: 4px; padding: 8px 12px; flex-wrap: wrap; border-bottom: 1px solid rgba(var(--white-rgb), 0.08); }
+.acr-modo-btn {
+  background: transparent; border: 1px solid rgba(var(--white-rgb), 0.12); border-radius: 6px;
+  color: var(--text-muted); padding: 3px 10px; font-size: 11.5px; cursor: pointer;
+}
+.acr-modo-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.acr-lista { overflow: auto; flex: 1; min-height: 40px; }
+
+/* Título de grupo — "Usados recentemente", e as categorias do modo Comando. */
+.acr-grupo {
+  padding: 8px 16px 4px; font-size: 10.5px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.acr-item {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  padding: 8px 16px; font-size: 13px; color: var(--text-muted); cursor: pointer;
+}
+.acr-item.sel { background: rgba(var(--blue-rgb), 0.16); color: var(--text); }
+.acr-item b { color: var(--text); flex-shrink: 0; }
+.acr-caminho { font-size: 11px; color: var(--text-muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acr-trecho { flex-basis: 100%; font-size: 11px; color: var(--text-muted); opacity: 0.8; white-space: pre-wrap; }
+
+/* Selo de porcentagem dos resultados semânticos. Morava em `editor.css`, longe
+   do resto do desenho da barra — um widget global não pode depender do CSS de
+   uma aba. */
+.acr-score { flex-shrink: 0; font-size: 10.5px; color: var(--teal); font-weight: 600; }
+
+/* O glifo do comando, à esquerda. ⚠️ GLIFO, nunca emoji: a linha muda de cor ao
+   ser selecionada, e emoji não obedece a `color`. */
+.acr-icone { flex-shrink: 0; width: 14px; text-align: center; color: var(--text-muted); }
+
+/* A tecla, à direita da linha. `margin-left: auto` a empurra para a borda sem
+   precisar de um espaçador vazio no meio. */
+.acr-tecla {
+  margin-left: auto; flex-shrink: 0; font-size: 10.5px; color: var(--text-muted);
+  border: 1px solid rgba(var(--white-rgb), 0.14); border-radius: 4px;
+  padding: 1px 6px; font-variant-numeric: tabular-nums;
+}
+/* "sem tecla" é texto, não uma tecla — sem a moldura, e apagado. Dizê-lo em voz
+   alta distingue "este comando não tem tecla" de "esta linha nem tem coluna de
+   tecla", que é o caso de um arquivo ou de uma aba. */
+.acr-tecla--vazia { border-color: transparent; opacity: 0.6; font-style: italic; }
+
+/* Item indisponível: fica na lista, apagado e COM O MOTIVO — sumir com ele
+   deixaria o usuário procurando um comando que existe. */
+.acr-item--inativo { opacity: 0.5; cursor: default; }
+.acr-motivo { flex-shrink: 0; font-size: 11px; color: var(--amber); }
+
+/* Mensagem de lista vazia e "Buscando…". Própria da barra: a `.ed-vazio` que
+   ela usava é da aba Editor, e um widget global não herda o CSS de uma aba. */
+.acr-vazio { padding: 14px 12px; font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+/* Rodapé com as quatro teclas de dentro da barra. É o único lugar em que elas
+   se anunciam: ↑↓, Enter, Tab e Esc são teclas de texto e não entram na tela
+   de Teclado. */
+.acr-rodape {
+  flex-shrink: 0; display: flex; gap: 12px; flex-wrap: wrap;
+  padding: 6px 16px; font-size: 10.5px; color: var(--text-muted);
+  border-top: 1px solid rgba(var(--white-rgb), 0.08);
+  background: var(--surface-dark);
+}
+.acr-rodape kbd {
+  font-family: inherit; font-size: 10px;
+  border: 1px solid rgba(var(--white-rgb), 0.14); border-radius: 3px;
+  padding: 0 4px; margin-right: 3px;
+}

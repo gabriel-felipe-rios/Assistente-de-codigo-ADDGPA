@@ -1,0 +1,21 @@
+{
+  "lm_studio_url": "http://localhost:1234",
+  "formato_garantido": true,
+  "resgate_da_resposta": true,
+  "janela_contexto": 70144,
+  "margem_pct": 20,
+  "usar_config_do_programa": false,
+  "modelo_escolhido": "",
+  "pensamento_rotinas": false,
+  "pensamento_chat": true,
+  "pensamento_fila": true,
+  "pensamento_subagentes": true,
+  "pensamento_designer": false,
+  "geracao_temperatura": null,
+  "geracao_top_p": null,
+  "geracao_top_k": null,
+  "geracao_min_p": null,
+  "geracao_repeat_penalty": null,
+  "teto_saida_pct": 17,
+  "teto_entrada_pct": 45
+}

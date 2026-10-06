@@ -1,0 +1,34 @@
+{
+  "cartoes": [
+    {
+      "titulo": "Quais linguagens formatar",
+      "dica": "Ctrl+S num arquivo destes grava já formatado. Os outros passam intocados.",
+      "campos": [
+        { "chave": "js", "rotulo": "JavaScript (.js, .jsx, .ts)", "tipo": "interruptor", "padrao": true },
+        { "chave": "css", "rotulo": "CSS (.css, .scss, .less)", "tipo": "interruptor", "padrao": true },
+        { "chave": "html", "rotulo": "HTML (.html, .htm)", "tipo": "interruptor", "padrao": true },
+        { "chave": "json", "rotulo": "JSON (.json)", "tipo": "interruptor", "padrao": true,
+          "nota": "O único que não depende da biblioteca em frontend/lib/. JSON inválido é gravado como está." }
+      ]
+    },
+    {
+      "titulo": "Limpeza, em qualquer arquivo de texto",
+      "dica": "Vale para .py, .md, .txt e tudo o mais — sem biblioteca nenhuma.",
+      "campos": [
+        { "chave": "tirar_espacos_no_fim", "rotulo": "Tirar espaços no fim das linhas", "tipo": "interruptor", "padrao": true,
+          "nota": "Markdown fica de fora: dois espaços antes da quebra são uma quebra forçada na sintaxe dele." },
+        { "chave": "nova_linha_final", "rotulo": "Garantir uma quebra de linha no fim do arquivo", "tipo": "interruptor", "padrao": true }
+      ]
+    },
+    {
+      "titulo": "Como formatar",
+      "campos": [
+        { "chave": "recuo", "rotulo": "Espaços por nível de recuo", "tipo": "numero",
+          "padrao": 2, "min": 0, "max": 8, "passo": 1 },
+        { "chave": "teto_kb", "rotulo": "Não formatar acima de (KB)", "tipo": "numero",
+          "padrao": 200, "min": 1, "max": 5000, "passo": 50,
+          "nota": "A formatação roda antes de gravar e o programa espera por ela, com teto de 1,5 s. Acima deste tamanho o arquivo é gravado sem formatar, sem esperar." }
+      ]
+    }
+  ]
+}

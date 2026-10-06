@@ -1,0 +1,20 @@
+{
+  "": [
+    "Específicos",
+    "Universais",
+    "Plugin base"
+  ],
+  "Específicos": [
+    "Mobile"
+  ],
+  "Universais": [
+    "Animação do código",
+    "Cenas do código",
+    "Complexidade do código",
+    "Contraste de Tela",
+    "Exportar visualizações",
+    "Linha do tempo",
+    "Panorama de projetos",
+    "Relatório do Projeto"
+  ]
+}

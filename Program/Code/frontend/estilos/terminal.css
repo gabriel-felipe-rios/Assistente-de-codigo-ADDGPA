@@ -1,0 +1,139 @@
+/* ══════════════════════════════════════════════════════ Terminal */
+.terminal-layout { display: flex; flex-direction: column; height: 100%; gap: 10px; padding: 16px 20px; }
+.terminal-toolbar { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.terminal-path-input {
+  flex: 1; background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text-muted); font-size: 13px; padding: 7px 12px;
+  font-family: 'Cascadia Code','Consolas',monospace; outline: none;
+}
+/* `user-select` aqui não é enfeite: a janela do pywebview nasce com a seleção
+   desligada (`text_select` é False por padrão), então sem isto não dá para
+   marcar nem copiar a saída com o mouse. Mesmo caminho cirúrgico que
+   `.message-content` (chat.css) já usa — corrigir na janela mexeria no app todo. */
+.terminal-output {
+  /* G9 · o chão da saída: nem um painel de extensão alto a leva abaixo disto. */
+  min-height: 120px;
+  flex: 1; background: var(--terminal-bg); border-radius: var(--radius); padding: 14px 16px;
+  overflow-y: auto; font-family: 'Cascadia Code','Consolas',monospace;
+  font-size: 13px; color: var(--terminal-text); white-space: pre-wrap;
+  border: 1px solid rgba(var(--white-rgb),0.06); line-height: 1.6;
+  user-select: text; cursor: text;
+}
+.terminal-placeholder { color: var(--terminal-muted); }
+.terminal-error-panel {
+  background: rgba(var(--red-rgb),0.08); border: 1px solid rgba(var(--red-rgb),0.25);
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; max-height: 200px; overflow-y: auto;
+}
+.terminal-error-header { display: flex; align-items: center; justify-content: space-between; }
+.error-badge {
+  background: rgba(var(--red-rgb),0.2); color: var(--red); font-size: 12px; font-weight: 600;
+  padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(var(--red-rgb),0.3);
+}
+.terminal-error-details {
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12px;
+  color: var(--text-muted); white-space: pre-wrap;
+}
+
+.terminal-path-origem {
+  font-size: 11.5px; color: var(--text-muted); font-style: italic;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* Saída colorida por canal — stdout, stderr e o eco do comando */
+.terminal-output .cmd { color: var(--mint); }
+.terminal-output .out { color: var(--terminal-out); }
+.terminal-output .err { color: var(--terminal-err); }
+
+/* Linha do teto de buffer — o corte é anunciado, nunca silencioso */
+.terminal-output .terminal-cortado { color: var(--terminal-muted); font-style: italic; }
+
+/* Cores ANSI que o programa executado pediu. Pintam POR CIMA da cor do canal:
+   `.out`/`.err` são a cor base, e um `<span class="ansi-*">` filho ganha dela
+   por ser mais específico ao elemento, não por ordem no arquivo. */
+.terminal-output .ansi-black-fg          { color: var(--ansi-black); }
+.terminal-output .ansi-red-fg            { color: var(--ansi-red); }
+.terminal-output .ansi-green-fg          { color: var(--ansi-green); }
+.terminal-output .ansi-yellow-fg         { color: var(--ansi-yellow); }
+.terminal-output .ansi-blue-fg           { color: var(--ansi-blue); }
+.terminal-output .ansi-magenta-fg        { color: var(--ansi-magenta); }
+.terminal-output .ansi-cyan-fg           { color: var(--ansi-cyan); }
+.terminal-output .ansi-white-fg          { color: var(--ansi-white); }
+.terminal-output .ansi-bright-black-fg   { color: var(--ansi-bright-black); }
+.terminal-output .ansi-bright-red-fg     { color: var(--ansi-bright-red); }
+.terminal-output .ansi-bright-green-fg   { color: var(--ansi-bright-green); }
+.terminal-output .ansi-bright-yellow-fg  { color: var(--ansi-bright-yellow); }
+.terminal-output .ansi-bright-blue-fg    { color: var(--ansi-bright-blue); }
+.terminal-output .ansi-bright-magenta-fg { color: var(--ansi-bright-magenta); }
+.terminal-output .ansi-bright-cyan-fg    { color: var(--ansi-bright-cyan); }
+.terminal-output .ansi-bright-white-fg   { color: var(--ansi-bright-white); }
+
+.terminal-output .ansi-black-bg          { background: var(--ansi-black); }
+.terminal-output .ansi-red-bg            { background: var(--ansi-red); }
+.terminal-output .ansi-green-bg          { background: var(--ansi-green); }
+.terminal-output .ansi-yellow-bg         { background: var(--ansi-yellow); }
+.terminal-output .ansi-blue-bg           { background: var(--ansi-blue); }
+.terminal-output .ansi-magenta-bg        { background: var(--ansi-magenta); }
+.terminal-output .ansi-cyan-bg           { background: var(--ansi-cyan); }
+.terminal-output .ansi-white-bg          { background: var(--ansi-white); }
+.terminal-output .ansi-bright-black-bg   { background: var(--ansi-bright-black); }
+.terminal-output .ansi-bright-red-bg     { background: var(--ansi-bright-red); }
+.terminal-output .ansi-bright-green-bg   { background: var(--ansi-bright-green); }
+.terminal-output .ansi-bright-yellow-bg  { background: var(--ansi-bright-yellow); }
+.terminal-output .ansi-bright-blue-bg    { background: var(--ansi-bright-blue); }
+.terminal-output .ansi-bright-magenta-bg { background: var(--ansi-bright-magenta); }
+.terminal-output .ansi-bright-cyan-bg    { background: var(--ansi-bright-cyan); }
+.terminal-output .ansi-bright-white-bg   { background: var(--ansi-bright-white); }
+
+/* Ocorrência da busca. Herda a cor do texto de propósito — repintar a letra
+   apagaria a cor ANSI que é justamente o que se está procurando ler. */
+.terminal-output .term-achado {
+  background: var(--terminal-achado); color: inherit; border-radius: 3px;
+}
+.terminal-output .term-achado.atual {
+  background: var(--terminal-achado-atual); color: var(--terminal-bg);
+}
+
+/* Sub-abas Tudo / Saída / Erros + a busca, na mesma linha */
+.terminal-sst-linha { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.terminal-busca-box { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.terminal-busca-input {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 12.5px; padding: 6px 11px;
+  font-family: inherit; outline: none; width: 190px;
+}
+.terminal-busca-input:focus { border-color: rgba(var(--blue-rgb),0.5); }
+/* Contador reserva a largura: crescendo de "1/9" para "12/340" ele empurraria
+   os botões ∧/∨ para a esquerda no meio do clique. */
+.terminal-busca-contador {
+  font-size: 11.5px; color: var(--text-muted); min-width: 52px; text-align: right;
+  white-space: nowrap;
+}
+
+.sst-bar {
+  display: flex; gap: 3px; background: rgba(var(--black-rgb),0.28); padding: 5px 8px;
+  border-radius: 6px; flex-shrink: 0; width: fit-content;
+}
+.sst {
+  background: transparent; border: none; color: var(--text-muted); font-size: 12.5px;
+  font-weight: 600; padding: 6px 13px; border-radius: 5px; cursor: pointer;
+  font-family: inherit; transition: all var(--t);
+}
+.sst:hover { background: rgba(var(--white-rgb),0.07); color: var(--text); }
+.sst.active { background: rgba(var(--blue-rgb),0.22); color: var(--text); }
+
+/* Badge de exit code — é ele o gatilho, não o stderr sozinho */
+.terminal-exit-badge {
+  font-size: 11.5px; font-weight: 700; padding: 3px 11px; border-radius: 99px;
+  white-space: nowrap;
+}
+.terminal-exit-badge.ok { background: rgba(var(--green-rgb),0.18); color: var(--green); }
+.terminal-exit-badge.bad { background: rgba(var(--red-rgb),0.2); color: var(--red); }
+
+/* Prompt montado por "Explicar este erro" — determinístico, sem LLM */
+.terminal-explain-area { display: flex; flex-direction: column; gap: 8px; }
+.terminal-explain-prompt {
+  background: rgba(var(--black-rgb),0.3); border-radius: 6px; padding: 12px 14px;
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12px; line-height: 1.8;
+  white-space: pre-wrap; color: var(--terminal-explain); max-height: 260px; overflow-y: auto;
+}

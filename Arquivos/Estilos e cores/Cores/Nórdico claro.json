@@ -1,0 +1,81 @@
+{
+  "nome": "Nórdico claro",
+  "descricao": "Paleta clara e fria de tons azul-acinzentados. Fundo gelo, texto azul-escuro e acentos suaves — sóbria sem ser apagada.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(0,0,0,0.10). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#ECEFF4",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#FFFFFF",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#E0E5EE",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#D8DEE9",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#2E3440",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#667084",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#5E81AC",
+      "apelido": "azul",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#4C6C93",
+      "apelido": "azul (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#A3BE8C",
+      "apelido": "verde",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#88A271",
+      "apelido": "verde (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#BF616A",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#A24C55",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#B48EAD",
+      "apelido": "lilás",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#997493",
+      "apelido": "lilás (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#88C0D0",
+      "apelido": "gelo",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#6BA5B6",
+      "apelido": "gelo (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

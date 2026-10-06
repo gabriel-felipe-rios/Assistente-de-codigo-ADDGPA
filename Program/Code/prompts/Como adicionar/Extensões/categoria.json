@@ -1,0 +1,104 @@
+{
+  "ordem": 10,
+  "nome": "Extensões",
+  "icone": "🧩",
+  "destino": "Program/External/extensions/",
+  "contrato": "Contrato/Como criar extensões.md",
+  "tabela": {
+    "marcar": true,
+    "colunas": [
+      "Tipo",
+      "O que faz"
+    ],
+    "linhas": [
+      {
+        "numero": 1,
+        "nome": "Tela própria",
+        "texto": "ganha uma tela só dela — uma aba nova, ou uma sub-aba dentro de uma aba que já existe",
+        "usa": "Tela · Opções",
+        "regras": "Tipo 1 · Tela própria.txt"
+      },
+      {
+        "numero": 2,
+        "nome": "Muda uma tela",
+        "texto": "acrescenta função numa tela que já existe",
+        "usa": "Painel · Comando num menu, numa barra ou num cartão · Marca no código · Opções",
+        "regras": "Tipo 2 · Muda uma tela.txt"
+      },
+      {
+        "numero": 3,
+        "nome": "Muda um comportamento",
+        "texto": "age sem tela: roda sozinha, ou reage ao que o programa faz",
+        "usa": "Em segundo plano · Reação · Comando no Acesso rápido · Opções",
+        "regras": "Tipo 3 · Muda um comportamento.txt"
+      },
+      {
+        "numero": 4,
+        "nome": "Acrescenta conteúdo",
+        "texto": "entrega um conteúdo que o programa usa mas não tem: ícones, suporte a uma linguagem no Editor, um agente",
+        "usa": "Visual · Recursos do Editor · Agente · Ferramenta · Trecho de prompt · Opções",
+        "regras": "Tipo 4 · Acrescenta conteúdo.txt"
+      }
+    ]
+  },
+  "montar": {
+    "texto": "Marque os tipos que a sua extensão vai ter — um, vários ou todos. O prompt junta as regras de cada tipo marcado e pede à IA que pergunte o que a extensão deve fazer.",
+    "comeco": "Prompt · Começo.txt",
+    "fim": "Prompt · Fim.txt"
+  },
+  "botao": null,
+  "nota": "O prompt pede à IA uma extensão com os tipos marcados, já no formato que o programa lê. Sem nenhum marcado, o botão fica apagado. Quando estiver pronta, ponha a pasta em `Program/External/extensions/`.",
+  "apoio": {
+    "titulo": "Os recursos que uma extensão pode usar",
+    "linhas": [
+      {
+        "nome": "Tela",
+        "texto": "uma aba nova, ou uma sub-aba em qualquer aba"
+      },
+      {
+        "nome": "Painel",
+        "texto": "um bloco ou um texto curto: Terminal, Editor e o rodapé dele, Chat, Fila, Quadro, Oficina…"
+      },
+      {
+        "nome": "Comando",
+        "texto": "uma ação no Acesso rápido, com tecla se quiser — e num menu, numa barra ou num cartão"
+      },
+      {
+        "nome": "Marca no código",
+        "texto": "marca trechos do código no Editor"
+      },
+      {
+        "nome": "Em segundo plano",
+        "texto": "roda sozinha enquanto a extensão estiver ligada"
+      },
+      {
+        "nome": "Reação",
+        "texto": "faz algo quando o programa salva, abre, roda… — antes, podendo barrar, ou depois"
+      },
+      {
+        "nome": "Recursos do Editor",
+        "texto": "cor do código, sugestões ao digitar, dica ao passar o mouse, formatação, trechos prontos"
+      },
+      {
+        "nome": "Visual",
+        "texto": "os ícones das listas de arquivo, e o que mais o programa passar a aceitar"
+      },
+      {
+        "nome": "Agente",
+        "texto": "um subagente para o Chat e a Fila, ou um agente para o ＋ Agente da Oficina"
+      },
+      {
+        "nome": "Ferramenta",
+        "texto": "uma ferramenta que o subagente chama e o backend da extensão atende — dela, ou emprestada a um subagente do programa"
+      },
+      {
+        "nome": "Trecho de prompt",
+        "texto": "um texto que entra no prompt do Chat, da Fila, de um prompt fixo ou de um subagente do programa, só com a extensão ligada"
+      },
+      {
+        "nome": "Opções",
+        "texto": "a página dela em Configurações › Extensões — toda extensão tem"
+      }
+    ]
+  }
+}

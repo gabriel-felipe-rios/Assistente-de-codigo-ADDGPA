@@ -1,0 +1,46 @@
+/* ── Workspace ── */
+.workspace-section { display: flex; flex-direction: column; gap: 10px; }
+.workspace-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.section-desc {
+  font-size: 11px; font-weight: 400; color: var(--text-muted);
+  text-transform: none; letter-spacing: 0; margin-left: 4px; opacity: 0.65;
+}
+.folder-display {
+  background: var(--surface); border-radius: var(--radius); padding: 10px 14px;
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12px;
+  color: var(--teal); word-break: break-all;
+}
+.path-list { display: flex; flex-direction: column; gap: 6px; }
+.path-item {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border-radius: var(--radius); padding: 8px 12px; gap: 10px;
+}
+.path-item-text {
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12px;
+  color: var(--text-muted); word-break: break-all; flex: 1;
+}
+.path-item-remove {
+  background: transparent; border: none; color: var(--red); cursor: pointer;
+  font-size: 14px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+  transition: background var(--t);
+}
+.path-item-remove:hover { background: rgba(var(--red-rgb),0.15); }
+
+/* Arquivo principal — botão remover inline */
+.main-file-clear { align-self: flex-start; margin-top: -4px; }
+
+
+
+/* Nota explicativa de sub-aba — a linha de prosa que diz o que aquela lista faz
+   antes de o usuário jogar a primeira pasta nela. Nasceu com o marcador "quem
+   pode ler" (sub-abas Remover e Contexto sem leitura), que sem uma frase de
+   contexto seria só um seletor sem sentido no meio de uma linha. */
+.subtab-nota {
+  margin: 0 0 10px; font-size: 11px; line-height: 1.5;
+  color: var(--text-muted);
+}
+.subtab-nota b { color: var(--text); font-weight: 600; }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Barra de comando -->
+<!-- Véu sobre a tela -> caixa de comando centralizada -> lista de resultados logo abaixo dela -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Barra de comando</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{position:relative}
+.fundo-app{position:absolute;inset:0;display:flex;flex-direction:column;filter:blur(1px)}
+.fa-top{height:36px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;padding:0 12px;font-weight:700;font-size:12px;color:var(--texto-secundario)}
+.fa-corpo{flex:1;display:flex}
+.fa-lado{width:180px;background:var(--superficie);border-right:1px solid var(--superficie-hover)}
+.fa-centro{flex:1;padding:14px;display:flex;flex-direction:column;gap:8px;color:var(--texto-secundario)}
+.veu{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;justify-content:center;padding-top:64px}
+.caixa{width:460px;height:max-content;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:11px;box-shadow:0 18px 46px rgba(0,0,0,.5);overflow:hidden}
+.entrada{height:42px;display:flex;align-items:center;gap:9px;padding:0 14px;border-bottom:1px solid var(--superficie-hover);font-size:14px}
+.entrada .lupa{color:var(--primaria)}
+.entrada .cursor{width:1.5px;height:16px;background:var(--primaria)}
+.grupo{padding:7px 14px 3px}
+.res{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;color:var(--texto-secundario)}
+.res.on{background:var(--superficie-hover);color:var(--texto);border-left:2px solid var(--primaria)}
+.res .k{font-size:10px;border:1px solid var(--superficie-hover);border-radius:4px;padding:1px 5px}
+.rodape{border-top:1px solid var(--superficie-hover);padding:6px 14px;color:var(--texto-secundario);font-size:10.5px;display:flex;gap:14px}
+</style></head><body>
+<div class="fundo-app">
+  <div class="fa-top">Aplicativo por baixo</div>
+  <div class="fa-corpo"><div class="fa-lado"></div><div class="fa-centro">A tela continua onde estava; a barra só cobre.</div></div>
+</div>
+<div class="veu">
+  <div class="caixa">
+    <div class="entrada"><span class="lupa">⌕</span><span>criar rel</span><span class="cursor"></span></div>
+    <div class="grupo rot">Ações</div>
+    <div class="res on"><span>Criar relatório mensal</span><span class="k">Enter</span></div>
+    <div class="res"><span>Criar relatório por cliente</span><span class="k">↵</span></div>
+    <div class="grupo rot">Ir para</div>
+    <div class="res"><span>Relatórios salvos</span><span class="k">G R</span></div>
+    <div class="res"><span>Relatório de agosto</span><span class="k">↵</span></div>
+    <div class="rodape"><span>↑↓ navegar</span><span>Enter abrir</span><span>Esc fechar</span></div>
+  </div>
+</div>
+</body></html>

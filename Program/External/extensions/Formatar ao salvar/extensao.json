@@ -1,0 +1,18 @@
+{
+  "nome": "Formatar ao salvar",
+  "versao": "2",
+  "descricao": "Ctrl+S e o arquivo sai formatado (JSON, JS, CSS, HTML) e limpo — espaços no fim das linhas, quebra final —, sem diálogo. E um comando para formatar agora, sem gravar.",
+  "prefixo": "fmt",
+  "tipos": ["3", "4"],
+  "acrescenta": [
+    { "recurso": "reacao", "id": "fmt.formatar-ao-salvar", "evento": "editor.vai_salvar",
+      "pode_barrar": true, "arquivo": "frontend/eventos/salvar.js" },
+    { "recurso": "comando", "id": "fmt.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js",
+      "teclas": { "formatar-agora": "Ctrl+Alt+F" } },
+    { "recurso": "editor", "id": "fmt.formatacao", "parte": "formatacao",
+      "linguagens": ["javascript", "jsx", "typescript", "json", "css", "scss", "less", "markup"],
+      "arquivo": "frontend/consultas/formatar.js" }
+  ],
+  "escreve_fora": []
+}

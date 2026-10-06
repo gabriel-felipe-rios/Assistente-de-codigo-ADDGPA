@@ -1,0 +1,81 @@
+{
+  "nome": "Ciano oceano",
+  "descricao": "Paleta fria e limpa com azul-petróleo profundo. Acentos em ciano, turquesa e azul-céu, com laranja de alerta como contraste.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#0E1A1F",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#16272E",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#1F343D",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#081215",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#E2F0F5",
+      "uso": "Todo texto principal — branco levemente azulado"
+    },
+    "texto_secundario": {
+      "hex": "#89A5AF",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#22B8CF",
+      "apelido": "ciano",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#1A96A8",
+      "apelido": "ciano (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#2DD4A8",
+      "apelido": "turquesa",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#22AF8B",
+      "apelido": "turquesa (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#FF6B5B",
+      "apelido": "coral",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#DB5145",
+      "apelido": "coral (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#4DA3E8",
+      "apelido": "azul-céu",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#3A83C4",
+      "apelido": "azul-céu (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#F0A030",
+      "apelido": "laranja de alerta",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#CC8420",
+      "apelido": "laranja de alerta (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

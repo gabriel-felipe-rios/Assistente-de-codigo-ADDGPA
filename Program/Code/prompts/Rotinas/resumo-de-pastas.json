@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "papel_da_pasta": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Uma ou duas frases sobre o propósito desta pasta. Não cita o caminho da pasta."
+    },
+    "arquivos": {
+      "type": "array",
+      "description": "Um item por arquivo diretamente dentro desta pasta.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": { "type": "string" },
+          "responsabilidade": { "type": "string" }
+        },
+        "required": ["nome", "responsabilidade"],
+        "additionalProperties": false
+      }
+    },
+    "simbolos": {
+      "type": "array",
+      "description": "Os símbolos mais importantes da pasta. Lista vazia se as fichas não sustentarem nenhum.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": { "type": "string" },
+          "origem": {
+            "type": "string",
+            "description": "arquivo.ext:linha — a linha está na ficha do arquivo."
+          },
+          "descricao": { "type": "string" }
+        },
+        "required": ["nome", "origem", "descricao"],
+        "additionalProperties": false
+      }
+    },
+    "conexoes_internas": {
+      "type": "array",
+      "description": "Dependências entre arquivos DESTA pasta. Uma frase por item.",
+      "items": { "type": "string" }
+    },
+    "conexoes_externas": {
+      "type": "array",
+      "description": "Pastas/módulos de fora dos quais arquivos desta pasta importam. Uma frase por item.",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["papel_da_pasta", "arquivos", "simbolos",
+               "conexoes_internas", "conexoes_externas"],
+  "additionalProperties": false
+}

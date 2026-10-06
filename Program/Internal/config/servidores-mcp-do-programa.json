@@ -1,0 +1,18 @@
+{
+  "mcp_teto_ler_arquivo_tokens": 15000,
+  "mcp_teto_parte_tokens": 12000,
+  "mcp_glossario_tokens": 2000,
+  "mcp_busca_semantica_excerpt_tokens": 150,
+  "mcp_cascata_nivel": 3,
+  "mcp_busca_semantica_candidatos": 8,
+  "mcp_duplicados_max_pares": 50,
+  "mcp_onde_esta_max_simbolos": 40,
+  "mcp_arquivos_grandes_max": 40,
+  "mcp_io_max_arquivos": 20,
+  "mcp_io_max_operacoes": 30,
+  "mcp_grep_max_ocorrencias": 150,
+  "mcp_grep_max_arquivos": 40,
+  "mcp_listar_pasta_primeiro_nivel": 40,
+  "mcp_listar_pasta_max_itens": 200,
+  "mcp_grep_corte_linha_chars": 200
+}

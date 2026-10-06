@@ -1,0 +1,28 @@
+Sua última resposta não veio no formato esperado e não pôde ser usada.
+
+ERRO DETECTADO:
+{descricao_erro}
+
+Sua resposta tem de ser UM dos três JSON abaixo, e nada mais:
+
+Para delegar:
+{"chamadas": [{"subagente": "<nome>", "pergunta": "<pergunta específica>"}]}
+
+Para parar e perguntar:
+{"precisa_de_voce": {"sub_tag": "tarefa_vaga", "motivo": "..."}}
+
+Para entregar:
+{"relatorio": {"resumo": "...", "arquivos": [{"arquivo": "...", "linha": "...", "mudanca": "...", "evidencia": "..."}], "restricoes": [], "observacoes": ""}}
+
+Qualquer um dos três pode levar "fala" junto, no objeto de fora:
+{"fala": "<o que você vai fazer agora, em 1-2 frases>", "chamadas": [...]}
+
+Regras do formato:
+- A chave externa deve ser exatamente "chamadas", "precisa_de_voce" ou "relatorio" — uma só, nunca duas juntas.
+- Junto dela pode vir "fala": uma ou duas frases suas para o usuário ler. É opcional, fica no objeto de FORA, e nunca dentro de um item de "chamadas".
+- Em "chamadas": cada item precisa de "subagente" e "pergunta", ambas strings. Máximo {max_chamadas_por_vez} por rodada.
+- Subagentes válidos: {subagentes_ativos}
+- Em "precisa_de_voce": "sub_tag" é "tarefa_vaga" ou "falta_decisao", e "motivo" é obrigatório.
+- Em "relatorio": "arquivos" é uma lista, e cada item precisa de "arquivo" e "mudanca"; "linha" e "evidencia" podem vir como string vazia quando você não confirmou — deixe-as vazias em vez de inventar. "restricoes" e "observacoes" podem vir vazios, mas têm de existir.
+
+Tente novamente. Responda SOMENTE com o JSON — sem texto antes ou depois, sem markdown, sem ```.

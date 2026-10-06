@@ -1,0 +1,17 @@
+{
+  "nome": "Rodar o que está selecionado",
+  "versao": "2",
+  "descricao": "Roda o trecho marcado, a linha do cursor ou o arquivo aberto, com a saída na aba Terminal.",
+  "prefixo": "rod",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "comando", "id": "rod.menu-da-aba", "lugares": ["editor.aba.menu"],
+      "arquivo": "frontend/encaixes/aba.js" },
+    { "recurso": "comando", "id": "rod.menu-da-arvore", "lugares": ["editor.menu"],
+      "arquivo": "frontend/encaixes/arvore.js" },
+    { "recurso": "comando", "id": "rod.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js",
+      "teclas": { "rodar-trecho": "Ctrl+Enter", "rodar-arquivo": "Ctrl+Alt+Enter" } }
+  ],
+  "escreve_fora": []
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Rolagem em seções -->
+<!-- Header fixo com navegação -> página única rolável com blocos empilhados de larguras contidas -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Rolagem em seções</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.header{height:44px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;position:sticky;top:0}
+.nav{display:flex;gap:16px;color:var(--texto-secundario);font-size:11.5px}
+.nav .on{color:var(--texto);border-bottom:2px solid var(--primaria);padding-bottom:2px}
+.pagina{flex:1;min-height:0;overflow:auto}
+.secao{max-width:620px;margin:0 auto;padding:26px 20px;border-bottom:1px solid var(--superficie-hover);display:flex;flex-direction:column;gap:9px}
+.h1{font-size:20px;font-weight:700}
+.h2{font-size:14px;font-weight:700}
+.par{color:var(--texto-secundario)}
+.destaque{background:var(--superficie);border-left:3px solid var(--especial);border-radius:0 7px 7px 0;padding:10px 12px;color:var(--texto-secundario)}
+</style></head><body>
+<div class="header"><span style="font-weight:700">Documento</span>
+  <div class="nav"><span class="on">Sobre</span><span>Como funciona</span><span>Preços</span><span>Contato</span></div>
+</div>
+<div class="pagina">
+  <div class="secao">
+    <div class="rot">Seção 1 · Sobre</div>
+    <div class="h1">Uma página só, lida de cima a baixo</div>
+    <div class="par">Cada bloco tem largura contida e respiro em volta; a leitura acontece rolando, não navegando.</div>
+    <div><button class="bt">Começar agora</button></div>
+  </div>
+  <div class="secao">
+    <div class="rot">Seção 2 · Como funciona</div>
+    <div class="h2">Três passos</div>
+    <div class="par">Escolha o plano, importe seus dados e convide o time. Nada precisa ser configurado antes.</div>
+    <div class="destaque">O menu do topo acompanha a rolagem e marca em qual seção o leitor está.</div>
+  </div>
+  <div class="secao">
+    <div class="rot">Seção 3 · Preços</div>
+    <div class="h2">Simples por definição</div>
+    <div class="par">Um valor por pessoa, sem taxa de entrada e sem cobrança por recurso extra.</div>
+    <div><button class="bt sec">Ver comparação</button></div>
+  </div>
+</div>
+</body></html>

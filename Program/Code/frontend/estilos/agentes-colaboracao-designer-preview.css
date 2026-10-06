@@ -1,0 +1,178 @@
+/* ═══ DESIGNER → o modal de preview de um estilo (zoom + pan) ══════════════
+   ⚠️ O ZOOM É POR CSS TRANSFORM num ancestral, como na Oficina — e vale aqui o
+   mesmo aviso: `vector-effect: non-scaling-stroke` NÃO resolve traço num
+   conteúdo HTML ampliado por transform.                                    */
+/* ── Modal de Preview de Estilo (zoom + pan) ── */
+#modal-style-preview {
+  background: rgba(var(--black-rgb),0.8);
+  backdrop-filter: none;
+  padding: 0;
+  align-items: stretch;
+  z-index: 200;
+}
+.style-preview-modal {
+  flex: 1;
+  display: flex; flex-direction: column;
+  background: var(--designer-preview-bg);
+}
+.style-preview-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  background: var(--surface-dark);
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+  flex-shrink: 0;
+}
+.style-preview-modal-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.style-preview-hint { font-size: 11px; color: var(--text-muted); }
+.style-preview-viewport {
+  flex: 1; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab;
+  user-select: none;
+}
+.style-preview-container {
+  transform-origin: center center;
+  will-change: transform;
+}
+.style-preview-frame {
+  width: 1280px; height: 800px;
+  border: none;
+  display: block;
+  background: var(--text);
+}
+
+/* Área principal */
+.designer-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Mode bar */
+.designer-mode-bar {
+  background: rgba(var(--purple-rgb),0.08);
+  border-bottom: 1px solid rgba(var(--purple-rgb),0.18);
+  padding: 7px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.designer-mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.designer-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(var(--white-rgb),0.06);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+}
+.dchip-label { color: var(--text-muted); }
+.dchip-value { font-weight: 600; color: var(--text); }
+/* Faixa contínua com a paleta inteira, no mesmo formato de .dcc-strip do card
+   da sidebar — segmentos em flex:1 numa largura fixa, para que qualquer
+   quantidade de cores caiba no mesmo espaço do chip. */
+.dchip-swatches {
+  display: flex;
+  width: 120px;
+  height: 12px;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(var(--white-rgb),0.18);
+  flex-shrink: 0;
+}
+/* Sem paleta selecionada o span continua no DOM: sem isso sobraria uma caixa
+   vazia de 120px com contorno ao lado de "Cores: Nenhuma". */
+.dchip-swatches:empty { display: none; }
+.dchip-swatch { flex: 1; }
+.dchip-clear {
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: 2px;
+}
+.dchip-clear:hover { color: var(--red); }
+.designer-mode-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.designer-select {
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 3px 8px;
+  cursor: pointer;
+  max-width: 180px;
+}
+
+.designer-model-display {
+  font-size: 12px;
+  color: var(--text);
+  padding: 3px 8px;
+  background: var(--surface);
+  border-radius: 5px;
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Empty state */
+.design-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Botões de variação */
+.design-variation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.design-variation-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.design-variation-group.selected {
+  padding: 8px;
+  border-radius: 4px;
+  background: rgba(var(--green-alt-rgb), 0.1);
+  border-left: 3px solid var(--green);
+}
+.design-variation-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-right: 2px;
+}
+.design-preview-iframe {
+  width: 100%;
+  max-height: 350px;
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 6px;
+  background: var(--text);
+  margin-top: 4px;
+  overflow: auto;
+}
+

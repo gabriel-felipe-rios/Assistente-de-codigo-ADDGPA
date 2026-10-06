@@ -1,0 +1,9 @@
+[ANIMAÇÕES] Cada arquivo abaixo é uma animação pronta, com a `@keyframes` e a regra que a usa dentro dele.
+- COPIE a `@keyframes` de cada arquivo para o seu CSS, com o MESMO nome, e aplique-a ao elemento do evento correspondente. Duração, curva (`cubic-bezier`/`ease-*`), `transform` e `opacity` vão exatamente como estão. Não invente valores próximos.
+- A pasta de onde a animação veio é o EVENTO em que ela roda, e a explicação da pasta acompanha cada uma delimitando onde vale. Nunca reaproveite o movimento de um evento em outro: animação de troca de aba não vira animação de notificação.
+- Evento sem animação escolhida não ganha movimento nenhum. Não acrescente transições "para ficar mais vivo".
+- Anime só `transform` e `opacity`. Nunca `width`, `height`, `top`, `left`, `margin` ou `padding` — eles forçam recálculo de layout a cada quadro.
+- A tela é estática: a animação existe no CSS, em laço, em `:hover` ou em estado — nunca depende de JavaScript.
+- OBRIGATÓRIO, uma vez, no fim do `<style>`, exatamente assim:
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important;transition:none !important} }
+- Antes de terminar, confira: cada animação escolhida tem a `@keyframes` dela no CSS, aplicada ao elemento certo, e o bloco `prefers-reduced-motion` está lá?

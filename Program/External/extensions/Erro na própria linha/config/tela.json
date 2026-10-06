@@ -1,0 +1,21 @@
+{
+  "cartoes": [
+    {
+      "titulo": "Como a linha com erro aparece",
+      "dica": "O fundo da linha inteira. O sublinhado ondulado no trecho exato continua sendo do lint do programa.",
+      "campos": [
+        { "chave": "cor", "rotulo": "Cor do fundo", "tipo": "escolha", "padrao": "red",
+          "opcoes": [
+            { "valor": "red", "rotulo": "Vermelho" },
+            { "valor": "amber", "rotulo": "Âmbar" },
+            { "valor": "purple", "rotulo": "Roxo" },
+            { "valor": "blue", "rotulo": "Azul" },
+            { "valor": "teal", "rotulo": "Verde-azulado" }
+          ],
+          "nota": "São tokens do tema, e ficam certos nos cinco temas, inclusive no claro." },
+        { "chave": "intensidade", "rotulo": "Intensidade do fundo (%)", "tipo": "numero", "padrao": 10, "min": 4, "max": 40, "passo": 2,
+          "nota": "Fraco de propósito: o texto da linha continua legível por cima." }
+      ]
+    }
+  ]
+}

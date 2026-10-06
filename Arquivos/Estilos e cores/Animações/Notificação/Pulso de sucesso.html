@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- Animação: Notificação · Pulso de sucesso -->
+<!-- A demonstração roda em laço; a regra escrita abaixo dela é o que vai ao modelo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Notificação — Pulso de sucesso</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;padding:12px;
+     display:flex;flex-direction:column;gap:10px;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+h1{font-size:13.5px;font-weight:700;flex-shrink:0}
+h1 small{display:block;font-weight:400;font-size:11px;color:var(--texto-secundario);margin-top:2px}
+.palco{flex:1;min-height:0;background:var(--superficie-escura);border:1px solid var(--superficie-hover);
+       border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.regra{flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:4px}
+.regra .tt{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-secundario);font-weight:700}
+.regra dl{display:grid;grid-template-columns:104px 1fr;gap:3px 10px;font-size:11px}
+.regra dt{color:var(--texto-secundario)}
+.regra dd.nunca{color:var(--negativa)}
+/* Acessibilidade: quem pediu menos movimento vê o estado final, sem transição. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+.tela{position:absolute;inset:0;padding:12px;color:var(--texto-secundario);font-size:11px}
+.av{position:absolute;left:50%;top:16px;transform-origin:center top;width:210px;background:var(--superficie);
+    border:1px solid var(--positiva);border-radius:8px;padding:8px 10px;font-size:11px;text-align:center;
+    animation:np 3.4s ease-out infinite}
+@keyframes np{0%{opacity:0;transform:translateX(-50%) scale(1)}
+  8%{opacity:1;transform:translateX(-50%) scale(1)}
+  14%{transform:translateX(-50%) scale(1.06)}
+  22%,84%{transform:translateX(-50%) scale(1);opacity:1}
+  94%,100%{opacity:0;transform:translateX(-50%) scale(1)}}</style></head><body>
+<h1>Pulso de sucesso<small>O aviso aparece e dá um pulso curto de escala, uma vez só, para o olho pegar.</small></h1>
+<div class="palco">
+<div class="tela">Conteúdo da página, sem deslocamento nenhum.</div>
+<div class="av">Pagamento confirmado.</div>
+</div>
+<div class="regra"><span class="tt">Regra</span><dl><dt>Duração</dt><dd>240 ms para entrar, mais um pulso de 200 ms</dd><dt>Curva</dt><dd>ease-out na entrada, ease-in-out no pulso</dd><dt>O que anima</dt><dd>opacidade na entrada e scale (1 → 1.06 → 1) no pulso, uma vez</dd><dt>O que nunca anima</dt><dd class="nunca">não pulse mais de uma vez, não use em erro e não passe de 1.08 de escala — acima disso o aviso parece bater na tela</dd></dl></div>
+</body></html>

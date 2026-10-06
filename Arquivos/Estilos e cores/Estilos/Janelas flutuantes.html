@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Janelas flutuantes -->
+<!-- Toolbar no topo -> área de trabalho onde janelas ficam posicionadas livremente -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Janelas flutuantes</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.toolbar{height:36px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;gap:8px;padding:0 12px;flex-shrink:0}
+.tb{padding:4px 10px;border-radius:5px;color:var(--texto-secundario);font-size:11.5px}
+.tb.on{background:var(--superficie-hover);color:var(--texto)}
+.mesa{flex:1;position:relative;min-height:0;background:var(--fundo)}
+.jan{position:absolute;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:8px;box-shadow:0 10px 26px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden}
+.jan .bar{height:26px;background:var(--superficie-escura);display:flex;align-items:center;justify-content:space-between;padding:0 9px;font-size:11px;font-weight:600}
+.jan .bar .x{color:var(--negativa)}
+.jan .ct{flex:1;padding:9px 10px;color:var(--texto-secundario);font-size:11px}
+.jan.foco{border-color:var(--primaria)}
+</style></head><body>
+<div class="toolbar"><span class="tb on">Janelas</span><span class="tb">Organizar</span><span class="tb">Empilhar</span></div>
+<div class="mesa">
+  <div class="jan" style="left:26px;top:22px;width:250px;height:150px">
+    <div class="bar"><span>Propriedades</span><span class="x">×</span></div>
+    <div class="ct">Cada janela abre onde foi solta e pode cobrir a de baixo.</div>
+  </div>
+  <div class="jan" style="left:150px;top:96px;width:290px;height:170px">
+    <div class="bar"><span>Camadas</span><span class="x">×</span></div>
+    <div class="ct">Fundo · Texto · Botões · Sombras</div>
+  </div>
+  <div class="jan foco" style="left:320px;top:40px;width:300px;height:190px">
+    <div class="bar"><span>Editor — em foco</span><span class="x">×</span></div>
+    <div class="ct">A janela em foco ganha borda da cor primária e fica por cima das outras.
+      <div style="margin-top:10px"><button class="bt">Aplicar</button></div>
+    </div>
+  </div>
+</div>
+</body></html>

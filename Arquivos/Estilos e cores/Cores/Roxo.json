@@ -1,0 +1,81 @@
+{
+  "nome": "Roxo",
+  "descricao": "Paleta fria com tons de roxo profundo e lavanda. Fundo quase preto arroxeado, acentos em lilás e violeta.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#12101E",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#1C1A2E",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#26233A",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#0C0A16",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#E8E0F5",
+      "uso": "Todo texto principal — branco levemente arroxeado"
+    },
+    "texto_secundario": {
+      "hex": "#9A8FB8",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#9B6DDB",
+      "apelido": "lilás",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#7E52C0",
+      "apelido": "lilás (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#C084FC",
+      "apelido": "violeta",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#A060DC",
+      "apelido": "violeta (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#E879A0",
+      "apelido": "rosa",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#C85A80",
+      "apelido": "rosa (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#6366F1",
+      "apelido": "índigo",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#4F52D0",
+      "apelido": "índigo (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#818CF8",
+      "apelido": "ciano-roxo",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#6470E0",
+      "apelido": "ciano-roxo (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

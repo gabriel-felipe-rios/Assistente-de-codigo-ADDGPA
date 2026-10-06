@@ -1,0 +1,12 @@
+{
+  "nome": "Completar enquanto digita",
+  "versao": "2",
+  "descricao": "Digitou duas letras no Editor e aparece a lista dos nomes do projeto — e das palavras do próprio arquivo — que começam por elas.",
+  "prefixo": "cpl",
+  "tipos": ["4"],
+  "acrescenta": [
+    { "recurso": "editor", "id": "cpl.sugestoes", "parte": "sugestoes", "linguagens": ["*"],
+      "arquivo": "frontend/consultas/completar.js" }
+  ],
+  "escreve_fora": []
+}

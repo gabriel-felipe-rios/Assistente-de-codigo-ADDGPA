@@ -1,0 +1,43 @@
+Preciso de uma INSTRUÇÃO BASE para a biblioteca do meu assistente de código.
+
+O QUE O PROJETO É: [descreva aqui — o tipo de projeto, e o que o assistente precisa saber para trabalhar nele]
+
+Uma INSTRUÇÃO BASE é o CLAUDE.md / AGENTS.md que um projeto novo recebe: o
+arquivo que o assistente lê primeiro ao abrir o projeto. Ela diz como entender
+o projeto sem reler tudo, e onde está o que já foi decidido — ela aponta para as
+decisões, não as guarda.
+
+Entregue UM arquivo .md, solto:
+
+  <Nome da instrução base>.md
+
+REGRAS DO FORMATO
+
+1. É UM arquivo, não uma pasta. Nesta categoria o item é o próprio .md; uma
+   pasta aqui dentro é só uma gaveta para organizar, e nunca vira item.
+
+2. O nome do arquivo (sem o .md) é o nome que aparece na tela. Pode ter
+   maiúscula, acento e espaço — é nome de exibição, não identificador.
+
+3. Não há Descrição.md ao lado. A descrição que aparece no cartão é a PRIMEIRA
+   linha do próprio arquivo que não começa com #, cortada em 200 caracteres. Por
+   isso abra com um "# Título" e, logo abaixo, uma frase que diga o que este
+   arquivo é.
+
+4. Ao ligar num projeto, o arquivo vai para a RAIZ do projeto, com o nome que o
+   assistente espera (CLAUDE.md no Claude Code, AGENTS.md em outros) — quem
+   decide o nome é o assistente do projeto, não o nome do seu arquivo.
+
+5. Depois de copiada, a instrução base é do projeto: o usuário a edita lá, e
+   desligar não a apaga. Escreva um texto que continue certo quando o projeto
+   crescer — como entender o projeto e onde procurar, não o estado de hoje.
+
+6. O modelo que vem com o programa é Arquivos/Instruções base/Instrução base
+   padrão.md: um parágrafo dizendo o que o arquivo é, as ferramentas que o
+   assistente deve consultar antes de varrer o projeto, uma tabela "Antes de… |
+   Leia" apontando para as bases de decisão, e o que registrar ao terminar.
+
+ONDE VOU SALVAR
+  Arquivos/Instruções base/<Nome da instrução base>.md
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

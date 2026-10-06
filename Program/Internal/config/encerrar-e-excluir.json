@@ -1,0 +1,7 @@
+{
+  "confirmar_ao_fechar": "rodando",
+  "confirmar_ao_sair_do_projeto": "nunca",
+  "confirmar_ao_fechar_o_projeto": "rodando",
+  "confirmar_ao_deletar": true,
+  "confirmar_ao_fechar_arquivo_nao_salvo": false
+}

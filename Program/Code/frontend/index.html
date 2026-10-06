@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente de código</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- O TEMA. Fica num <link> próprio, e não num @import de style.css, porque
+       @import é resolvido uma vez e não troca em execução — e trocar em
+       execução é exatamente o que este arquivo precisa fazer. `config-tema.js`
+       reescreve o href deste elemento (id `tema-css`) quando o usuário escolhe
+       outro tema em Configurações › Temas, e o navegador repinta sozinho.
+
+       Vem DEPOIS de style.css de propósito: os dois declaram `:root`, mesma
+       especificidade, e o último vence. Hoje os conjuntos de token são
+       disjuntos, mas a ordem é o que garante que continuem podendo não ser.
+
+       O href aqui é o padrão (Ardósia). Se houver tema gravado no
+       settings.json, `config-tema.js` troca antes da primeira pintura. -->
+  <link rel="stylesheet" href="estilos/tema/tema-ardosia.css" id="tema-css" />
+  <script src="../../External/libraries/marked.min.js"></script>
+  <script src="../../External/libraries/d3.min.js"></script>
+  <script src="../../External/libraries/ansi_up.js"></script>
+  <!-- xterm.js 6.0.0 (MIT) — o terminal da Oficina. Vendorizado com
+       `npm pack @xterm/xterm`; nada e buscado na rede em execucao.
+       ⚠️ O CSS NAO E OPCIONAL: sem ele o terminal vira uma pilha de
+       <div> sem posicionamento, e parece que o JS falhou.
+       ⚠️ Nenhum addon, de proposito — ver o cabecalho de
+       modulos/trabalhos-shell.js (canvas borra no zoom do canvas, e o
+       fit() mede em pixels de tela ja multiplicados pelo scale). -->
+  <link rel="stylesheet" href="../../External/libraries/xterm/xterm.css" />
+  <script src="../../External/libraries/xterm/xterm.js"></script>
+  <!-- Prism — coloração de código da aba Editor. Três detalhes obrigatórios,
+       e os três falham EM SILÊNCIO se faltarem (o programa roda sem console):
+       · `data-manual`: sem ele, prism-core.js sai pintando o HTML da própria
+         página no DOMContentLoaded.
+       ⚠️ AS GRAMÁTICAS NÃO ESTÃO MAIS AQUI. Em 04/09/2026 os 297
+       `components/prism-*.js` saíram para a extensão "Cor do código" (tipo
+       11). O que carrega abaixo é só o MOTOR e o autoloader; a pasta das
+       gramáticas é apontada em tempo de execução, por
+       `xtAplicarGramaticasEscolhidas` (editor-pintura.js), quando a extensão
+       liga. O `data-autoloader-path` abaixo aponta para uma pasta que já não
+       tem gramática nenhuma, e isso está CERTO: sem extensão ligada, toda
+       linguagem dá 404 em silêncio — que é o comportamento "sem cor"
+       desejado.
+
+       · `data-autoloader-path`: o autoloader deriva o caminho das gramáticas
+         do `src` desta tag, e o caminho deste projeto tem espaço e acento.
+         Fixado, não se depende dessa derivação.
+       · `use_minified = false`: o autoloader pede `.min.js` por padrão, e a
+         pasta baixada tem 299 arquivos `.js` e NENHUM `.min.js`. Sem esta
+         linha, toda linguagem dá 404 e o código aparece sem cor nenhuma. -->
+  <script src="../../External/libraries/prism-master/components/prism-core.js" data-manual></script>
+  <script src="../../External/libraries/prism-master/plugins/autoloader/prism-autoloader.js"
+          data-autoloader-path="../../External/libraries/prism-master/components/"></script>
+  <script>if (window.Prism && Prism.plugins && Prism.plugins.autoloader) Prism.plugins.autoloader.use_minified = false;</script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════════════════════════ Header compartilhado (as duas telas) ══
+       Fora das duas `.screen`: fica de pé na troca entre a grade de Projetos e
+       um projeto aberto, porque é aqui que mora a tira de abas de projetos
+       abertos simultaneamente (`modulos/projetos-abertos.js`) — ela precisa
+       continuar visível nas duas telas, senão não daria pra "ver que o Teste
+       continua aberto" enquanto se olha a grade de Projetos. -->
+  <header class="topbar">
+    <button class="btn-back" id="btn-back">&#8592; Projetos</button>
+    <!-- ⚠️ NÃO devolver um <span class="topbar-title"> aqui. O nome do programa
+         já está na BARRA DE TÍTULO da janela (o `title=` do webview, que sai do
+         <title> lá em cima) — escrevê-lo de novo a dois centímetros dali era a
+         mesma palavra duas vezes na mesma linha de olhar. O que este canto tem
+         para dizer é ONDE VOCÊ ESTÁ, e disso já cuidam o "← Projetos" e a tira
+         de abas de projetos abertos. A regra `.topbar-title` saiu junto de
+         `estilos/tema/base.css`. -->
+    <!-- Uma aba por projeto aberto — nome, bolinha de "rodando" (mesma classe
+         de `.tab-btn.processando`) e × de fechar. Renderizada por
+         `renderOpenProjectTabs()`, que reage a mudanças em `openProjects`. -->
+    <div class="open-projects-bar" id="open-projects-bar"></div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════ Tela: Projetos -->
+  <main id="projects-screen" class="screen active">
+    <div class="main-tabs-bar" data-taborder-group="project_screen_tabs" data-taborder-label="Tela principal — abas" data-taborder-dica="As três abas desta tela inicial.">
+      <button class="main-tab-btn active" data-ptab="ptab-projetos">Projetos</button>
+      <button class="main-tab-btn" data-ptab="ptab-arquivos">Arquivos</button>
+      <button class="main-tab-btn" data-ptab="ptab-configs">Configurações</button>
+      <!-- Só aparece se algum plugin estiver marcado "Tela principal" —
+           ver `plugins-navegacao.js::atualizarAbasDePlugins`. -->
+      <button class="main-tab-btn hidden" id="main-tab-plugins" data-ptab="ptab-plugins">Plugins</button>
+      <!-- Só aparece se algum atalho estiver marcado "Tela principal" —
+           ver `atalhos-externos-navegacao.js::atualizarAbasDeAtalhosExternos`. -->
+      <button class="main-tab-btn hidden" id="main-tab-atalhos-externos" data-ptab="ptab-atalhos-externos">Launchers</button>
+    </div>
+
+    <!-- Aba: Projetos -->
+    <div class="projects-tab-content active" id="ptab-projetos">
+      <div class="screen-body">
+        <div class="screen-header">
+          <h2>Meus Projetos</h2>
+          <div class="screen-header-actions">
+            <!-- Busca: 4 checkboxes desmarcadas por padrão — ver
+                 `projetos-busca.js`. Marcar nenhuma cai no padrão de buscar só
+                 por nome. -->
+            <div class="busca-projetos-bloco">
+              <input type="text" id="pb-texto" class="busca-projetos" placeholder="Buscar projeto..." autocomplete="off" />
+              <div class="busca-filtros">
+                <label class="busca-filtro"><input type="checkbox" id="pb-nome" /> Nome</label>
+                <label class="busca-filtro"><input type="checkbox" id="pb-descricao" /> Descrição</label>
+                <label class="busca-filtro"><input type="checkbox" id="pb-tags" /> Tags</label>
+                <label class="busca-filtro"><input type="checkbox" id="pb-grupo" /> Grupo/Subgrupo</label>
+              </div>
+            </div>
+            <button class="btn btn-special" id="btn-manage-projects">Gerenciar projetos</button>
+            <button class="btn btn-positive" id="btn-new-project">+ Novo projeto</button>
+          </div>
+        </div>
+        <!-- A grade inteira é zona de solta: a pasta arrastada vira a pasta RAIZ
+             de um projeto novo, e só isso. UMA por vez, de propósito (ver
+             `setupDropZone` em projetos.js) — soltar duas criaria projeto sem
+             querer. O quadro em colunas (grupos/subgrupos) é desenhado por
+             `projetos-kanban.js::renderKanban` dentro deste mesmo elemento —
+             só a classe mudou, de `.project-grid` (grade) para `.kanban-board`
+             (colunas). -->
+        <div class="drop-section" id="projects-drop">
+          <div id="project-grid" class="kanban-board"></div>
+          <div id="empty-state" class="empty-state hidden">
+            <p>Nenhum projeto encontrado.</p>
+            <p>Crie um novo ou adicione uma pasta manualmente em <code>Files/projects/</code>.</p>
+          </div>
+          <div class="drop-hint">Arraste uma pasta aqui para importar como projeto — uma por vez</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba: Arquivos (global) — markup injetado por modulos/arquivos-template.js -->
+    <div class="projects-tab-content hidden" id="ptab-arquivos"></div>
+
+    <!-- Aba: Configurações -->
+    <!-- Casca (trilho de categorias + painel + barra de ações) e categorias são
+         injetadas por modulos/config-template.js e pelos demais
+         *-template.js de configuração — ver modulos/config-categorias.js -->
+    <div class="projects-tab-content hidden" id="ptab-configs"></div>
+
+    <!-- Aba: Plugins (tela principal) — sub-abas montadas dinamicamente por
+         `plugins-navegacao.js`, uma por plugin marcado "Tela principal". -->
+    <div class="projects-tab-content hidden" id="ptab-plugins"></div>
+    <!-- Aba: Launchers (tela principal) — lista plana montada por
+         `atalhos-externos-navegacao.js`, sem sub-abas. -->
+    <div class="projects-tab-content hidden" id="ptab-atalhos-externos"></div>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════ Tela: Projeto -->
+  <main id="project-screen" class="screen">
+    <div class="project-body">
+
+      <!-- Abas principais -->
+      <div class="tabs-bar" data-taborder-group="main_tabs" data-taborder-label="Dentro do projeto — abas" data-taborder-dica="Abas mostradas depois de abrir um projeto. As que têm ▾ abrem a lista de sub-abas.">
+        <button class="tab-btn active" data-tab="tab-projeto">Projeto</button>
+        <button class="tab-btn"        data-tab="tab-assistente">Assistente</button>
+        <button class="tab-btn"        data-tab="tab-regras">Acervo</button><!-- id tab-regras preservado: só o rótulo mudou, mesmo caso de tab-agentes/"Automação" -->
+
+        <button class="tab-btn"        data-tab="tab-documentacao">Documentação</button>
+        <button class="tab-btn"        data-tab="tab-editor">Editor</button>
+        <button class="tab-btn"        data-tab="tab-terminal">Terminal</button>
+        <button class="tab-btn"        data-tab="tab-arquivos">Arquivos</button>
+        <!-- id continua `tab-agentes`: só o rótulo virou "Automação". Renomear
+             o id arrastaria 30+ referências (asubtab-*, agentes_subtabs, CSS,
+             rotinas.js) sem ganho — mesmo precedente de tab-git/"Backups". -->
+        <button class="tab-btn"        data-tab="tab-agentes">Automação</button>
+        <button class="tab-btn"        data-tab="tab-analise">Análise</button>
+        <button class="tab-btn"        data-tab="tab-mapas">Mapas</button>
+        <button class="tab-btn"        data-tab="tab-git">Backups</button>
+        <button class="tab-btn"        data-tab="tab-trabalhos">Trabalhos</button>
+        <button class="tab-btn"        data-tab="tab-hooks">Hooks</button>
+        <button class="tab-btn"        data-tab="tab-inspetor">Inspetor</button>
+        <button class="tab-btn"        data-tab="tab-aparencia">Aparência</button>
+        <!-- Só aparece se algum plugin estiver marcado "Dentro do projeto" —
+             ver `plugins-navegacao.js::atualizarAbasDePlugins`. -->
+        <button class="tab-btn hidden" id="main-tab-plugins-projeto" data-tab="tab-plugins">Plugins</button>
+        <!-- Só aparece se algum atalho estiver marcado "Dentro do projeto" —
+             ver `atalhos-externos-navegacao.js::atualizarAbasDeAtalhosExternos`. -->
+        <button class="tab-btn hidden" id="main-tab-atalhos-externos-projeto" data-tab="tab-atalhos-externos">Launchers</button>
+      </div>
+
+      <!-- Conteúdo de cada aba é injetado por um `*-template.js` em
+           Program/Code/frontend/modulos/ (ver lista de scripts no fim deste
+           arquivo) — o HTML estático foi extraído daqui para manter este
+           shell abaixo do limite de linhas da arquitetura modular. -->
+      <div class="tab-content active" id="tab-projeto"></div>
+      <div class="tab-content hidden" id="tab-regras"></div>
+      <div class="tab-content hidden" id="tab-documentacao"></div>
+      <div class="tab-content hidden" id="tab-editor"></div>
+      <div class="tab-content hidden" id="tab-terminal"></div>
+      <div class="tab-content hidden" id="tab-arquivos"></div>
+
+      <!-- ─────────────────────────────────────────── Aba: Assistente -->
+      <!-- Agrupa tudo com que você CONVERSA. Antes, Chat era aba de topo solta
+           e Fila/Designer eram sub-abas de Agentes, misturadas com o
+           maquinário automático. O critério que separou os dois grupos é
+           "interajo ou não interajo". A Visualizar pipeline saiu daqui em
+           2026-09 e virou o mapa Pipeline, em Mapas: ela só desenha. -->
+      <div class="tab-content hidden" id="tab-assistente">
+
+        <div class="agentes-subtabs-bar" data-taborder-group="assistente_subtabs" data-taborder-label="Sub-abas de Assistente" data-taborder-parent="tab-assistente">
+          <button class="agentes-subtab-btn active" data-asubtab="tab-chat">Chat</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-fila">Fila</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-designer">Designer</button>
+        </div>
+
+        <!-- O id `tab-chat` NÃO PODE MUDAR: modulos/chat-template.js:4 faz
+             getElementById('tab-chat') no top-level do script. Se o id sumir,
+             o script lança, #chat-input nunca existe, e navegacao.js quebra
+             dentro do try/catch de app.js — a tela do projeto abre com quase
+             nada respondendo. Só a classe mudou (era `tab-content`), e as duas
+             classes são a mesma regra CSS. Mesmo motivo para os 2 asubtab-*. -->
+        <div id="tab-chat" class="agentes-subtab-content active"></div>
+        <div id="asubtab-fila" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-designer" class="agentes-subtab-content hidden"></div>
+
+      </div><!-- /tab-assistente -->
+
+      <!-- ────────────────────────── Aba: Automação (id: tab-agentes) -->
+      <!-- Só o maquinário: roda sozinho, por acionamento ou rotina, e produz
+           documentação. Você não conversa com nada daqui. -->
+      <div class="tab-content hidden" id="tab-agentes">
+
+        <div class="agentes-subtabs-bar" data-taborder-group="agentes_subtabs" data-taborder-label="Sub-abas de Automação" data-taborder-parent="tab-agentes">
+          <button class="agentes-subtab-btn active" data-asubtab="asubtab-acionamentos">Acionamentos</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-rotinas">Rotinas</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-visualizar">Visualizar</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-pendencias">Pendências</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-erros">Erros</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-referencia">Explicações</button>
+          <button class="agentes-subtab-btn" data-asubtab="asubtab-historico">Histórico</button>
+        </div>
+
+        <!-- Conteúdo de cada sub-aba injetado pelos `*-template.js` de
+             modulos/agentes/**/ — ver lista de scripts no fim deste arquivo. -->
+        <div id="asubtab-acionamentos" class="agentes-subtab-content active"></div>
+        <div id="asubtab-rotinas" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-visualizar" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-pendencias" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-erros" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-referencia" class="agentes-subtab-content hidden"></div>
+        <div id="asubtab-historico" class="agentes-subtab-content hidden"></div>
+
+      </div><!-- /tab-agentes -->
+
+      <div class="tab-content hidden" id="tab-analise"></div>
+      <div class="tab-content hidden" id="tab-mapas"></div>
+
+      <!-- ─────────────────────────────────────────── Aba: Backups (id herdado: tab-git) -->
+      <div class="tab-content hidden" id="tab-git">
+        <!-- Corpo injetado por modulos/backups-template.js: são três sub-abas
+             (Versões · Mapa da mudança · Configuração), e três painéis inline
+             engordariam ainda mais o arquivo mais longo do frontend. -->
+      </div><!-- /tab-git (Backups) -->
+
+      <!-- ─────────────────────────────────────────── Aba: Trabalhos -->
+      <div class="tab-content hidden" id="tab-trabalhos">
+        <!-- Corpo injetado por modulos/trabalhos-template.js: sao seis sub-abas
+             (Quadro · Linha do tempo · Fluxo · Oficina · Metricas ·
+             Configuracao). Mesmo motivo de Backups — seis paineis inline aqui
+             engordariam o arquivo mais longo do frontend. -->
+      </div><!-- /tab-trabalhos -->
+
+      <!-- ─────────────────────────────────────────── Aba: Hooks (placeholder) -->
+      <div class="tab-content hidden" id="tab-hooks">
+        <div class="screen-body">
+          <div class="ph-why">
+            <span class="ph-why-tag">Placeholder — sem lógica ainda</span><br>
+            Interceptação dos hooks do Claude Code. Os hooks vivem no
+            <code>.claude/settings.json</code> do projeto, então valem tanto para a extensão
+            do VS Code quanto para o terminal — sem precisar escrever extensão nenhuma.
+          </div>
+          <div class="ph-lock">
+            <span class="ph-pulse"></span>
+            <span><b>Claude Code trabalhando</b> — lock <code>.claude-trabalhando</code> ativo · Detector pausado</span>
+          </div>
+          <p class="ph-p" style="margin-top:18px">
+            O que já funciona hoje, sem depender de hooks: o <b>debounce</b> em
+            Agentes → Acionamentos, que espera o código ficar em silêncio antes de disparar.
+          </p>
+        </div>
+      </div><!-- /tab-hooks -->
+
+      <div class="tab-content hidden" id="tab-inspetor"></div>
+      <div class="tab-content hidden" id="tab-aparencia"></div>
+
+      <!-- Aba: Plugins (dentro do projeto) — sub-abas montadas dinamicamente
+           por `plugins-navegacao.js`, uma por plugin marcado "Dentro do
+           projeto". -->
+      <div class="tab-content hidden" id="tab-plugins"></div>
+      <!-- Aba: Launchers (dentro do projeto) — lista plana montada por
+           `atalhos-externos-navegacao.js`, sem sub-abas. -->
+      <div class="tab-content hidden" id="tab-atalhos-externos"></div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ Modais -->
+
+<!-- Novo Projeto -->
+<div id="modal-new-project" class="modal-overlay hidden">
+  <div class="modal modal-projeto">
+    <h3>Novo Projeto</h3>
+    <label for="input-project-name">Nome do projeto</label>
+    <input type="text" id="input-project-name" placeholder="Ex: Meu App" autocomplete="off" />
+
+    <label for="new-project-preset">Início rápido</label>
+    <select id="new-project-preset" class="arq-preparar-select"></select>
+
+    <!-- Grupo/Subgrupo/Tags: mesmo picker de `projetos-tag-picker.js` usado
+         no modal de Importar e no de Editar Projeto — nunca três cópias. -->
+    <div class="projeto-organizacao">
+      <div class="projeto-organizacao-duplo">
+        <div>
+          <label for="new-project-grupo">Grupo</label>
+          <select id="new-project-grupo" class="arq-preparar-select"></select>
+        </div>
+        <div>
+          <label for="new-project-subgrupo">Subgrupo</label>
+          <select id="new-project-subgrupo" class="arq-preparar-select"></select>
+        </div>
+      </div>
+      <label>Tags</label>
+      <div id="new-project-tags"></div>
+    </div>
+
+    <button type="button" class="desc-retratil-toggle" id="new-project-desc-toggle">+ Descrição</button>
+    <div class="desc-retratil-painel hidden" id="new-project-desc-painel">
+      <textarea class="modal-textarea" id="new-project-desc-texto" rows="3"
+        placeholder="Sem descrição ainda — escreva uma."></textarea>
+    </div>
+
+    <div id="modal-new-error" class="modal-error hidden"></div>
+    <div class="modal-actions">
+      <button class="btn btn-muted" id="btn-cancel-project">Cancelar</button>
+      <button class="btn btn-positive" id="btn-confirm-project">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Importar pasta como projeto (arrastar na grade de Projetos).
+     Duas escolhas na hora, em vez de um interruptor "preparar automaticamente"
+     na configuração: custa um clique e poupa uma opção (D27). -->
+<div id="modal-import-project" class="modal-overlay hidden">
+  <div class="modal modal-import">
+    <h3>Importar pasta como projeto</h3>
+    <div class="import-project-nome" id="import-project-nome"></div>
+    <div class="import-project-op">
+      <button type="button" class="btn import-project-btn" id="btn-import-only">Importar sem preparar</button>
+      <button type="button" class="btn btn-primary import-project-btn" id="btn-import-preparar">Importar e preparar</button>
+    </div>
+    <div class="import-project-preset">
+      <label for="import-project-preset">Início rápido</label>
+      <select id="import-project-preset" class="arq-preparar-select"></select>
+    </div>
+
+    <div class="projeto-organizacao">
+      <div class="projeto-organizacao-duplo">
+        <div>
+          <label for="import-project-grupo">Grupo</label>
+          <select id="import-project-grupo" class="arq-preparar-select"></select>
+        </div>
+        <div>
+          <label for="import-project-subgrupo">Subgrupo</label>
+          <select id="import-project-subgrupo" class="arq-preparar-select"></select>
+        </div>
+      </div>
+      <label>Tags</label>
+      <div id="import-project-tags"></div>
+    </div>
+
+    <button type="button" class="desc-retratil-toggle" id="import-project-desc-toggle">+ Descrição</button>
+    <div class="desc-retratil-painel hidden" id="import-project-desc-painel">
+      <textarea class="modal-textarea" id="import-project-desc-texto" rows="3"
+        placeholder="Sem descrição ainda — escreva uma."></textarea>
+    </div>
+
+    <div id="modal-import-error" class="modal-error hidden"></div>
+    <div class="modal-actions">
+      <button class="btn btn-muted btn-sm" id="btn-cancel-import">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Editar Projeto (era só "Renomear" — ganhou Grupo/Subgrupo/Tags, ver
+     `projetos-editar.js`). Id/markup do nome continuam os mesmos de propósito
+     (menos risco que criar um modal do zero para uma extensão do existente). -->
+<div id="modal-rename" class="modal-overlay hidden">
+  <div class="modal modal-projeto">
+    <h3>Editar Projeto</h3>
+    <label for="input-rename">Nome</label>
+    <input type="text" id="input-rename" autocomplete="off" />
+
+    <div class="projeto-organizacao">
+      <div class="projeto-organizacao-duplo">
+        <div>
+          <label for="rename-project-grupo">Grupo</label>
+          <select id="rename-project-grupo" class="arq-preparar-select"></select>
+        </div>
+        <div>
+          <label for="rename-project-subgrupo">Subgrupo</label>
+          <select id="rename-project-subgrupo" class="arq-preparar-select"></select>
+        </div>
+      </div>
+      <label>Tags</label>
+      <div id="rename-project-tags"></div>
+    </div>
+
+    <div id="modal-rename-error" class="modal-error hidden"></div>
+    <div class="modal-actions">
+      <button class="btn btn-muted" id="btn-cancel-rename">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirm-rename">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deletar Projeto -->
+<div id="modal-delete" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Deletar Projeto</h3>
+    <p class="modal-body-text">Tem certeza que deseja deletar <strong id="delete-project-name"></strong>?<br>Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn btn-muted" id="btn-cancel-delete">Cancelar</button>
+      <button class="btn btn-negative" id="btn-confirm-delete">Remover</button>
+    </div>
+  </div>
+</div>
+
+<!-- Limpar dados gerados pelos agentes — UMA rotina, algumas ou todas.
+     ⚠️ A lista de rotinas NÃO está escrita aqui, e isso é de propósito: ela é
+     lida da própria sub-aba Acionamentos, no clique (`_acRotinasParaLimpar`,
+     acionamentos.js). Escrever os quinze nomes uma segunda vez neste arquivo
+     era garantir que a rotina número dezesseis nascesse impossível de apagar
+     pela tela, sem dar erro nenhum. -->
+<div id="modal-ac-limpar" class="modal-overlay hidden">
+  <div class="modal modal-limpar">
+    <h3>Limpar dados gerados</h3>
+    <p class="modal-body-text">Apaga o que estas rotinas já geraram neste projeto.
+      O que ficar <strong>desmarcado</strong> não é tocado.<br>Esta ação não pode ser desfeita.</p>
+    <div class="limpar-atalhos">
+      <button class="btn btn-muted btn-sm" id="btn-ac-limpar-marcar-tudo" type="button">Selecionar tudo</button>
+      <button class="btn btn-muted btn-sm" id="btn-ac-limpar-desmarcar" type="button">Desselecionar tudo</button>
+      <span class="limpar-contagem" id="ac-limpar-contagem"></span>
+    </div>
+    <div class="limpar-lista" id="ac-limpar-lista"></div>
+    <p class="modal-dica">Os acionamentos <strong>continuam como estão</strong> — limpar
+      não desliga nada. Se houver rotina ligada, um ciclo começa em seguida e
+      regenera o que você acabou de apagar.</p>
+    <div class="modal-actions">
+      <button class="btn btn-muted" id="btn-ac-limpar-cancelar">Cancelar</button>
+      <button class="btn btn-negative" id="btn-ac-limpar-confirmar">Limpar dados</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Visualizar Prompt -->
+<div id="modal-prompt-view" class="modal-overlay hidden">
+  <div class="modal modal-prompt">
+    <div class="modal-prompt-header">
+      <h3 id="modal-prompt-title">Prompt do agente</h3>
+      <button class="btn-icon" id="btn-close-prompt-modal" title="Fechar">✕</button>
+    </div>
+    <pre id="modal-prompt-content" class="modal-prompt-content"></pre>
+  </div>
+</div>
+
+<!-- Modal: Preview de Estilo (zoom + pan) -->
+<div id="modal-style-preview" class="modal-overlay hidden">
+  <div class="style-preview-modal">
+    <div class="style-preview-topbar">
+      <span id="style-preview-title" class="style-preview-modal-title"></span>
+      <span class="style-preview-hint">Rolar para zoom · Arrastar para mover</span>
+      <button class="btn-icon" id="btn-close-style-preview">✕</button>
+    </div>
+    <div class="style-preview-viewport" id="style-preview-viewport">
+      <div class="style-preview-container" id="style-preview-container">
+        <iframe id="style-preview-frame" class="style-preview-frame" sandbox="allow-same-origin"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ Templates (injetam o HTML das abas — ver
+     Saída das skills/Arquitetura modular/Convenções.md sobre por que index.html
+     não usa fetch() de .html parciais: o app carrega via file://, sem servidor
+     HTTP local, e fetch de file:// para file:// é bloqueado pelo WebView2). -->
+<!-- PRIMEIRO de todos, e de propósito: os valores de fábrica (endereço do LM
+     Studio, paralelismo) são lidos já pelos templates abaixo, que interpolam
+     PARALELISMO_PADRAO/MINIMO/MAXIMO no markup no instante em que carregam. Um
+     `const` só existe a partir da linha do <script> que o declarou, então
+     qualquer posição depois daqui deixaria um template sem o valor. O arquivo
+     não depende de nada — pode vir antes de tudo sem risco. -->
+<script src="modulos/constantes.js"></script>
+<!-- A trava de cinco pontas (Chat · Fila · Rotinas · Designer · Backup) do lado
+     da tela. Antes de tudo que dispara IA: chat, fila, designer e Automação
+     chamam `travaIALiberado` no clique. -->
+<script src="modulos/trava-ia.js"></script>
+
+<script src="modulos/projeto-template.js"></script>
+  <!-- Preenche o #subtab-preparar que o projeto-template acabou de criar. -->
+  <script src="modulos/preparar-template.js"></script>
+<!-- Antes do chat-template.js: ele chama subagentesConfigMarkup() na montagem. -->
+<script src="modulos/agentes/subagentes-config-tab.js"></script>
+<script src="modulos/chat-template.js"></script>
+<script src="modulos/regras-template.js"></script>
+<script src="modulos/documentacao-template.js"></script>
+<script src="modulos/editor-template.js"></script>
+<script src="modulos/terminal-template.js"></script>
+<script src="modulos/arquivos-template.js"></script>
+<script src="modulos/agentes/explicacoes-dados.js"></script>
+<script src="modulos/agentes/automacao/acionamentos-template.js"></script>
+<script src="modulos/agentes/automacao/visualizar-template.js"></script>
+<script src="modulos/agentes/execucao/rotinas-template.js"></script>
+<script src="modulos/agentes/execucao/pendencias-template.js"></script>
+<script src="modulos/agentes/erros-template.js"></script>
+<script src="modulos/agentes/referencia-template.js"></script>
+<script src="modulos/agentes/historico-template.js"></script>
+<script src="modulos/agentes/documentacao/resumo-pastas-template.js"></script>
+<script src="modulos/agentes/indexacao/grafo-imports-template.js"></script>
+<script src="modulos/agentes/indexacao/bibliotecas-template.js"></script>
+<script src="modulos/agentes/indexacao/comentarios-template.js"></script>
+<script src="modulos/agentes/indexacao/indice-simbolos-template.js"></script>
+<script src="modulos/agentes/indexacao/duplicados-template.js"></script>
+<script src="modulos/agentes/indexacao/pipeline-template.js"></script>
+<script src="modulos/agentes/indexacao/hashes-template.js"></script>
+<script src="modulos/agentes/sincronia/sincronia-template.js"></script>
+<script src="modulos/agentes/indexacao/identificadores-template.js"></script>
+<script src="modulos/agentes/automacao/detector-template.js"></script>
+<script src="modulos/agentes/automacao/espera-template.js"></script>
+<script src="modulos/agentes/automacao/revezamento-template.js"></script>
+<script src="modulos/agentes/indexacao/indice-navegacao-template.js"></script>
+<script src="modulos/agentes/indexacao/glossario-template.js"></script>
+<script src="modulos/agentes/documentacao/documentacao-tecnica-template.js"></script>
+<script src="modulos/agentes/embedding-template.js"></script>
+<script src="modulos/agentes/execucao/fila-template.js"></script>
+<script src="modulos/agentes/colaboracao/designer-template.js"></script>
+<script src="modulos/analise-template.js"></script>
+<script src="modulos/mapas-template.js"></script>
+<!-- Depois de mapas-template.js, que cria o #mapa-pipeline; e o do Mapa em
+     níveis depois do do Pipeline, que cria o #vp-sub-niveis. -->
+<script src="modulos/mapas-pipeline-template.js"></script>
+<script src="modulos/mapas-pipeline-niveis-template.js"></script>
+<script src="modulos/inspetor-template.js"></script>
+<script src="modulos/aparencia-template.js"></script>
+<script src="modulos/backups-template.js"></script>
+<script src="modulos/trabalhos-template.js"></script>
+
+<!-- Notificações: as duas tabelas de origem e o filtro. Vêm ANTES do
+     utils.js porque é o showToast dele que as consulta — scripts
+     clássicos, a ordem textual é a ordem em que os globais existem. -->
+<script src="modulos/notificacoes-origens.js"></script>
+<script src="modulos/notificacoes.js"></script>
+<script src="modulos/utils.js"></script>
+<!-- O construtor único do modal de confirmação. Compartilhado por Arquivos,
+     Preparar projeto, Tags, Estilos e cores, Regras, Chat e Fila — por isso saiu
+     de `arquivos-crud.js`, onde nasceu como `_arqModal`. Fica aqui, junto do
+     `utils.js`, por ser utilitário de tela e não de aba nenhuma. -->
+<script src="modulos/modal-padrao.js"></script>
+<!-- As duas perguntas de "vai abandonar o que está rodando?": encerrar o
+     programa e sair do projeto. Depois do `modal-padrao.js`, que é quem as
+     desenha, e do `utils.js`, de onde vêm `escapeHtml` e `showToast`. A
+     primeira é chamada pelo Python, de uma thread, no handler de fechamento; a
+     segunda pelo `goBackToProjects` (navegacao.js), que carrega mais abaixo. -->
+<script src="modulos/encerramento.js"></script>
+<!-- Componente único de árvore de pastas — precisa vir antes de quem o usa
+     (contexto.js, mapaio.js, treesitter.js, relacoes.js, regras.js,
+     documentacao.js, resumo.js). Scripts clássicos: a ordem textual é a ordem
+     em que os globais passam a existir. -->
+<!-- Ícones de arquivo/pasta: consultado por arvore-pastas.js, logo abaixo —
+     pela mesma regra de ordem textual. -->
+<script src="modulos/icones.js"></script>
+<script src="modulos/arvore-pastas.js"></script>
+<!-- Barra de busca das três telas de árvore da aba Análise. Depende de
+     `filtrarArvorePorCaminho` (arvore-pastas.js, logo acima) e é usada por
+     mapaio.js, treesitter.js e relacoes.js, mais abaixo. -->
+<script src="modulos/busca-arvore.js"></script>
+<!-- Formato unico de copia para o chat (o envelope). Usado por documentacao.js,
+     mapaio.js e relacoes.js, todos mais abaixo. -->
+<script src="modulos/copiar-contexto.js"></script>
+<!-- Divisória arrastável entre dois painéis. Componente compartilhado, nascido
+     na aba Editor; quem usa está mais abaixo. -->
+<script src="modulos/divisoria.js"></script>
+<!-- Menu do botão direito. Componente compartilhado, nascido na aba Editor. -->
+<script src="modulos/menu-contexto.js"></script>
+<!-- O ouvinte ÚNICO de tecla do programa, e o registro de quem responde a cada
+     uma. Aqui, junto do `menu-contexto.js` e do `modal-padrao.js`, por ser
+     utilitário de tela e não de aba nenhuma — e ANTES do bloco de Configurações
+     e do bloco do Editor, que chamam `registrarTecla` já no carregamento. -->
+<script src="modulos/teclas.js"></script>
+<!-- A barra de Acesso rápido (Ctrl+P / Ctrl+Shift+P). Nasceu como a abertura
+     rápida da aba Editor e carregava no bloco dela; deixou de ser de aba
+     nenhuma, e por isso mora aqui, junto do `menu-contexto.js` e do
+     `modal-padrao.js`. DEPOIS do `teclas.js`, de onde saem as duas teclas que a
+     abrem, e ANTES do bloco do Editor, que chama `acessoRapidoAlternar` no
+     clique do botão da árvore. Os modos vêm antes da casca, que os consulta. -->
+<script src="modulos/acesso-rapido-modos.js"></script>
+<script src="modulos/acesso-rapido.js"></script>
+<script src="modulos/drag-drop.js"></script>
+<!-- Grupos/subgrupos/tags/descrição de projeto — seis arquivos pela mesma
+     regra de sempre (uma responsabilidade por arquivo, teto de 500 linhas da
+     AMF). Ordem: dados (`projetos-taxonomia.js`) primeiro, o picker
+     compartilhado depois (usado pelos três modais de organização e pelo
+     quadro), o quadro e a busca por cima dele, e os dois modais de
+     organização/descrição por último — todos dependem de `abrirModalPadrao`
+     (`modal-padrao.js`, acima) e de `escapeHtml`/`showToast` (`utils.js`,
+     também acima). -->
+<script src="modulos/projetos-taxonomia.js"></script>
+<script src="modulos/projetos-tag-picker.js"></script>
+<script src="modulos/projetos-kanban.js"></script>
+<script src="modulos/projetos-busca.js"></script>
+<script src="modulos/projetos-taxonomia-modal.js"></script>
+<script src="modulos/projetos-descricao.js"></script>
+<script src="modulos/projetos-editar.js"></script>
+<script src="modulos/modais.js"></script>
+<script src="modulos/projetos.js"></script>
+<script src="modulos/navegacao.js"></script>
+<script src="modulos/navegacao-abas.js"></script>
+<!-- A tira de abas de projetos abertos ao mesmo tempo. Depois de navegacao.js
+     (chama `enterProject`/`goBackToProjects`) e antes de abas-processando.js,
+     que agora faz poll por PROJETO ABERTO, não só o atual. -->
+<script src="modulos/projetos-abertos.js"></script>
+<script src="modulos/abas-processando.js"></script>
+<script src="modulos/assistente.js"></script>
+<script src="modulos/workspace.js"></script>
+<!-- Componentes compartilhados pelas duas sub-abas logo abaixo (Remover e
+     Contexto sem leitura) — têm de vir ANTES das duas: a lista de caminhos
+     (Estrutura + lista; `registrarListaDeCaminhos` é chamada por elas ao
+     carregar) e o marcador "Mesmo assim, pode ler". -->
+<script src="modulos/projeto-caminhos.js"></script>
+<script src="modulos/quem-pode-ler.js"></script>
+<script src="modulos/remover.js"></script>
+<script src="modulos/contexto.js"></script>
+<script src="modulos/resumo.js"></script>
+<script src="modulos/resumo-extensoes.js"></script>
+<script src="modulos/treesitter.js"></script>
+<script src="modulos/lsp.js"></script>
+<script src="modulos/simbolos.js"></script>
+<script src="modulos/mapaio.js"></script>
+<script src="modulos/relacoes.js"></script>
+<script src="modulos/duplicados.js"></script>
+<script src="modulos/chat-lista.js"></script>
+<script src="modulos/chat-mensagens.js"></script>
+<script src="modulos/chat-mensagens-stream.js"></script>
+<script src="modulos/chat-mensagens-ponte.js"></script>
+<script src="modulos/chat-prompt-fixo.js"></script>
+<script src="modulos/chat-contexto-inicial.js"></script>
+<script src="modulos/chat-envio.js"></script>
+<script src="modulos/chat-payload.js"></script>
+<script src="modulos/regras.js"></script>
+<script src="modulos/regras-lista.js"></script>
+<script src="modulos/regras-editor.js"></script>
+<script src="modulos/regras-acervo.js"></script>
+<script src="modulos/terminal.js"></script>
+<script src="modulos/terminal-extensoes.js"></script>
+<script src="modulos/arquivos.js"></script>
+<script src="modulos/arquivos-global.js"></script>
+<script src="modulos/arquivos-crud.js"></script>
+  <script src="modulos/arquivos-agente-editor.js"></script>
+<script src="modulos/arquivos-preview.js"></script>
+<!-- Depois de `arquivos-template.js`, que é quem injeta #garq-estilos-e-cores-list.
+     ℹ️ O construtor de modal que estes usam saiu de `arquivos-crud.js` e virou
+     `modal-padrao.js`, carregado logo depois de `utils.js` — e ele não impõe
+     ordem nenhuma: as chamadas são de dentro de funções. -->
+<script src="modulos/estilos-e-cores-miniaturas.js"></script>
+<script src="modulos/estilos-e-cores-tags.js"></script>
+<script src="modulos/estilos-e-cores.js"></script>
+<!-- A sub-aba informativa "Como adicionar". Depois de `arquivos-template.js`,
+     que injeta #garq-como-adicionar-corpo, e de `copiar-contexto.js`, de onde
+     vem o `copiarContexto` dos botões de prompt. O texto (explicações, prompts
+     e guias) mora em `Program/Code/prompts/Como adicionar/` e chega pelo
+     backend (`listar_como_adicionar`) — aqui só a montagem. -->
+<script src="modulos/arquivos-como-adicionar.js"></script>
+  <script src="modulos/preparar.js"></script>
+<script src="modulos/config-categorias.js"></script>
+<script src="modulos/config-busca.js"></script>
+<script src="modulos/config-template.js"></script>
+<script src="modulos/config-ferramentas-template.js"></script>
+<script src="modulos/config-mcp-template.js"></script>
+<script src="modulos/config-mcps-template.js"></script>
+<script src="modulos/config-rotinas-template.js"></script>
+<script src="modulos/config-rotinas.js"></script>
+<script src="modulos/config-render-template.js"></script>
+<script src="modulos/config-render.js"></script>
+<!-- A ordem de carga destes <script> é a ordem do trilho da esquerda: é isso
+     que põe "Temas" abaixo de "Desempenho dos mapas", e "Arquivos que
+     o programa lê" abaixo de "Temas". Não há lista de categorias em lugar
+     nenhum para editar; ver config-categorias.js.
+     "Aparência: onde procurar" saiu em 23/09/2026: as duas listas dela são
+     partes das Exceções, dentro de Arquivos que o programa lê.
+     "Ícones de arquivos e pastas" também saiu em 23/09/2026 (fase 13): a
+     escolha do pacote é o "Pacote em uso" da página da extensão Ícones de
+     arquivo, no lado Extensões, e a lógica mora em `icones.js`. -->
+<script src="modulos/config-tema-template.js"></script>
+<script src="modulos/config-tema.js"></script>
+<script src="modulos/config-extensoes-template.js"></script>
+<script src="modulos/config-extensoes.js"></script>
+<script src="modulos/config-arquivos-lidos-nunca.js"></script>
+<script src="modulos/config-arquivos-lidos-codigo.js"></script>
+<script src="modulos/config-arquivos-lidos-excecoes.js"></script>
+<script src="modulos/config-arquivos-lidos-quem.js"></script>
+<script src="modulos/config-notificacoes-template.js"></script>
+<script src="modulos/config-notificacoes.js"></script>
+<!-- Categoria "Acesso rápido": a barra que abre por cima da tela. Fica junto de
+     Notificações porque as duas são sobre como o programa se mostra, e a grade
+     3x3 de posição é literalmente a mesma peça. A posição destas tags É a
+     posição da categoria no trilho — não há lista de categorias em lugar
+     nenhum. -->
+<script src="modulos/config-acesso-rapido-template.js"></script>
+<script src="modulos/config-acesso-rapido.js"></script>
+<!-- Categoria "Teclado": a tecla de cada comando. Logo depois de "Acesso
+     rápido", que é onde as duas teclas da barra aparecem — e este arquivo é a
+     CASA da grade que as duas categorias mostram. A ordem não é obrigatória (a
+     grade é desenhada pelo `init` de cada categoria, em tempo de execução), mas
+     ler as duas juntas é. -->
+<script src="modulos/config-teclado-template.js"></script>
+<script src="modulos/config-teclado.js"></script>
+<!-- Categoria "Editor de código". A ordem no trilho de Configurações é a ordem
+     destas tags, não uma propriedade do registro. -->
+<script src="modulos/config-editor-template.js"></script>
+<script src="modulos/config-editor.js"></script>
+<!-- "Encerrar e excluir". A posição desta tag É a posição da categoria no
+     trilho: logo abaixo de "Notificações". Não tem `config-confirmacoes.js` —
+     o comportamento dos três controles mora em `limites.js`, junto dos outros
+     campos que gravam em `settings.json`. -->
+<script src="modulos/config-confirmacoes-template.js"></script>
+  <!-- ⚠️ A ORDEM DESTAS TAGS E A ORDEM DO TRILHO da esquerda, e nao ha lista
+       de categorias em lugar nenhum para editar. "Assistentes externos" vem
+       ANTES de "Preparar projeto" porque e la que o assistente e definido — o
+       inicio rapido so aponta para um deles. As duas continuam DEPOIS de
+       `config-template.js`, que cria a casca; antes dela a categoria some da
+       tela, com um console.error em `config-categorias.js`. -->
+  <script src="modulos/config-arquivos-template.js"></script>
+  <script src="modulos/config-arquivos.js"></script>
+  <!-- Configurações › Arquivos (chave `biblioteca`): como o programa reconhece
+       o principal de uma skill. Logo abaixo de Assistentes externos, de quem é
+       vizinha de assunto. -->
+  <script src="modulos/config-biblioteca-template.js"></script>
+  <script src="modulos/config-biblioteca.js"></script>
+  <script src="modulos/config-preparar-template.js"></script>
+  <script src="modulos/config-preparar.js"></script>
+  <script src="modulos/config-preparar-biblioteca.js"></script>
+  <script src="modulos/config-preparar-eventos.js"></script>
+  <script src="modulos/config-preparar-presets.js"></script>
+  <script src="modulos/config-acervo-template.js"></script>
+  <script src="modulos/config-acervo.js"></script>
+<script src="modulos/limites.js"></script>
+<script src="modulos/config-modelo-e-geracao.js"></script>
+<script src="modulos/config-ferramentas.js"></script>
+<script src="modulos/config-mcp.js"></script>
+<script src="modulos/config-mcps.js"></script>
+<!-- Por último dos *-template.js de Configurações, de propósito: a posição
+     da tag é a posição no trilho (ver comentário acima), e "Plugins" é a
+     categoria mais recente. -->
+<script src="modulos/config-plugins-template.js"></script>
+<script src="modulos/config-plugins.js"></script>
+<!-- Categoria "Trabalhos". Veio de Trabalhos › Configuração: a área sempre foi
+     GLOBAL, e estava pendurada numa tela que é por projeto. O nome é o da aba
+     que ela configura, e não "Agentes". -->
+<script src="modulos/config-atalhos-externos-template.js"></script>
+<script src="modulos/config-atalhos-externos.js"></script>
+<!-- Extensões do programa. A camada inteira, e depois a categoria.
+     ⚠️ `extensoes/estado.js` ANTES de `config-xtprog.js`: é ele que define
+     `xtArvore` e `xtAdotarArvore`, e sem eles a categoria carregaria a lista
+     para lugar nenhum. E `config-xtprog-template.js` DEPOIS de
+     `config-template.js` (bem acima), senão a casca não existe e a categoria
+     some em silêncio — ver o console.error de `registrarCategoriaConfig`.
+     A POSIÇÃO desta tag entre os outros `config-*-template.js` É a posição no
+     trilho: logo depois de Launchers, para Plugins, Launchers e Extensões
+     ficarem vizinhas. -->
+<script src="modulos/extensoes/estado.js"></script>
+<script src="modulos/extensoes/destaque.js"></script>
+<script src="modulos/extensoes/descarregar.js"></script>
+<script src="modulos/extensoes/encaixes.js"></script>
+<!-- O recurso Tela (fase 11): aba nova e sub-aba de extensão. DEPOIS de
+     `encaixes.js`, ao lado do qual mora, e ANTES de `carga.js`, que chama
+     `xtCarregarTelas` (por `typeof`, mas a ordem fica escrita). -->
+<script src="modulos/extensoes/telas.js"></script>
+<!-- ⚠️ `decorador.js` DEPOIS de `encaixes.js`: ele chama `xtEncaixadosNoPonto`,
+     que é de lá. E antes de `editor-painel.js` (bem abaixo), que o procura por
+     `typeof` ao criar cada painel — a ordem entre os dois não é obrigatória
+     (a chamada é em runtime), mas registrar a superfície na criação do painel
+     é o que faz desligar uma decoradora limpar a marca sem trocar de aba. -->
+<script src="modulos/extensoes/decorador.js"></script>
+<!-- Os comandos que uma extensão põe na barra de Acesso rápido (ponto
+     `acesso-rapido.comandos`, tipo 9). DEPOIS de `encaixes.js`, de onde vem o
+     `xtEncaixeItens` que ele chama, e do `teclas.js` lá em cima, que é onde os
+     comandos vão parar. A baixa dele está em `descarregar.js`, no bloco que sai
+     ANTES do `xtDesmontar`. -->
+<script src="modulos/extensoes/acesso-rapido-extensao.js"></script>
+<script src="modulos/extensoes/eventos.js"></script>
+<script src="modulos/extensoes/consulta.js"></script>
+<script src="modulos/extensoes/carga.js"></script>
+<script src="modulos/extensoes/dados.js"></script>
+<!-- A página da extensão: `tela.js` e as duas partes que saíram dele pelo
+     teto de 500 linhas (fase 13). As chamadas entre os três são de dentro de
+     funções, e a ordem entre eles não importa. -->
+<script src="modulos/extensoes/tela-acrescenta.js"></script>
+<script src="modulos/extensoes/tela-subagentes.js"></script>
+<script src="modulos/extensoes/tela-opcoes.js"></script>
+<script src="modulos/extensoes/tela.js"></script>
+<script src="modulos/config-xtprog-template.js"></script>
+<script src="modulos/config-xtprog.js"></script>
+<script src="modulos/tab-order.js"></script>
+<script src="modulos/agentes/automacao/acionamentos.js"></script>
+<script src="modulos/agentes/automacao/acionamentos-limpar.js"></script>
+<script src="modulos/agentes/automacao/acionamentos-estado.js"></script>
+<script src="modulos/agentes/automacao/acionamentos-status.js"></script>
+<script src="modulos/agentes/documentacao/rotinas-comum.js"></script>
+<script src="modulos/agentes/documentacao/resumo-pastas.js"></script>
+<script src="modulos/agentes/indexacao/grafo-imports.js"></script>
+<script src="modulos/agentes/indexacao/bibliotecas.js"></script>
+<script src="modulos/agentes/indexacao/comentarios.js"></script>
+<script src="modulos/agentes/indexacao/indice-simbolos.js"></script>
+<script src="modulos/agentes/indexacao/duplicados.js"></script>
+<script src="modulos/agentes/indexacao/pipeline.js"></script>
+<script src="modulos/agentes/indexacao/hashes.js"></script>
+<script src="modulos/agentes/sincronia/sincronia.js"></script>
+<script src="modulos/agentes/indexacao/identificadores.js"></script>
+<script src="modulos/agentes/automacao/detector.js"></script>
+<script src="modulos/agentes/automacao/espera.js"></script>
+<script src="modulos/agentes/automacao/revezamento.js"></script>
+<script src="modulos/agentes/indexacao/indice-navegacao.js"></script>
+<script src="modulos/agentes/indexacao/glossario.js"></script>
+<script src="modulos/agentes/automacao/visualizar-acionamentos-desenho.js"></script>
+<script src="modulos/agentes/automacao/visualizar-acionamentos.js"></script>
+<script src="modulos/agentes/automacao/visualizar-acionamentos-estados.js"></script>
+<script src="modulos/agentes/automacao/visualizar-acionamentos-sincronia.js"></script>
+<script src="modulos/agentes/documentacao/documentacao-tecnica.js"></script>
+<script src="modulos/agentes/execucao/fila-lista.js"></script>
+<script src="modulos/agentes/execucao/fila-chamadas.js"></script>
+<script src="modulos/agentes/execucao/fila-chat-tab.js"></script>
+<script src="modulos/agentes/execucao/fila-chat-tab-sinais.js"></script>
+<script src="modulos/agentes/execucao/fila-chat-tab-blocos.js"></script>
+<script src="modulos/agentes/execucao/fila-contexto-tab.js"></script>
+<script src="modulos/agentes/execucao/fila-subagentes-tab.js"></script>
+<script src="modulos/agentes/execucao/fila-log-tab.js"></script>
+<script src="modulos/agentes/execucao/fila.js"></script>
+<script src="modulos/agentes/colaboracao/designer-preview-modal.js"></script>
+<script src="modulos/agentes/colaboracao/designer-styles.js"></script>
+<script src="modulos/agentes/colaboracao/designer-chips.js"></script>
+<script src="modulos/agentes/colaboracao/designer-chat.js"></script>
+<script src="modulos/agentes/colaboracao/designer-rodadas.js"></script>
+<!-- Depois de `designer-template.js`, que injeta os oito painéis que estes
+     procuram, e depois de `designer-styles.js`, de onde vem o estado das
+     escolhas que os três consomem. -->
+<script src="modulos/agentes/colaboracao/designer-dimensoes.js"></script>
+<script src="modulos/agentes/colaboracao/designer-zoom.js"></script>
+<script src="modulos/agentes/colaboracao/designer-selecao.js"></script>
+<script src="modulos/agentes/colaboracao/designer-contexto.js"></script>
+<script src="modulos/agentes/colaboracao/designer.js"></script>
+<script src="modulos/agentes/execucao/rotinas.js"></script>
+<script src="modulos/agentes/execucao/rotinas-cards.js"></script>
+<script src="modulos/agentes/execucao/rotinas-estado.js"></script>
+<!-- Usado por plugins-navegacao.js e atalhos-externos-navegacao.js — os
+     dois navegam por pasta do mesmo jeito, por isso vem antes dos dois. -->
+<script src="modulos/trilho-de-pastas.js"></script>
+<!-- Usa `_wireSubtabBar`, definida acima, `trilho-de-pastas.js` (acima), e
+     `pluginsArvore`, de `config-plugins.js` (carregado bem antes) — por
+     isso vem depois dos três. -->
+<script src="modulos/plugins-navegacao.js"></script>
+<!-- Usa `trilho-de-pastas.js` (acima) e `atalhosExternosArvore`, de
+     `config-atalhos-externos.js` (carregado bem antes) — por isso vem
+     depois dos dois. -->
+<script src="modulos/atalhos-externos-navegacao.js"></script>
+<script src="modulos/agentes/erros.js"></script>
+<script src="modulos/agentes/pendencias.js"></script>
+<!-- Depois de acionamentos.js e automacao/detector.js: a tabela usa
+     AC_NOMES_AGENTES e DET_NOMES_CLASSES, que moram nos dois. -->
+<script src="modulos/agentes/referencia.js"></script>
+<script src="modulos/agentes/historico.js"></script>
+<script src="modulos/agentes/embedding.js"></script>
+<script src="modulos/agentes/agentes-fontes.js"></script>
+<script src="modulos/agentes/chat-agentes.js"></script>
+<script src="modulos/agentes/chat-agentes-log.js"></script>
+<script src="modulos/agentes/subagentes-de-extensoes.js"></script>
+<script src="modulos/documentacao.js"></script>
+<script src="modulos/documentacao-viewer.js"></script>
+<script src="modulos/documentacao-busca.js"></script>
+<!-- As árvores de Pipeline, Glossário e Índice de navegação. Só declara
+     funções e estado: quem a chama (loadDocTree, abrirDocArtefato,
+     docFilterByName) só o faz depois do carregamento. -->
+<script src="modulos/documentacao-arvores.js"></script>
+<!-- Aba Editor. Ordem obrigatória: `editor-superficie.js` define
+     `criarSuperficie`, de que `editor-pintura.js` e `editor-painel.js`
+     dependem; `editor-painel.js` chama `salvarArquivoDoPainel` e
+     `abrirHistoricoLocal` (editor-salvar.js), `criarLocalizador`
+     (editor-localizar.js) e `criarLint` (editor-lint.js); `editor.js` é a
+     casca e monta todos. -->
+<!-- Antes da superfície: ela chama `indentacaoDoEditor()` na tecla Tab. -->
+<script src="modulos/editor-metricas.js"></script>
+<!-- M5 · o popup de autocomplete. ANTES da superfície, que o chama por
+     `typeof` a cada tecla — a ordem não é obrigatória (a chamada é em
+     runtime), mas ler os dois juntos é. -->
+<script src="modulos/editor-autocomplete.js"></script>
+<script src="modulos/editor-dica.js"></script>
+<script src="modulos/editor-superficie.js"></script>
+<script src="modulos/editor-pintura.js"></script>
+<script src="modulos/editor-localizar.js"></script>
+<script src="modulos/editor-lint.js"></script>
+<script src="modulos/editor-salvar.js"></script>
+<script src="modulos/editor-painel.js"></script>
+<script src="modulos/editor-cartao.js"></script>
+<script src="modulos/editor-visualizador.js"></script>
+<!-- As ações e o assistente vêm antes de `editor-menus.js`, que os referencia. -->
+<script src="modulos/editor-arquivos.js"></script>
+<script src="modulos/editor-assistente.js"></script>
+<script src="modulos/editor-menus.js"></script>
+<script src="modulos/editor-arrasto.js"></script>
+<script src="modulos/editor-arvore.js"></script>
+<!-- A abertura rápida SAIU deste bloco: virou a barra de Acesso rápido, que
+     não é mais da aba Editor e carrega junto da infraestrutura, mais acima. -->
+<script src="modulos/editor-buscar-substituir.js"></script>
+<!-- As nove teclas da aba, no registro central (`modulos/teclas.js`). Arquivo
+     irmão da casca pelo teto de 500 linhas da AMF; lê os globais que
+     `editor.js` declara, e quem o chama é `initEditorTab`, já com tudo
+     montado — então a posição aqui é só de leitura, não de dependência. -->
+<script src="modulos/editor-teclas.js"></script>
+<script src="modulos/editor.js"></script>
+<!-- O que o Editor empresta às extensões (`edArquivoAberto`). Depois de
+     `editor.js`, que declara `_edPaineis`. -->
+<script src="modulos/editor-extensoes.js"></script>
+<script src="modulos/mapas.js"></script>
+<script src="modulos/mapas-matriz.js"></script>
+<script src="modulos/mapas-matriz-io.js"></script>
+<script src="modulos/mapas-hotspots.js"></script>
+<script src="modulos/mapas-dispersao.js"></script>
+<script src="modulos/mapas-proporcao.js"></script>
+<script src="modulos/mapas-painel.js"></script>
+<script src="modulos/mapas-hierarquia.js"></script>
+<script src="modulos/mapas-ligacoes-modos.js"></script>
+<script src="modulos/mapas-ligacoes.js"></script>
+<script src="modulos/mapas-ligacoes-desenho.js"></script>
+<!-- Mapas › Pipeline: as Leituras e o Mapa em níveis. As cascas
+     (`mapas-pipeline-niveis.js` e `mapas-pipeline.js`) vêm por ÚLTIMO, e os
+     módulos delas antes. Nenhum roda nada na carga além de declarar função e
+     constante; mantê-los juntos e com o mesmo prefixo é o que diz que são um
+     mapa só. -->
+<script src="modulos/mapas-pipeline-dados.js"></script>
+<script src="modulos/mapas-pipeline-pecas.js"></script>
+<script src="modulos/mapas-pipeline-trilha.js"></script>
+<script src="modulos/mapas-pipeline-raias.js"></script>
+<script src="modulos/mapas-pipeline-sequencia.js"></script>
+<script src="modulos/mapas-pipeline-listas.js"></script>
+<script src="modulos/mapas-pipeline-markdown.js"></script>
+<script src="modulos/mapas-pipeline-ajuda.js"></script>
+<script src="modulos/mapas-pipeline-niveis-arvore.js"></script>
+<script src="modulos/mapas-pipeline-niveis-geometria.js"></script>
+<script src="modulos/mapas-pipeline-niveis-desenho.js"></script>
+<script src="modulos/mapas-pipeline-niveis-camera.js"></script>
+<script src="modulos/mapas-pipeline-niveis-paineis.js"></script>
+<script src="modulos/mapas-pipeline-niveis-esboco.js"></script>
+<script src="modulos/mapas-pipeline-niveis.js"></script>
+<script src="modulos/mapas-pipeline.js"></script>
+<script src="modulos/inspetor.js"></script>
+<script src="modulos/inspetor-candidatos.js"></script>
+<script src="modulos/inspetor-envio.js"></script>
+<script src="modulos/inspetor-gravacao.js"></script>
+<script src="modulos/inspetor-gravacao-revisao.js"></script>
+<script src="modulos/aparencia-seletor-cor.js"></script>
+<script src="modulos/aparencia-escopo.js"></script>
+<script src="modulos/aparencia.js"></script>
+<!-- Cartões e ações da Aparência: depende do estado declarado em aparencia.js. -->
+<script src="modulos/aparencia-cartoes.js"></script>
+<script src="modulos/backups.js"></script>
+<!-- Trabalhos: a casca primeiro (define trDespachar/initTrabalhosTab),
+     depois as duas sub-abas que ela despacha. Scripts classicos: a
+     ordem textual e a ordem em que os globais passam a existir. -->
+<script src="modulos/trabalhos.js"></script>
+<script src="modulos/trabalhos-quadro.js"></script>
+<script src="modulos/trabalhos-config.js"></script>
+<script src="modulos/trabalhos-oficina.js"></script>
+<script src="modulos/trabalhos-oficina-nos.js"></script>
+<script src="modulos/trabalhos-oficina-fios.js"></script>
+<script src="modulos/trabalhos-oficina-grupos.js"></script>
+<script src="modulos/trabalhos-oficina-palco.js"></script>
+<script src="modulos/trabalhos-oficina-arraste.js"></script>
+<script src="modulos/trabalhos-oficina-acoes.js"></script>
+<script src="modulos/trabalhos-oficina-edicao.js"></script>
+<script src="modulos/trabalhos-oficina-popovers.js"></script>
+<script src="modulos/trabalhos-fluxo.js"></script>
+<script src="modulos/trabalhos-shell.js"></script>
+<script src="modulos/trabalhos-shell-medidas.js"></script>
+<script src="modulos/trabalhos-shell-entrada.js"></script>
+<script src="modulos/trabalhos-metricas.js"></script>
+<script src="modulos/backups-modais.js"></script>
+<!-- Mapa da mudança: a casca primeiro, os cinco desenhos depois — a casca
+     define bmPar/bmLigarZoom/bmPodarRotulos, que os cinco consomem. -->
+<script src="modulos/backups-mapa.js"></script>
+<script src="modulos/backups-mapa-zoom.js"></script>
+<script src="modulos/backups-mapa-trilha.js"></script>
+<script src="modulos/backups-mapa-painel.js"></script>
+<script src="modulos/backups-mapa-diff-modal.js"></script>
+<script src="modulos/backups-mapa-arvore.js"></script>
+<script src="modulos/backups-mapa-treemap.js"></script>
+<script src="modulos/backups-mapa-sunburst.js"></script>
+<script src="modulos/backups-mapa-ligacoes.js"></script>
+<script src="modulos/backups-mapa-pipeline.js"></script>
+<script src="modulos/backups-config.js"></script>
+<!-- O catálogo do modo Comando da barra de Acesso rápido: as ações do programa
+     que NÃO têm tecla. Por último de propósito — depois de `teclas.js`, de
+     `acesso-rapido.js` e de TODOS os módulos cujas funções ele chama no `fazer`.
+     A ordem não é obrigatória (cada `fazer` é `() => f()`, que resolve o nome no
+     clique), mas ler o catálogo depois do que ele cita é o que deixa uma função
+     que sumiu aparecer aqui como nome órfão, e não como erro num clique meses
+     depois. -->
+<script src="modulos/acesso-rapido-comandos.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Observar sistemas com LLMs</title>
+<meta name="observar-versao" content="1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#2C3E50; --surface:#34495E; --surface-hover:#3d566e; --surface-dark:#1a252f;
+  --text:#FFFFFF; --text-muted:#BDC3C7;
+  --blue-rgb:52,152,219; --blue:rgb(var(--blue-rgb));
+  --green-rgb:46,204,113; --green:rgb(var(--green-rgb));
+  --red-rgb:231,76,60; --red:rgb(var(--red-rgb));
+  --purple-rgb:155,89,182; --purple:rgb(var(--purple-rgb));
+  --teal-rgb:26,188,156; --teal:rgb(var(--teal-rgb));
+  --amber-rgb:243,156,18; --amber:rgb(var(--amber-rgb));
+  --yellow-rgb:241,196,15; --yellow:rgb(var(--yellow-rgb));
+  --indigo-rgb:99,102,241; --indigo:rgb(var(--indigo-rgb));
+  --cinza-rgb:149,165,166; --cinza:rgb(var(--cinza-rgb));
+  --rosa:#F472B6; --sky:#7aa2f7; --mint:#8ce8b4; --laranja:#ff8a4c; --sand:#d9c99b;
+  --white-rgb:255,255,255; --black-rgb:0,0,0;
+  --gray:#4a5568; --radius:8px; --t:0.15s ease;
+  --mono:Consolas,'Cascadia Mono',monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;overflow:hidden}
+button{font-family:inherit;font-size:inherit;color:inherit}
+
+/* barra do preview (fora do programa) */
+.meta{height:38px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#0f161c;border-bottom:1px solid rgba(var(--white-rgb),.08);font-size:12px;color:var(--text-muted)}
+.meta b{letter-spacing:.14em;font-size:10.5px}
+.meta .vers{display:flex;gap:6px}
+.meta .vers button{background:rgba(var(--white-rgb),.06);border:1px solid rgba(var(--white-rgb),.14);border-radius:6px;padding:4px 12px;cursor:pointer;font-weight:600;font-size:12px;color:var(--text-muted)}
+.meta .vers button:hover{background:rgba(var(--white-rgb),.12)}
+.meta .vers button.on{background:var(--text);color:#0f161c;border-color:var(--text)}
+
+.app{display:flex;flex-direction:column;height:100vh;min-height:560px}
+
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--surface-dark);padding:8px 20px;border-bottom:1px solid rgba(var(--white-rgb),.07);flex-shrink:0}
+.proj{display:flex;align-items:baseline;gap:14px;min-width:0}
+.proj-nome{font-weight:700;font-size:16px}
+.proj-arq{font-family:var(--mono);font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-dir{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.consumo{display:flex;gap:16px;font-size:12px;color:var(--text-muted)}
+.consumo b{color:var(--text);font-size:14px;margin-right:3px}
+.btn{background:var(--gray);border:0;border-radius:var(--radius);padding:6px 13px;cursor:pointer;font-weight:600;font-size:13px;transition:background var(--t)}
+.btn:hover{background:#5a6478}
+.btn.sm{padding:3px 9px;font-size:12px}
+.vivo{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;user-select:none}
+.vivo input{display:none}
+.vivo .sw{width:32px;height:17px;border-radius:99px;background:var(--gray);position:relative;transition:background var(--t)}
+.vivo .sw::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:var(--text);transition:transform var(--t)}
+.vivo input:checked + .sw{background:var(--green)}
+.vivo input:checked + .sw::after{transform:translateX(15px)}
+
+/* abas */
+.tabs-bar{display:flex;gap:2px;padding:10px 24px 0;border-bottom:2px solid rgba(var(--white-rgb),.07);flex-shrink:0}
+.tab-btn{background:transparent;border:1px solid transparent;border-bottom:0;font-size:14px;font-weight:700;padding:8px 20px;cursor:pointer;border-radius:6px 6px 0 0;position:relative;bottom:-2px;transition:background var(--t)}
+.tab-btn:hover{background:rgba(var(--white-rgb),.05)}
+.tab-btn.active{background:rgba(var(--white-rgb),.08);border-color:rgba(var(--white-rgb),.18)}
+
+
+.tela{display:none;flex:1;min-height:0}
+.tela.on{display:grid}
+#tela-pipeline{grid-template-columns:236px minmax(0,1fr) 390px}
+#tela-logs{grid-template-columns:300px minmax(0,1fr) 390px}
+@media(max-width:1180px){#tela-pipeline{grid-template-columns:200px minmax(0,1fr) 330px}#tela-logs{grid-template-columns:240px minmax(0,1fr) 330px}}
+
+/* trilho esquerdo */
+.rail{background:rgba(var(--black-rgb),.12);border-right:1px solid rgba(var(--white-rgb),.07);padding:12px 10px;overflow-y:auto;min-height:0}
+.rail-tit{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin:10px 6px 6px}
+.rail-item{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:var(--radius);padding:7px 10px;margin-bottom:3px;cursor:pointer;transition:background var(--t)}
+.rail-item:hover{background:rgba(var(--white-rgb),.06)}
+.rail-item.sel{background:rgba(var(--white-rgb),.09);border-color:rgba(var(--white-rgb),.22)}
+.rail-item .n{font-size:13.5px;font-weight:600}
+.rail-item .s{font-size:11.5px;color:var(--text-muted);margin-top:1px}
+.rail-item .n small{float:right;font-size:11px;color:var(--text-muted);font-weight:600}
+
+.chip{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;border:1px solid rgba(var(--white-rgb),.16);white-space:nowrap;line-height:1.35}
+.chip.ok{color:var(--green);background:rgba(var(--green-rgb),.13);border-color:rgba(var(--green-rgb),.38)}
+.chip.teto{color:var(--amber);background:rgba(var(--amber-rgb),.13);border-color:rgba(var(--amber-rgb),.38)}
+.chip.erro{color:var(--red);background:rgba(var(--red-rgb),.13);border-color:rgba(var(--red-rgb),.38)}
+.chip.fl{background:rgba(var(--white-rgb),.08);color:var(--text)}
+.chip.tp{color:var(--text);border-color:rgba(var(--white-rgb),.22)}
+.chip.tp i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--cor);margin-right:5px;vertical-align:-0.5px}
+
+/* palco */
+.centro{display:flex;flex-direction:column;min-width:0;min-height:0}
+.barra-ferr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid rgba(var(--white-rgb),.06);background:rgba(var(--black-rgb),.06);flex-shrink:0}
+.barra-ferr .sep{width:1px;height:20px;background:rgba(var(--white-rgb),.12)}
+.barra-ferr .rot{font-size:11px;color:var(--text-muted);font-weight:600}
+.pct{font-size:12.5px;font-weight:700;min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;background:rgba(var(--black-rgb),.25);border-radius:var(--radius);padding:2px;gap:2px}
+.seg button{background:transparent;border:0;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-muted)}
+.seg button.on{background:var(--gray);color:var(--text)}
+.vp{position:relative;flex:1;min-height:0;overflow:hidden;cursor:grab;
+  background-image:radial-gradient(rgba(var(--white-rgb),.13) 1px,transparent 1.2px);background-size:24px 24px;touch-action:none;user-select:none}
+.vp.arrastando{cursor:grabbing}
+.mundo{position:absolute;left:0;top:0;transform-origin:0 0}
+.setas{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.setas path{fill:none;vector-effect:non-scaling-stroke}
+.setas text{font-size:calc(11px*var(--kf3,1));font-weight:700;paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+
+.frame{position:absolute;border-radius:12px;border:1px solid rgba(var(--white-rgb),.11);background:rgba(var(--white-rgb),.028)}
+.frame.foco{border-color:rgba(var(--white-rgb),.4)}
+.frame-head{position:absolute;left:18px;top:12px;right:18px;display:flex;align-items:center;gap:10px;white-space:nowrap;overflow:hidden}
+.frame-head b{font-size:calc(15px*var(--kf2,1))}
+.frame-head .chip{font-size:calc(10.5px*var(--kf2,1))}
+.frame-sub{font-size:calc(11.5px*var(--kf2,1));color:var(--text-muted);overflow:hidden;min-width:0}
+.lod3 .frame-sub{display:none}
+.no{position:absolute;width:172px;height:110px;border-radius:8px;padding:8px 10px 6px 15px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(var(--white-rgb),.085),rgba(var(--white-rgb),.035));border:1px solid rgba(var(--white-rgb),.14);overflow:hidden;
+  transition:border-color .15s,box-shadow .15s}
+.no::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--cor)}
+.no:hover{border-color:rgba(var(--white-rgb),.42)}
+.no.sel{border-color:#fff;box-shadow:0 0 0 2px rgba(var(--white-rgb),.38),0 6px 18px rgba(var(--black-rgb),.35)}
+.no-nome{font-size:calc(13px*var(--kf,1));font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.no-tipo{font-size:calc(9.5px*var(--kf,1));font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.no-l3{font-size:calc(11.5px*var(--kf,1));margin-top:4px;font-family:var(--mono);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:clip}
+.no-l3.mut{color:var(--text-muted)}
+.pills{display:flex;gap:5px;margin-top:5px;white-space:nowrap;overflow:hidden}
+.pill{font-size:calc(9.5px*var(--kf,1));font-weight:700;padding:1px 7px;border-radius:99px;border:1px solid}
+.pill.esp{color:var(--rosa);border-color:rgba(244,114,182,.5);background:rgba(244,114,182,.10)}
+.pill.env{color:var(--mint);border-color:rgba(140,232,180,.5);background:rgba(140,232,180,.09)}
+.no-vis{position:absolute;right:6px;top:5px;font-size:11px;font-weight:800;padding:0 7px;border-radius:99px;background:var(--surface-dark);border:1px solid rgba(var(--white-rgb),.3)}
+.no.ok{border-color:rgba(var(--green-rgb),.6)}
+.no.erro{border-color:var(--red);background:linear-gradient(180deg,rgba(var(--red-rgb),.20),rgba(var(--red-rgb),.06))}
+.no.nao{opacity:.38;border-style:dashed}
+.lod2 .no-l3,.lod2 .no-l4,.lod2 .pills{display:none}
+.lod3 .no-tipo,.lod3 .no-l3,.lod3 .no-l4,.lod3 .pills{display:none}
+.lod2 .no-nome{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lod3 .no-nome{-webkit-line-clamp:3}
+
+.leg-linha{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;padding:6px 16px;font-size:11.5px;border-bottom:1px solid rgba(var(--white-rgb),.06);background:rgba(var(--black-rgb),.10);flex-shrink:0}
+.leg-linha .gt{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--text-muted)}
+.leg-linha .it{display:inline-flex;align-items:center;gap:6px}
+.sw-t{width:11px;height:11px;border-radius:3px;background:var(--cor)}
+.tr{width:24px;height:0;border-top:2px solid rgba(var(--white-rgb),.6)}
+.tr.v{border-top:2px dashed var(--amber)} .tr.x{border-top:2px dashed var(--rosa)}
+
+/* detalhe */
+.det{background:var(--surface-dark);border-left:1px solid rgba(var(--white-rgb),.07);padding:14px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;min-height:0}
+.det-tit{font-size:17px;font-weight:700;line-height:1.2}
+.det-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.det-sub{font-size:12px;color:var(--text-muted)}
+.det .seg{display:flex}.det .seg button{flex:1}
+.card{background:linear-gradient(180deg,rgba(var(--white-rgb),.06),rgba(var(--white-rgb),.02));border:1px solid rgba(var(--white-rgb),.09);border-radius:var(--radius);padding:10px 13px 12px}
+.card h5{margin:0 0 7px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);font-weight:800}
+.card p{margin:0 0 6px;font-size:13px;line-height:1.5}
+.card ul{margin:0;padding-left:16px;font-size:13px;line-height:1.55}
+pre.bloco{margin:0;background:rgba(var(--black-rgb),.3);border-radius:var(--radius);padding:11px 13px;font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#c9d1d9}
+.var{color:var(--yellow);background:rgba(var(--yellow-rgb),.12);border-radius:3px;padding:0 2px}
+.mono{font-family:var(--mono);font-size:12px}
+.faixa-erro{background:rgba(var(--red-rgb),.14);border-left:3px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:9px 12px;font-size:13px}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.kpi{background:rgba(var(--black-rgb),.22);border-radius:var(--radius);padding:8px 10px}
+.kpi .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi .r{font-size:10.5px;color:var(--text-muted)}
+.meter{height:10px;border-radius:6px;background:rgba(var(--white-rgb),.08);overflow:hidden;margin:6px 0 4px;display:flex}
+.meter i{display:block;height:100%}
+.meter-l{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)}
+.brow{display:grid;grid-template-columns:118px 1fr 74px;gap:8px;align-items:center;font-size:12px;margin:5px 0}
+.brow .b{height:9px;border-radius:5px;background:rgba(var(--white-rgb),.07);overflow:hidden;display:flex}
+.brow .b i{display:block;height:100%}
+.brow .n{text-align:right;color:var(--text-muted);font-variant-numeric:tabular-nums;font-size:11.5px}
+.brow.me{color:var(--text);font-weight:700}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* logs */
+.run{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid transparent;border-radius:var(--radius);padding:8px 11px;margin-bottom:6px;cursor:pointer;transition:background var(--t)}
+.run:hover{background:var(--surface-hover)}
+.run.sel{border-color:rgba(var(--white-rgb),.4);background:var(--surface-hover)}
+.run-1{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+.run-1 b{color:var(--text);font-size:13.5px}
+.run-2{font-size:13.5px;font-weight:600;margin:3px 0 2px}
+.run-3{font-size:11.5px;color:var(--text-muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filt{display:flex;flex-wrap:wrap;gap:5px;margin:0 4px 8px}
+.fchip{background:rgba(var(--white-rgb),.07);border:1px solid rgba(var(--white-rgb),.12);border-radius:99px;padding:3px 10px;font-size:11.5px;font-weight:600;cursor:pointer;color:var(--text-muted)}
+.fchip.on{background:rgba(var(--white-rgb),.18);color:var(--text);border-color:rgba(var(--white-rgb),.4)}
+.resumo{padding:12px 18px;border-bottom:1px solid rgba(var(--white-rgb),.06);background:rgba(var(--black-rgb),.06);flex-shrink:0}
+.resumo-1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.resumo-1 .tit{font-size:17px;font-weight:700}
+.resumo-2{font-size:12.5px;color:var(--text-muted);margin:4px 0 10px}
+.resumo-2 b{color:var(--text)}
+.kp6{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media(max-width:1300px){.kp6{grid-template-columns:repeat(3,1fr)}}
+.trilha{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;font-size:12px}
+.trilha .p{background:rgba(var(--white-rgb),.07);border:1px solid rgba(var(--white-rgb),.13);border-radius:99px;padding:2px 10px 2px 8px;cursor:pointer;border-left:4px solid var(--cor)}
+.trilha .p:hover{background:rgba(var(--white-rgb),.14)}
+.trilha .p.sel{border-color:#fff}
+.trilha .a{color:var(--text-muted)}
+.lg-corpo{flex:1;min-height:0;overflow-y:auto;padding:12px 18px}
+.eixo{display:grid;grid-template-columns:240px 1fr 64px 150px;gap:8px;align-items:center;font-size:10.5px;color:var(--text-muted);padding:0 4px 5px;border-bottom:1px solid rgba(var(--white-rgb),.1);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.eixo .marcas{position:relative;height:14px}
+.eixo .marcas span{position:absolute;transform:translateX(-50%);white-space:nowrap;text-transform:none;letter-spacing:0}
+.linha{display:grid;grid-template-columns:240px 1fr 64px 150px;gap:8px;align-items:center;padding:5px 4px;border-bottom:1px solid rgba(var(--white-rgb),.05);cursor:pointer;font-size:13px}
+.linha:hover{background:rgba(var(--white-rgb),.04)}
+.linha.sel{background:rgba(var(--white-rgb),.10)}
+.linha .nome{display:flex;align-items:center;gap:7px;min-width:0;white-space:nowrap}
+.linha .nome.ind{padding-left:16px}
+.linha .faixa{position:relative;height:14px}
+.linha .faixa span{position:absolute;top:2px;height:10px;border-radius:4px;min-width:3px}
+.linha .d{text-align:right;color:var(--text-muted);font-size:12px;font-variant-numeric:tabular-nums}
+.linha .k{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.linha .k .b{flex:1;height:8px;border-radius:4px;background:rgba(var(--white-rgb),.06);display:flex;overflow:hidden}
+.linha .k .b i{display:block;height:100%}
+.grupo{padding:9px 4px 3px;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);display:flex;gap:10px;align-items:center}
+
+.pts{display:inline-flex;gap:4px;align-items:center;vertical-align:middle}
+.pts i{width:9px;height:9px;border-radius:50%;background:var(--green)}
+.pts i.erro{background:var(--red)} .pts i.teto{background:var(--amber)}
+.vazio{padding:30px;color:var(--text-muted);font-size:13px}
+
+/* ===== v3 ===== */
+.meta em{color:var(--text);font-style:normal;font-weight:700}
+.meta .sep2{width:1px;height:18px;background:rgba(var(--white-rgb),.16)}
+.mostrando{font-size:12.5px;color:var(--text-muted)}.mostrando b{color:var(--text)}
+.rail-item.tipo{margin-top:9px;background:rgba(var(--white-rgb),.045)}
+.rail-item.tipo .n{font-weight:800}
+.rail-item.sub{margin-left:12px;width:calc(100% - 12px)}
+.ico{flex-shrink:0;margin-right:5px;vertical-align:-2px}
+.no-tipo{display:flex;align-items:center}
+.no.t-gatilho{border-radius:24px 8px 8px 24px}
+.no.t-humano{border-style:dashed}
+.grp-h{position:absolute;left:4px;font-size:calc(11.5px*var(--kf2,1));font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:10px;cursor:pointer}
+.grp-h .gd{font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--text-muted)}
+.grp-h::after{content:"";flex:1;height:1px;background:rgba(var(--white-rgb),.16)}
+.grp-h:hover{color:var(--brand,#fff)}
+.lod3 .grp-h .gd{display:none}
+.frame-head[data-fh]{cursor:pointer}
+.frame-head[data-fh]:hover b{text-decoration:underline}
+.kv{display:grid;grid-template-columns:88px 1fr;gap:9px 10px;font-size:13px;line-height:1.45}
+.kv .k{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);font-weight:800;padding-top:3px}
+.kv .v{min-width:0;overflow-wrap:anywhere}.kv .v .btn.sm{margin-left:4px}
+.lk{color:var(--sky);cursor:pointer;text-decoration:none}.lk:hover{text-decoration:underline}
+.mini{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:2px 0 4px}
+.mp{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:2px 8px 2px 6px;border-radius:6px;background:rgba(var(--white-rgb),.08);border:1px solid rgba(var(--white-rgb),.14);border-left:4px solid var(--cor)}
+.mini .a{color:var(--text-muted)}.mini .lc{color:var(--amber);font-size:11px;font-weight:700}.mini .fim{font-size:11px;color:var(--text-muted);font-weight:700;border:1px dashed rgba(var(--white-rgb),.3);border-radius:6px;padding:2px 7px}
+.tprow{display:grid;grid-template-columns:16px 118px 1fr;gap:6px;align-items:center;font-size:12px;margin:5px 0}.tprow span{color:var(--text-muted)}
+details.decl summary{cursor:pointer;font-size:12.5px;font-weight:700}
+details.decl pre{margin-top:9px}
+.ult{font-size:13.5px}
+.emport{border-left:3px solid var(--sky);background:rgba(var(--white-rgb),.05);border-radius:0 var(--radius) var(--radius) 0;padding:8px 12px;font-size:13px;line-height:1.5}
+.emport span{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--text-muted);margin-bottom:2px}
+.emport.erro{border-left-color:var(--red);background:rgba(var(--red-rgb),.12)}.emport.aviso{border-left-color:var(--amber);background:rgba(var(--amber-rgb),.10)}
+.faixa-erro.amb{background:rgba(var(--amber-rgb),.13);border-left-color:var(--amber)}
+.chip.info{color:var(--sky);background:rgba(122,162,247,.12);border-color:rgba(122,162,247,.35)}
+.seg.lsub{display:flex;margin:0 0 6px}.seg.lsub button{flex:1;font-size:12px;padding:5px 6px}
+.run{border-left:4px solid transparent}
+.run.e-erro{border-left-color:var(--red)}.run.e-teto{border-left-color:var(--amber)}.run.e-ok{border-left-color:rgba(var(--green-rgb),.6)}
+.run-err{margin-top:4px;font-size:11.5px;color:#ff9c92;line-height:1.35}.run-err.amb{color:#f6c66b}
+.cg{margin:0 0 14px;padding:8px 8px 4px;border-radius:10px;background:rgba(var(--white-rgb),.035);border:1px solid rgba(var(--white-rgb),.08)}
+.cg.erro{border-color:rgba(var(--red-rgb),.35)}.cg.aviso{border-color:rgba(var(--amber-rgb),.35)}
+.cg-h{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.35}.cg-h b{font-weight:700}
+.cg-s{font-size:11.5px;color:var(--text-muted);margin:4px 0 8px}
+.linha.l-erro{background:rgba(var(--red-rgb),.10)}
+
+/* ===== v4 ===== */
+#tela-legenda.on{display:block;overflow-y:auto}
+.leg-pagina{max-width:1180px;margin:0 auto;padding:18px 24px 40px}
+.leg-pagina h2{margin:0 0 4px;font-size:22px}
+.tab-leg{width:100%;border-collapse:collapse;font-size:13px}
+.tab-leg th,.tab-leg td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(var(--white-rgb),.08);vertical-align:top}
+.tab-leg th{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.tab-leg td:first-child{white-space:nowrap}
+.sw-t{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--cor);margin-right:4px}
+.og{display:inline-block;margin-top:3px;font-size:9px;letter-spacing:.05em;font-weight:800;padding:0 6px;border-radius:99px;border:1px solid;text-transform:none;line-height:1.5}
+.og-código{color:var(--sky);border-color:rgba(122,162,247,.5)}
+.og-rastro{color:var(--green);border-color:rgba(var(--green-rgb),.5)}
+.og-assistente{color:var(--amber);border-color:rgba(var(--amber-rgb),.55)}
+.cnt{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:4px 0;border-bottom:1px solid rgba(var(--white-rgb),.06)}
+.lbl2{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);font-weight:800;margin:10px 0 4px}
+.det .seg{flex-wrap:wrap}.det .seg button{white-space:nowrap}
+/* ===== v5 ===== */
+.no-l4{font-size:calc(10.5px*var(--kf,1));margin-top:2px;font-family:var(--mono);color:var(--text-muted);white-space:nowrap;overflow:hidden}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 2px rgba(46,204,113,.55),0 0 0 0 rgba(46,204,113,0)}50%{box-shadow:0 0 0 2px rgba(46,204,113,1),0 0 0 8px rgba(46,204,113,.2)}}
+@keyframes pisca{50%{opacity:.25}}
+.no.rodando{animation:pulso 1s ease-in-out infinite;border-color:var(--green)}
+.frame.rodando{border-color:rgba(46,204,113,.7)}
+.rail-item.rodando .n::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:8px;animation:pisca 1s infinite}
+.dot-vivo{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pisca 1s infinite}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="proj">
+      <span class="proj-nome" id="proj-nome"></span>
+      <span class="proj-arq" id="proj-arq"></span>
+    </div>
+    <div class="topbar-dir">
+      <div class="consumo" id="consumo"></div>
+      <button class="btn" id="btn-atualizar">Atualizar</button>
+      <label class="vivo"><input type="checkbox" id="ao-vivo"><span class="sw"></span><span>Ao vivo</span></label>
+    </div>
+  </header>
+
+  <nav class="tabs-bar">
+    <button class="tab-btn active" data-tab="pipeline">Pipeline</button>
+    <button class="tab-btn" data-tab="logs">Logs</button>
+    <button class="tab-btn" data-tab="legenda">Legenda</button>
+  </nav>
+
+  <!-- ===== PIPELINE ===== -->
+  <section class="tela on" id="tela-pipeline">
+    <aside class="rail" id="rail-pl"></aside>
+    <div class="centro">
+      <div class="barra-ferr" id="ferr-pl"></div>
+      <div class="leg-linha" id="leg-pl"></div>
+      <div id="palco-pl" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+    </div>
+    <aside class="det" id="det-pl"></aside>
+  </section>
+
+  <!-- ===== LEGENDA ===== -->
+  <section class="tela" id="tela-legenda"><div class="leg-pagina" id="leg-pagina"></div></section>
+
+  <!-- ===== LOGS ===== -->
+  <section class="tela" id="tela-logs">
+    <aside class="rail" id="rail-lg"></aside>
+    <div class="centro">
+      <div class="resumo" id="resumo-lg"></div>
+      <div class="barra-ferr" id="ferr-lg"></div>
+      <div class="leg-linha" id="leg-lg" style="display:none"></div>
+      <div id="palco-lg" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+    </div>
+    <aside class="det" id="det-lg"></aside>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   DADOS FICTÍCIOS
+   ============================================================ */
+let JANELA=null,PROJ={nome:'',rastro:''},AVISOS=[];
+const TN={
+  gatilho:{rot:'gatilho',cor:'--rosa'},
+  llm:{rot:'LLM',cor:'--purple'},
+  ferramenta:{rot:'ferramenta',cor:'--teal'},
+  codigo:{rot:'código',cor:'--cinza'},
+  humano:{rot:'humano',cor:'--yellow'},
+  embedding:{rot:'modelo complementar',cor:'--sky'},
+  barreira:{rot:'barreira',cor:'--laranja'},
+  fila:{rot:'fila',cor:'--indigo'},
+  outro:{rot:'outro',cor:'--sand'}
+};
+const TF={
+  tiro:{rot:'tiro único',ordem:0,desc:'um prompt, uma resposta'},
+  cadeia:{rot:'cadeia',ordem:1,desc:'etapas fixas, em sequência'},
+  ciclo:{rot:'ciclo',ordem:2,desc:'papéis com laço e teto'},
+  agente:{rot:'agente',ordem:3,desc:'o modelo escolhe o próximo passo'}
+};
+let FL={},IDS=[],CRUZ=[],NOME={},DESC={},RUNS=[],EVENTOS=[],DESDE=0;
+const porTipo=()=>IDS.map(i=>FL[i]).sort((a,b)=>TF[a.tipo].ordem-TF[b.tipo].ordem||a.nome.localeCompare(b.nome));
+const humanizar=s=>{s=String(s).replace(/_/g,' ');return s.charAt(0).toUpperCase()+s.slice(1);};
+const escq=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- buscar no servidor local ---------- */
+async function apiJson(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(u+' → '+r.status);return r.json();}
+async function lerRastro(zerar){
+  const r=await apiJson('/api/rastro?desde='+(zerar?0:DESDE));
+  if(r.reiniciou)EVENTOS=[];
+  if(r.eventos&&r.eventos.length)EVENTOS=EVENTOS.concat(r.eventos);
+  DESDE=r.proximo;
+  return !!r.reiniciou||(r.eventos||[]).length>0;
+}
+async function carregar(){
+  AVISOS=[];
+  try{
+    const p=await apiJson('/api/pipeline');
+    PROJ={nome:p.projeto||'',rastro:p.rastro||''};JANELA=p.janela||null;AVISOS=p.avisos||[];
+    FL={};
+    (p.fluxos||[]).forEach(f=>{
+      if(!TF[f.tipo])f.tipo='cadeia';
+      if(!GAT[f.gat])f.gat='evento';
+      f.nome=escq(f.nome);f.resumo=escq(f.resumo||'');f.arq=escq(f.arq||'');
+      f.nos=(f.nos||[]).map(n=>{if(!TN[n.tipo])n.tipo='outro';n.nome=escq(n.nome);n.arq=escq(n.arq||'');return n;});
+      f.arestas=(f.arestas||[]).filter(a=>f.nos.some(n=>n.id===a[0])&&f.nos.some(n=>n.id===a[1]));
+      FL[f.id]=f;
+    });
+    CRUZ=(p.cruzamentos||[]).filter(c=>FL[c.de[0]]&&FL[c.para[0]]&&FL[c.de[0]].nos.some(n=>n.id===c.de[1])&&FL[c.para[0]].nos.some(n=>n.id===c.para[1]));
+    EVENTOS=[];DESDE=0;
+    await lerRastro(true);
+  }catch(e){AVISOS.push('Não consegui falar com o Observar.pyw: '+e.message);}
+  reconstruir();
+  if(!S.carregado){S.carregado=true;if(Q.get('call')&&RUNS.length)S.call=+Q.get('call');if(FL[S.foco]&&!S.selFluxo)S.selFluxo=S.foco;}
+  renderTudo();
+}
+
+/* ---------- do rastro (linhas de evento) para as execuções que o resto do painel lê ---------- */
+const tipoDe=(f,no,ev)=>{const F=FL[f],n=F&&F.nos.find(x=>x.id===no);return (n&&n.tipo)||ev||'outro';};
+function montarRuns(){
+  const por={},ordem=[],agora=Date.now()/1000;
+  EVENTOS.forEach(e=>{
+    if(!e.execucao||!e.fluxo||!e.ponto)return;
+    let r=por[e.execucao];
+    if(!r){r=por[e.execucao]={id:e.execucao,f:e.fluxo,ts:e.ts,ini:{},abertos:{},fins:[]};ordem.push(r);}
+    r.ts=Math.min(r.ts,e.ts);
+    const k=e.ponto+'#'+e.visita;
+    if(e.evento==='ponto_inicio'){r.ini[k]=e;r.abertos[k]=e;}
+    else if(e.evento==='ponto_fim'){delete r.abertos[k];r.fins.push(e);}
+  });
+  S.vivoSet=new Set();
+  ordem.forEach(r=>Object.values(r.abertos).forEach(e=>{if(agora-e.ts<900)S.vivoSet.add(e.fluxo+'.'+e.ponto);}));
+  const runs=ordem.filter(r=>r.fins.length).sort((a,b)=>a.ts-b.ts);
+  runs.forEach((r,i)=>{
+    const F=FL[r.f],lacos=F&&(F.tipo==='ciclo'||F.tipo==='agente');
+    r.n=i+1;r.h=new Date(r.ts*1000).toLocaleTimeString('pt-BR');
+    r.rodando=Object.keys(r.abertos).length>0;
+    r.calls=r.fins.map(e=>{
+      const k=e.ponto+'#'+e.visita,i0=(r.ini[k]||{ts:e.ts-(e.duracao||0)}).ts;
+      return {k,no:e.ponto,tipoEv:e.tipo,ini:Math.max(0,i0-r.ts),dur:e.duracao||0,
+        tin:e['gen_ai.usage.input_tokens']||0,tout:e['gen_ai.usage.output_tokens']||0,fonte:e.tokens_fonte,
+        st:e.estado==='erro'?'erro':(e.estado==='barrou'?'barrou':'ok'),erro:e.erro,encerra:e.encerra,
+        enviado:e.enviado,resposta:e.resposta,cont:e.contagens,detalhe:e.detalhe,visita:e.visita,volta:0};
+    });
+    r.calls.sort((a,b)=>a.ini-b.ini);
+    r.calls.forEach((c,j)=>{c.id=j+1;});
+    if(lacos){const mx={};r.calls.forEach(c=>{mx[c.no]=Math.max(mx[c.no]||0,c.visita);});r.calls.forEach(c=>{c.volta=mx[c.no]>1?c.visita:0;});}
+    const ec=r.calls.find(c=>c.st==='erro');
+    r.fim=ec?'erro':(r.calls.some(c=>c.encerra==='teto')?'teto':'ok');
+    r.erro=ec?ec.erro:'';r.erroNo=ec?ec.no:null;
+    r.tin=r.calls.reduce((a,c)=>a+c.tin,0);r.tout=r.calls.reduce((a,c)=>a+c.tout,0);
+    r.dur=Math.max(...r.calls.map(c=>c.ini+c.dur));
+    const g=r.calls.find(c=>tipoDe(r.f,c.no,c.tipoEv)==='gatilho');
+    r.gat=(g&&g.detalhe)||'';
+    const maxLlm=Math.max(0,...r.calls.filter(c=>tipoDe(r.f,c.no,c.tipoEv)==='llm').map(c=>c.visita));
+    r.voltas=F&&F.tipo==='ciclo'?maxLlm:(F&&F.tipo==='agente'?Math.max(0,maxLlm-1):0);
+  });
+  RUNS=runs.reverse();
+}
+/* o painel nunca esconde o que não reconhece: ponto ou fluxo visto só no rastro entra no desenho */
+function adotarOrfaos(){
+  RUNS.forEach(r=>{
+    let F=FL[r.f];
+    if(!F)F=FL[r.f]={id:r.f,nome:humanizar(r.f),tipo:'cadeia',gat:'evento',teto:null,resumo:'Fluxo visto só no rastro: falta a descrição.',arq:'—',nos:[],arestas:[]};
+    r.calls.forEach(c=>{
+      if(F.nos.some(n=>n.id===c.no))return;
+      const col=F.nos.reduce((a,n)=>Math.max(a,n.c),-1)+1;
+      F.nos.push({id:c.no,nome:humanizar(c.no),tipo:TN[c.tipoEv]?c.tipoEv:'outro',c:col,r:0,arq:'— (só no rastro)'});
+    });
+  });
+  IDS=Object.keys(FL);
+}
+/* da última execução em que o ponto rodou: tokens, contagens e o último texto enviado */
+function preencherPontos(){
+  IDS.forEach(f=>FL[f].nos.forEach(n=>{
+    delete n.tok;delete n.vis;delete n.cont;delete n.prompt;delete n.saida;
+    for(const r of RUNS.filter(x=>x.f===f)){
+      const cs=r.calls.filter(c=>c.no===n.id&&c.st!=='erro');
+      if(!cs.length)continue;
+      const u=cs[cs.length-1];
+      if(n.tok===undefined&&(u.tin+u.tout>0||n.tipo==='llm'||n.tipo==='embedding')){n.tok=[u.tin,u.tout];n.vis=cs.length;}
+      if(!n.cont&&u.cont)n.cont=Object.entries(u.cont);
+      if(n.prompt===undefined&&u.enviado){n.prompt=u.enviado;n.saida=u.resposta||'';}
+    }
+  }));
+}
+function reconstruir(){
+  montarRuns();adotarOrfaos();
+  NOME={};DESC={};
+  IDS.forEach(f=>FL[f].nos.forEach(n=>{n.f=f;NOME[f+'.'+n.id]=n;if(n.desc)DESC[f+'.'+n.id]=n.desc;}));
+  RUNS.forEach(r=>{const F=FL[r.f];if(F&&!F.teto&&r.fim==='teto')F.teto=r.voltas;});
+  preencherPontos();
+  if(!RUNS.find(r=>r.n===S.run))S.run=RUNS.length?RUNS[0].n:null;
+  if(RUNS.length){const r=runAtual();if(!r.calls.find(c=>c.id===S.call))S.call=callPadrao(r);}
+}
+
+/* ---------- texto enviado / recebido de cada chamada ---------- */
+const AVISO_TEXTO='O texto não foi gravado. Rode o programa com a variável de ambiente OBSERVAR_TEXTO=1 para o rastro guardar o prompt e a resposta inteiros.';
+const ehModelo=(f,no)=>{const n=NOME[f+'.'+no];return !!n&&(n.tipo==='llm'||n.tipo==='embedding');};
+function textoEnv(run,c){
+  if(c.enviado)return c.enviado;
+  if(ehModelo(run.f,c.no))return AVISO_TEXTO;
+  return c.detalhe||'—';
+}
+function textoRes(run,c){
+  if(c.st==='erro')return 'Erro: '+c.erro;
+  if(c.resposta)return c.resposta;
+  if(ehModelo(run.f,c.no))return AVISO_TEXTO;
+  return c.st==='barrou'?'barrou':'—';
+}
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>Math.round(n).toLocaleString('pt-BR');
+const seg=x=>x.toFixed(1).replace('.',',')+' s';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const baseArq=a=>a.split('/').pop();
+const hl=t=>esc(t).replace(/\{([a-z_]+)\}/g,'<span class="var">{$1}</span>');
+const corTipo=t=>'--cor:var('+TN[t].cor+')';
+const chipTipo=t=>`<span class="chip tp">${icone(t,11)}${TN[t].rot}</span>`;
+const chipFluxo=f=>`<span class="chip fl">${TF[FL[f].tipo].rot}</span>`;
+const ROT_FIM={ok:'concluída',erro:'erro',teto:'parou no teto'};
+const tokMedio=F=>{let i=0,o=0;F.nos.forEach(n=>{if(n.tok){const v=n.vis||1;i+=n.tok[0]*v;o+=n.tok[1]*v;}});return {i:Math.round(i),o:Math.round(o)};};
+const chipEst=e=>`<span class="chip ${e}">${ROT_FIM[e]}</span>`;
+const GAT={evento:'evento',agenda:'agenda',usuário:'mensagem do usuário'};
+const rotEsp=n=>n.tipo==='fila'?'na fila':(n.tipo==='humano'?'espera pessoa':'espera evento');
+
+/* ============================================================
+   ZOOM E ARRASTO (roda do mouse amplia; arrastar move)
+   ============================================================ */
+class Vista{
+  constructor(vp,mundo,onchange){
+    this.vp=vp;this.m=mundo;this.k=1;this.x=0;this.y=0;this.onchange=onchange;this.moveu=false;
+    vp.addEventListener('wheel',e=>{e.preventDefault();const r=vp.getBoundingClientRect();this.zoomEm(e.clientX-r.left,e.clientY-r.top,this.k*Math.exp(-e.deltaY*0.0016));},{passive:false});
+    let arr=null;
+    vp.addEventListener('pointerdown',e=>{if(e.button!==0)return;arr={x:e.clientX,y:e.clientY,ox:this.x,oy:this.y};this.moveu=false;});
+    window.addEventListener('pointermove',e=>{if(!arr)return;const dx=e.clientX-arr.x,dy=e.clientY-arr.y;if(!this.moveu&&Math.hypot(dx,dy)<4)return;this.moveu=true;vp.classList.add('arrastando');this.x=arr.ox+dx;this.y=arr.oy+dy;this.aplicar();});
+    window.addEventListener('pointerup',()=>{if(arr){arr=null;vp.classList.remove('arrastando');setTimeout(()=>{this.moveu=false;},0);}});
+  }
+  aplicar(){
+    this.m.style.transform=`translate(${this.x}px,${this.y}px) scale(${this.k})`;
+    this.m.style.setProperty('--kf',clamp(1/this.k,1,1.55).toFixed(3));this.m.style.setProperty('--kf2',clamp(1/this.k,1,2.2).toFixed(3));this.m.style.setProperty('--kf3',clamp(1/this.k,1,1.3).toFixed(3));
+    this.m.style.willChange='transform';clearTimeout(this._t);this._t=setTimeout(()=>{this.m.style.willChange='';},220);
+    const s=24*this.k;this.vp.style.backgroundSize=s+'px '+s+'px';this.vp.style.backgroundPosition=this.x+'px '+this.y+'px';
+    this.vp.classList.toggle('lod2',this.k<0.78);this.vp.classList.toggle('lod3',this.k<0.46);
+    if(this.onchange)this.onchange(this.k);
+  }
+  zoomEm(px,py,nk){nk=clamp(nk,0.2,2.6);const f=nk/this.k;this.x=px-(px-this.x)*f;this.y=py-(py-this.y)*f;this.k=nk;this.aplicar();}
+  zoomCentro(f){const r=this.vp.getBoundingClientRect();this.zoomEm(r.width/2,r.height/2,this.k*f);}
+  enquadrarLargura(b,minK){ /* cabe na largura; a altura pode passar (rolar arrastando), sem descer de minK */
+    const r=this.vp.getBoundingClientRect(),pad=28;
+    const kw=(r.width-pad*2)/b.w,kh=(r.height-pad*2)/b.h;
+    const k=clamp(Math.min(kw,Math.max(kh,minK),1),0.2,1);
+    this.k=k;this.x=(r.width-b.w*k)/2-b.x*k;this.y=pad-b.y*k;this.aplicar();
+  }
+  enquadrar(b){ /* b = {x,y,w,h} no mundo; escala que cabe, sem passar de 100 % */
+    const r=this.vp.getBoundingClientRect(),pad=28;
+    const k=clamp(Math.min((r.width-pad*2)/b.w,(r.height-pad*2)/b.h,1),0.2,1);
+    this.k=k;this.x=(r.width-b.w*k)/2-b.x*k;
+    this.y=b.h*k<r.height-pad*2?(pad+Math.min(24,(r.height-pad*2-b.h*k)/2))-b.y*k:(r.height-b.h*k)/2-b.y*k;
+    this.aplicar();
+  }
+}
+
+/* ============================================================
+   ÍCONES POR TIPO DE PONTO
+   ============================================================ */
+const ORDEM_TIPOS=['gatilho','llm','ferramenta','codigo','humano','embedding','barreira','fila','outro'];
+const ICO={
+  barreira:'<path d="M8 1 2.5 3v4.2c0 3.3 2.3 6.2 5.5 7.8 3.2-1.6 5.5-4.5 5.5-7.8V3z"/>',
+  fila:'<rect x="1.5" y="3" width="13" height="2.4" rx="1"/><rect x="1.5" y="6.8" width="9" height="2.4" rx="1"/><rect x="1.5" y="10.6" width="5" height="2.4" rx="1"/>',
+  outro:'<circle cx="3" cy="8" r="1.7"/><circle cx="8" cy="8" r="1.7"/><circle cx="13" cy="8" r="1.7"/>',
+  gatilho:'<path d="M9 1 3 9h4l-1 6 6-8H8z"/>',
+  llm:'<path d="M8 1c.4 3.2 1.8 4.6 5 5-3.2.4-4.6 1.8-5 5-.4-3.2-1.8-4.6-5-5 3.2-.4 4.6-1.8 5-5z"/>',
+  ferramenta:'<path d="M10.5 1.5a3.5 3.5 0 0 0-3.2 4.8L1.8 11.8a1.4 1.4 0 0 0 2 2l5.5-5.5a3.5 3.5 0 0 0 4.8-3.2l-2.2 2.2-1.9-.5-.5-1.9z"/>',
+  codigo:'<path d="M5 4 1 8l4 4M11 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+  humano:'<circle cx="8" cy="5" r="2.7"/><path d="M2.5 14.5c.4-3 2.6-4.7 5.5-4.7s5.1 1.7 5.5 4.7z"/>',
+  embedding:'<rect x="2" y="9" width="3" height="5" rx=".6"/><rect x="6.5" y="3" width="3" height="11" rx=".6"/><rect x="11" y="6" width="3" height="8" rx=".6"/>'
+};
+const icone=(t,s)=>`<svg class="ico" width="${s||13}" height="${s||13}" viewBox="0 0 16 16" fill="currentColor" style="color:var(${TN[t].cor})">${ICO[t]}</svg>`;
+const TIPO_DESC={
+  gatilho:'o que acorda o fluxo: evento, agenda ou mensagem',
+  llm:'uma chamada ao modelo que gera texto',
+  ferramenta:'função que o modelo pode pedir para rodar',
+  codigo:'passo comum do programa, sem modelo',
+  humano:'espera uma resposta de pessoa',
+  embedding:'outro modelo (vetores, ranqueador) — não gera texto',
+  barreira:'bloqueia, limita ou corta: guardrail, restrição, timeout',
+  fila:'espera a vez antes de seguir: fila de pedidos ao modelo',
+  outro:'qualquer coisa que não cabe nos outros — nunca fica de fora'
+};
+const LEGENDA=`<span class="gt">Ponto</span>${ORDEM_TIPOS.map(t=>`<span class="it" title="${TIPO_DESC[t]}">${icone(t,13)}${TN[t].rot}</span>`).join('')}
+<span class="gt">Setas</span><span class="it"><i class="tr"></i>só começa quando o de trás termina</span><span class="it"><i class="tr v"></i>volta do laço</span><span class="it"><i class="tr x"></i>dispara outro fluxo</span>
+<span class="gt">Selos</span><span class="it"><span class="pill esp">espera evento</span></span><span class="it"><span class="pill env">envia</span></span>`;
+
+/* ============================================================
+   DECLARAÇÃO MÍNIMA — o que o assistente externo escreveria (JSON)
+   ============================================================ */
+const slug=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+function declNo(n){
+  let s=`{"id": "${slug(n.nome)}", "tipo": "${n.tipo}", "arquivo": "${n.arq}"`;
+  if(n.espera)s+=`, "espera": "${n.espera}"`;
+  return s+'}';
+}
+function declLiga(F,a){
+  const o=a[2]||{},nm=id=>slug(F.nos.find(n=>n.id===id).nome);
+  const r=o.laco?':volta':(o.rot?':'+slug(o.rot).split('_')[0]:'');
+  return `${nm(a[0])} ${o.bi?'<>':'>'} ${nm(a[1])}${r}`;
+}
+function declFluxo(F){
+  const disp=CRUZ.filter(c=>c.de[0]===F.id).map(c=>slug(FL[c.para[0]].nome));
+  return `{
+  "fluxo": "${slug(F.nome)}",
+  "tipo": "${slug(TF[F.tipo].rot)}",${F.teto?`
+  "teto": ${F.teto},`:''}
+  "nos": [
+${F.nos.map(n=>'    '+declNo(n)).join(',\n')}
+  ],
+  "liga": [${F.arestas.map(a=>'"'+declLiga(F,a)+'"').join(', ')}]${disp.length?`,
+  "dispara": [${disp.map(d=>'"'+d+'"').join(', ')}]`:''}
+}`;
+}
+function declPonto(F,n){
+  const li=F.arestas.filter(a=>a[0]===n.id).map(a=>'"'+declLiga(F,a)+'"');
+  return declNo(n)+(li.length?`\n→ liga: [${li.join(', ')}]`:'');
+}
+const NOTA_DECL='Só isto o assistente escreve. Os pontos, as ligações, o tipo provável, o arquivo e a linha o painel lê do código; prompt, tokens, tempos, contagens e erros vêm do que rodou.';
+
+/* ============================================================
+   LAYOUT E DESENHO DO MUNDO
+   ============================================================ */
+const CW=214,RH=132,NW=172,NH=110,GAP=56,GH=40;
+function ehLaco(F){return F.arestas.some(a=>a[2]&&a[2].laco);}
+function tamanhoFluxo(F){
+  const cs=Math.max(...F.nos.map(n=>n.c))+1,rs=Math.max(...F.nos.map(n=>n.r))+1;
+  return {w:(cs-1)*CW+NW+48,h:(rs-1)*RH+NH+66+(ehLaco(F)?44:0)+14};
+}
+function layoutMapa(ids,comGrupo){
+  const fr={},pos={},grp=[];let x=0,y=0,rh=0,ult=null;const MAXW=1580;
+  ids.forEach(id=>{
+    const F=FL[id],s=tamanhoFluxo(F);
+    if(comGrupo&&F.tipo!==ult){if(ult!==null)y+=rh+GAP;x=0;rh=0;grp.push({tipo:F.tipo,y});y+=GH;ult=F.tipo;}
+    if(x>0&&x+s.w>MAXW){x=0;y+=rh+GAP;rh=0;}
+    fr[id]={x,y,w:s.w,h:s.h};
+    pos[id]={};F.nos.forEach(n=>{pos[id][n.id]={x:x+24+n.c*CW,y:y+58+n.r*RH};});
+    x+=s.w+GAP;rh=Math.max(rh,s.h);
+  });
+  let W=0,H=0;Object.values(fr).forEach(f=>{W=Math.max(W,f.x+f.w);H=Math.max(H,f.y+f.h);});
+  return {fr,pos,W,H,grp};
+}
+function pAresta(pa,pb,o){
+  const ax=pa.x,ay=pa.y,bx=pb.x,by=pb.y;
+  if(o&&o.laco){const sx=ax+NW/2,tx=bx+NW/2,y=ay+NH;return {d:`M${sx} ${y} C${sx} ${y+58} ${tx} ${by+NH+58} ${tx} ${by+NH+3}`,lx:(sx+tx)/2,ly:y+50};}
+  if(ax===bx){const sx=ax+NW/2;return by>ay?{d:`M${sx} ${ay+NH} L${sx} ${by-3}`,lx:sx+8,ly:(ay+NH+by)/2+4}:{d:`M${sx} ${ay} L${sx} ${by+NH+3}`,lx:sx+8,ly:(ay+by+NH)/2+4};}
+  const x1=ax+NW,y1=ay+NH/2,x2=bx-3,y2=by+NH/2;
+  if(y1===y2)return {d:`M${x1} ${y1} L${x2} ${y2}`,lx:(x1+x2)/2,ly:y1-7};
+  return {d:`M${x1} ${y1} C${x1+44} ${y1} ${x2-44} ${y2} ${x2} ${y2}`,lx:(x1+x2)/2,ly:(y1+y2)/2-6};
+}
+function desenharMundo(host,cfg){
+  const L=layoutMapa(cfg.ids,cfg.comGrupo),sf=cfg.sfx||'p';
+  const run=cfg.run,ov={};
+  if(run){run.calls.forEach(c=>{const o=ov[c.no]||(ov[c.no]={v:0,tin:0,tout:0,dur:0,erro:false});o.v++;o.dur+=c.dur;o.tin+=c.tin;o.tout+=c.tout;if(c.st==='erro')o.erro=true;});}
+  let h='';
+  L.grp.forEach(g=>{h+=`<div class="grp-h" data-gfoco="tipo:${g.tipo}" style="top:${g.y+8}px;width:${L.W-8}px">${TF[g.tipo].rot}<span class="gd">— ${TF[g.tipo].desc}</span></div>`;});
+  cfg.ids.forEach(id=>{const F=FL[id],f=L.fr[id],m=tokMedio(F);
+    const foco=!run&&!S.selNo&&(S.selFluxo===id||S.foco===id);
+    h+=`<div class="frame ${foco?'foco':''}" data-frame="${id}" style="left:${f.x}px;top:${f.y}px;width:${f.w}px;height:${f.h}px">
+      <div class="frame-head" ${run?'':`data-fh="${id}" title="Clique para ver a ficha deste fluxo"`}><span class="chip fl">${TF[F.tipo].rot}</span><b>${F.nome}</b><span class="frame-sub">${GAT[F.gat]}${F.teto?' · teto '+F.teto+' voltas':''}${(m.i+m.o)?' · ~'+fmt(m.i+m.o)+' tokens por execução':''}</span></div></div>`;});
+  let sv=`<svg class="setas" width="${L.W}" height="${L.H}" viewBox="0 0 ${L.W} ${L.H}">
+    <defs><marker id="pta${sf}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#d5dbdf" style="stroke:none"/></marker>
+    <marker id="ptv${sf}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--amber);stroke:none"/></marker>
+    <marker id="ptx${sf}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--rosa);stroke:none"/></marker></defs>`;
+  cfg.ids.forEach(id=>{
+    const F=FL[id];
+    F.arestas.forEach(a=>{
+      const o=a[2]||{},pa=L.pos[id][a[0]],pb=L.pos[id][a[1]],p=pAresta(pa,pb,o);
+      let uso=true;if(run){const oa=ov[a[0]],ob=ov[a[1]];uso=!!(oa&&ob);}
+      const cor=o.laco?'var(--amber)':'#d5dbdf';
+      const mk=(o.laco?'ptv':'pta')+sf;
+      sv+=`<path d="${p.d}" style="stroke:${cor}" stroke-width="2" ${o.laco?'stroke-dasharray="7 4"':''} opacity="${uso?'.88':'.18'}" marker-end="url(#${mk})" ${o.bi?`marker-start="url(#${mk})"`:''}/>`;
+      let rot=o.rot;
+      if(run&&o.laco&&ov[a[0]])rot='voltou ×'+Math.max(ov[a[0]].v-1,0);
+      if(rot&&uso)sv+=`<text x="${p.lx}" y="${p.ly}" text-anchor="middle" style="fill:${o.laco?'var(--amber)':'#d5dbdf'}">${esc(rot)}</text>`;
+    });
+  });
+  if(!run){
+    CRUZ.forEach(c=>{
+      if(!L.pos[c.de[0]]||!L.pos[c.para[0]])return;
+      const pa=L.pos[c.de[0]][c.de[1]],pb=L.pos[c.para[0]][c.para[1]];
+      let d,lx,ly;
+      const sx=pa.x+NW/2,sy=pa.y+NH,tx=pb.x+NW/2,ty=pb.y;
+      if(ty>sy){d=`M${sx} ${sy} C${sx} ${sy+80} ${tx} ${ty-80} ${tx} ${ty-3}`;}
+      else{d=`M${sx} ${pa.y} C${sx} ${pa.y-90} ${tx} ${pb.y+NH+90} ${tx} ${pb.y+NH+3}`;}
+      lx=(sx+tx)/2;ly=(sy+ty)/2;
+      sv+=`<path d="${d}" style="stroke:var(--rosa)" stroke-width="2" stroke-dasharray="3 5" marker-end="url(#ptx${sf})" opacity=".9"/>`;
+      sv+=`<text x="${lx}" y="${ly}" text-anchor="middle" style="fill:var(--rosa)">${esc(c.rot)}</text>`;
+    });
+  }
+  sv+='</svg>';h+=sv;
+  cfg.ids.forEach(id=>{
+    FL[id].nos.forEach(n=>{
+      const p=L.pos[id][n.id],T=TN[n.tipo],o=ov[n.id];
+      let l3;
+      if(run){l3=o?((o.tin+o.tout)?`${fmt(o.tin+o.tout)} tokens`:seg(o.dur)):'não rodou';}
+      else if(n.tok)l3=`in ${fmt(n.tok[0])} · out ${fmt(n.tok[1])}`;
+      else l3=n.retorno?'retorna '+n.retorno:((n.tipo==='llm'||n.tipo==='embedding')?'sem rastro ainda':'sem modelo');
+      let cls='no t-'+n.tipo;
+      if(run){cls+=o?(o.erro?' erro':' ok'):' nao';}
+      if(S.selNo&&!run&&S.selNo.f===id&&S.selNo.n===n.id)cls+=' sel';
+      if(run&&S.call){const cc=run.calls.find(c=>c.id===S.call);if(cc&&cc.no===n.id)cls+=' sel';}
+      h+=`<div class="${cls}" data-f="${id}" data-n="${n.id}" style="left:${p.x}px;top:${p.y}px;--cor:var(${T.cor})">
+        <div class="no-nome">${n.nome}</div><div class="no-tipo">${icone(n.tipo,11)}${T.rot}</div>
+        <div class="no-l3${(!run&&!n.tok)?' mut':''}">${esc(l3)}</div><div class="no-l4">${esc(baseArq(n.arq))}</div>
+        <div class="pills">${n.espera?'<span class="pill esp">'+rotEsp(n)+'</span>':''}${n.envia?'<span class="pill env">envia</span>':''}</div>
+        ${run&&o&&o.v>1?`<span class="no-vis">×${o.v}</span>`:''}</div>`;
+    });
+  });
+  host.style.width=L.W+'px';host.style.height=L.H+'px';host.innerHTML=h;
+  return L;
+}
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+const S={vivo:false,tab:'pipeline',rot:'tokens',selNo:null,selFluxo:null,det:'ficha',foco:'todos',
+  run:null,call:null,vivoSet:new Set(),ldet:'env',lview:'linha',lsub:'exec',fFluxo:null,fEst:null,
+  legenda:true,legendaL:true};
+let vistaP=null,vistaL=null,mundoP=null,mundoL=null,layoutP=null,layoutL=null;
+
+/* ============================================================
+   APOIO
+   ============================================================ */
+function idsVisiveis(){
+  if(S.foco==='todos')return porTipo().map(F=>F.id);
+  if(S.foco.startsWith('tipo:'))return porTipo().filter(F=>F.tipo===S.foco.slice(5)).map(F=>F.id);
+  return [S.foco];
+}
+function ultimoNo(f,nid){
+  const r=RUNS.find(x=>x.f===f&&x.calls.some(c=>c.no===nid));if(!r)return null;
+  const cs=r.calls.filter(c=>c.no===nid);
+  return {r,v:cs.length,tin:cs.reduce((a,c)=>a+c.tin,0),tout:cs.reduce((a,c)=>a+c.tout,0),dur:cs.reduce((a,c)=>a+c.dur,0),first:cs[0].id};
+}
+const OG_TXT={código:'lido do código-fonte pelo painel',rastro:'vem do que rodou (arquivo de eventos)',assistente:'escrito pelo assistente externo'};
+const og=t=>`<br><span class="og og-${t}" title="${OG_TXT[t]}">${t}</span>`;
+function contCard(n){const c=n.cont||[];return `<div class="card"><h5>Contagens neste ponto ${og('rastro').replace('<br>','')}</h5>${c.length?c.map(([k,v])=>`<div class="cnt"><span>${k}</span><b>${v}</b></div>`).join(''):'<p class="det-sub">Este ponto não declara contagens.</p>'}</div>`;}
+function contFluxo(F){const a={};F.nos.forEach(n=>(n.cont||[]).forEach(([k,v])=>{if(/^\d+$/.test(String(v)))a[k]=(a[k]||0)+parseInt(v,10);}));return a;}
+function tokContFluxo(F){
+  const m=tokMedio(F),c=contFluxo(F),ks=Object.keys(c);
+  return `<div class="card"><h5>Tokens e contagens por execução ${og('rastro').replace('<br>','')}</h5>${(m.i+m.o)?`<div class="kpis"><div class="kpi"><div class="v">${fmt(m.i)}</div><div class="r">entrada</div></div><div class="kpi"><div class="v">${fmt(m.o)}</div><div class="r">saída</div></div><div class="kpi"><div class="v">${fmt(m.i+m.o)}</div><div class="r">total</div></div></div>`:'<p class="det-sub">Nenhum ponto deste fluxo gera tokens.</p>'}${ks.length?`<div style="margin-top:10px">${ks.map(k=>`<div class="cnt"><span>${k}</span><b>${fmt(c[k])}</b></div>`).join('')}</div>`:''}<p class="det-sub" style="margin-top:8px">Média por execução.</p></div>`;
+}
+function declMin(F){
+  const g=F.nos.find(n=>n.tipo==='gatilho');
+  return `{\n  "fluxo": "${F.id}",\n  "entrada": "${g?g.arq:''}",\n  "descricao": "${F.resumo}",\n  "pontos": {\n${F.nos.map(n=>`    "${n.id}": "${DESC[F.id+'.'+n.id]||''}"`).join(',\n')}\n  },\n  "correcoes": {}\n}`;
+}
+const lista=(xs,vazio)=>xs.length?xs.map(esc).join('<br>'):`<span class="det-sub">${vazio}</span>`;
+const kv=rows=>`<div class="kv">${rows.map(r=>`<div class="k">${r[0]}</div><div class="v">${r[1]}</div>`).join('')}</div>`;
+const callPadrao=r=>(r.calls.find(c=>c.st==='erro')||r.calls.filter(c=>{const t=NOME[r.f+'.'+c.no].tipo;return t==='llm'||t==='embedding';}).slice(-1)[0]||r.calls[0]).id;
+function frase(r,c){
+  const n=NOME[r.f+'.'+c.no],nm='«'+n.nome+'»';
+  if(c.st==='erro')return {nivel:'erro',txt:'Falhou em '+nm+': '+c.erro};
+  if(n.tipo==='gatilho')return {nivel:'info',txt:'Começou — '+r.gat};
+  if(c.encerra==='teto')return {nivel:'aviso',txt:'Bateu o teto de '+(r.voltas||'?')+' voltas e chamou o usuário'};
+  if(c.st==='barrou')return {nivel:'aviso',txt:'A barreira '+nm+' barrou'+(c.detalhe?': '+c.detalhe:'')};
+  if(n.tipo==='barreira')return {nivel:'info',txt:'A barreira '+nm+' deixou passar'};
+  if(n.tipo==='fila')return {nivel:'info',txt:'Ficou na fila '+nm+' por '+seg(c.dur)};
+  if(n.tipo==='llm'||n.tipo==='embedding')return {nivel:'info',txt:'Chamou o modelo em '+nm+' — enviou '+fmt(c.tin)+' tokens, recebeu '+fmt(c.tout)+' ('+seg(c.dur)+')'};
+  if(n.tipo==='ferramenta')return {nivel:'info',txt:'Rodou a ferramenta '+nm+' ('+seg(c.dur)+')'};
+  return {nivel:'info',txt:'Executou '+nm+(n.envia?' — gravou/enviou '+n.envia[0]:'')+' ('+seg(c.dur)+')'};
+}
+function narrativa(r){
+  const F=FL[r.f],ll=r.calls.filter(c=>{const t=NOME[r.f+'.'+c.no].tipo;return t==='llm'||t==='embedding';}).length;
+  let t=`Fez ${r.calls.length} chamadas (${ll} ao modelo) em ${seg(r.dur)}, com ${fmt(r.tin)} tokens de entrada e ${fmt(r.tout)} de saída.`;
+  if(F.tipo==='ciclo'&&r.voltas)t+=` O ciclo deu ${r.voltas} ${r.voltas>1?'voltas':'volta'}.`;
+  if(F.tipo==='agente'&&r.voltas)t+=` O modelo pediu ${r.voltas} ${r.voltas>1?'ferramentas':'ferramenta'} antes de responder.`;
+  if(r.fim==='ok')t+=' Terminou bem.';
+  if(r.fim==='teto')t+=` Bateu o teto de ${F.teto} voltas e ficou aguardando o usuário.`;
+  if(r.fim==='erro')t+=` Parou com erro em «${NOME[r.f+'.'+r.erroNo].nome}».`;
+  return t;
+}
+function causas(){
+  const m={};
+  RUNS.forEach(r=>{
+    if(r.fim==='ok')return;
+    const c=r.calls.find(x=>x.st==='erro');
+    const chave=r.fim==='erro'?c.erro:'Bateu o teto de voltas e chamou o usuário';
+    const g=m[chave]||(m[chave]={txt:chave,nivel:r.fim==='erro'?'erro':'aviso',runs:[],onde:new Set()});
+    g.runs.push(r);g.onde.add(r.fim==='erro'?FL[r.f].nome+' › '+NOME[r.f+'.'+c.no].nome:FL[r.f].nome);
+  });
+  return Object.values(m).sort((a,b)=>(a.nivel==='erro'?0:1)-(b.nivel==='erro'?0:1));
+}
+function escolherRun(n){S.run=n;S.call=callPadrao(runAtual());}
+
+/* ============================================================
+   TOPO
+   ============================================================ */
+function renderTopo(){
+  $('#proj-nome').textContent=PROJ.nome||'Projeto';$('#proj-arq').textContent=PROJ.rastro;
+  const tin=RUNS.reduce((a,r)=>a+r.tin,0),tout=RUNS.reduce((a,r)=>a+r.tout,0),er=RUNS.filter(r=>r.fim==='erro').length;
+  $('#consumo').innerHTML=`<span><b>${fmt(tin+tout)}</b>tokens no rastro</span><span><b>${RUNS.length}</b>execuções</span><span><b>${er}</b>com erro</span>`;
+}
+
+/* ============================================================
+   PIPELINE
+   ============================================================ */
+function renderRailPl(){
+  let h=`<div class="rail-tit">Mostrar</div><button class="rail-item ${S.foco==='todos'?'sel':''}" data-foco="todos"><div class="n">Todos os fluxos <small>${IDS.length}</small></div><div class="s">tudo, separado por tipo</div></button>`;
+  Object.keys(TF).forEach(t=>{
+    const fs=porTipo().filter(F=>F.tipo===t);
+    h+=`<button class="rail-item tipo ${S.foco==='tipo:'+t?'sel':''}" data-foco="tipo:${t}"><div class="n">${TF[t].rot} <small>${fs.length}</small></div><div class="s">${TF[t].desc}</div></button>`;
+    fs.forEach(F=>{const m=tokMedio(F);
+      h+=`<button class="rail-item sub ${S.foco===F.id?'sel':''}" data-foco="${F.id}"><div class="n">${F.nome}</div><div class="s">${GAT[F.gat]}${(m.i+m.o)?' · ~'+fmt(m.i+m.o)+' tok':''}</div></button>`;});
+  });
+  $('#rail-pl').innerHTML=h;
+}
+function rotuloFoco(){
+  if(S.foco==='todos')return `Todos os fluxos · ${IDS.length}`;
+  if(S.foco.startsWith('tipo:')){const t=S.foco.slice(5);return `${TF[t].rot} · ${idsVisiveis().length}`;}
+  return `${TF[FL[S.foco].tipo].rot} › ${FL[S.foco].nome}`;
+}
+function renderFerrPl(){
+  $('#ferr-pl').innerHTML=`<span class="mostrando">Mostrando: <b>${rotuloFoco()}</b></span>${S.vivo?'<span class="mostrando"><i class="dot-vivo"></i>ao vivo — lendo o rastro</span>':''}<span class="sep"></span>
+   <button class="btn sm" data-zoom="-">−</button><span class="pct" id="pct-pl">100%</span><button class="btn sm" data-zoom="+">+</button><button class="btn sm" data-zoom="ajustar">Ajustar</button><span class="sep"></span>
+   <button class="btn sm" data-legenda="1">${S.legenda?'Ocultar legenda':'Mostrar legenda'}</button><span class="rot" style="margin-left:auto">roda do mouse = zoom · arrastar = mover</span>`;
+}
+function renderPalcoPl(reenq){
+  const host=$('#palco-pl');
+  if(!host.querySelector('.vp')){
+    host.innerHTML=`<div class="vp" id="vp-pl"><div class="mundo" id="mundo-pl"></div></div>`;
+    mundoP=$('#mundo-pl');vistaP=new Vista($('#vp-pl'),mundoP,k=>{const p=$('#pct-pl');if(p)p.textContent=Math.round(k*100)+'%';});
+    $('#vp-pl').addEventListener('click',e=>{if(vistaP.moveu)return;clickMundo(e,false);});
+  }
+  layoutP=desenharMundo(mundoP,{ids:idsVisiveis(),comGrupo:true,sfx:'p'});
+  if(reenq!==false)setTimeout(()=>{if(vistaP&&layoutP)vistaP.enquadrarLargura({x:0,y:0,w:layoutP.W,h:layoutP.H},0.6);},30);
+}
+
+/* ---------- mini-desenhos dos quatro tipos de fluxo ---------- */
+const mp=(t,txt)=>`<span class="mp" style="${corTipo(t)}">${icone(t,10)}${txt}</span>`;
+const sa='<span class="a">›</span>';
+const MINI={
+  tiro:()=>`${mp('gatilho','gatilho')}${sa}${mp('llm','1 prompt')}${sa}${mp('codigo','grava')}${sa}<span class="fim">fim</span>`,
+  cadeia:()=>`${mp('gatilho','gatilho')}${sa}${mp('codigo','extrai')}${sa}${mp('codigo','fatia')}${sa}${mp('embedding','vetores')}${sa}${mp('codigo','grava')}`,
+  ciclo:()=>`${mp('gatilho','gatilho')}${sa}${mp('llm','redige')}${sa}${mp('llm','confere')}<span class="lc">↻ volta até o teto</span>${sa}${mp('codigo','grava')}`,
+  agente:()=>`${mp('gatilho','mensagem')}${sa}${mp('llm','modelo')}<span class="lc">⇄ escolhe sozinho</span>${mp('ferramenta','ferram. A')}${mp('ferramenta','ferram. B')}${mp('ferramenta','ferram. C')}${sa}<span class="fim">responde</span>`
+};
+const TEXTO_TIPO={
+  tiro:'Um prompt vai para a IA, o resultado é salvo e o fluxo morre. Não tem laço nem etapa seguinte que dependa da resposta.',
+  cadeia:'Etapas fixas, uma atrás da outra. O código decide a ordem; a IA (se houver) só faz a parte dela.',
+  ciclo:'Papéis que se repetem: um faz, outro confere, e volta até aprovar ou bater o teto de voltas. O código é quem decide se volta.',
+  agente:'O próprio modelo escolhe o próximo passo: chama uma ferramenta, lê o resultado e decide de novo, até responder. A ordem não está no código. Uma ferramenta pode disparar outro fluxo — é essa a «derivação».'
+};
+function cartaoTipo(t){
+  const fs=porTipo().filter(F=>F.tipo===t);
+  return `<div class="card"><h5>${TF[t].rot} · ${fs.length} ${fs.length===1?'fluxo':'fluxos'}</h5><div class="mini">${MINI[t]()}</div><p style="margin-top:8px">${TEXTO_TIPO[t]}</p>
+    <p class="det-sub">Neste projeto: ${fs.map(F=>'<a class="lk" data-foco="'+F.id+'">'+F.nome+'</a>').join(' · ')||'nenhum'}</p></div>`;
+}
+
+/* ---------- painel da direita, no Pipeline ---------- */
+function meter(v,total,cor){if(!total)return `<div class="meter-l"><span>${fmt(v)} tokens</span></div>`;const p=v/total*100;return `<div class="meter"><i style="width:${Math.max(p,0.6)}%;background:${cor||'var(--purple)'}"></i></div><div class="meter-l"><span>${fmt(v)} tokens</span><span>${p.toFixed(1).replace('.',',')} % da janela de ${fmt(total)}</span></div>`;}
+function ligacoes(f,nid){
+  const F=FL[f],rec=[],env=[];
+  F.arestas.forEach(a=>{if(a[1]===nid)rec.push(F.nos.find(n=>n.id===a[0]).nome);if(a[0]===nid)env.push(F.nos.find(n=>n.id===a[1]).nome+(a[2]&&a[2].rot?' ('+a[2].rot+')':''));if(a[2]&&a[2].bi&&a[1]===nid)env.push(F.nos.find(n=>n.id===a[0]).nome+' (devolve)');if(a[2]&&a[2].bi&&a[0]===nid)rec.push(F.nos.find(n=>n.id===a[1]).nome+' (devolve)');});
+  CRUZ.forEach(c=>{if(c.de[0]===f&&c.de[1]===nid)env.push('fluxo «'+FL[c.para[0]].nome+'» — '+c.rot);if(c.para[0]===f&&c.para[1]===nid)rec.push('fluxo «'+FL[c.de[0]].nome+'» — '+c.rot);});
+  return {rec,env:env.concat(NOME[f+'.'+nid].envia||[])};
+}
+function cadeiaBarras(f,marca){
+  const F=FL[f];const itens=F.nos.filter(n=>n.tok).map(n=>({n,t:(n.tok[0]+n.tok[1])*(n.vis||1)}));const tot=itens.reduce((a,x)=>a+x.t,0)||1;
+  const max=Math.max(...itens.map(x=>x.t),1);
+  return `<div class="card"><h5>Na cadeia inteira — ${F.nome}</h5>
+    ${itens.map(x=>`<div class="brow ${x.n.id===marca?'me':''}"><span>${x.n.nome}${x.n.vis&&x.n.vis>1?` <span style="color:var(--text-muted)">×${x.n.vis}</span>`:''}</span><div class="b"><i style="width:${x.t/max*100}%;background:var(${TN[x.n.tipo].cor})"></i></div><span class="n">${fmt(x.t)}</span></div>`).join('')}
+    <div class="meter-l" style="margin-top:8px"><span>total por execução</span><b style="color:var(--text)">~${fmt(tot)} tokens</b></div></div>`;
+}
+function renderDetPl(){
+  const box=$('#det-pl');
+  if(S.selNo)return renderDetNo(box);
+  const fid=S.selFluxo||(FL[S.foco]?S.foco:null);
+  if(fid)return renderDetFluxo(box,fid);
+  renderDetVisao(box);
+}
+function renderDetVisao(box){
+  const t=S.foco.startsWith('tipo:')?S.foco.slice(5):null;
+  const tipos=t?[t]:Object.keys(TF);
+  box.innerHTML=`<div class="det-tit">${t?TF[t].rot:'Visão geral'}</div>
+    <div class="det-sub">${t?'Clique num fluxo do trilho para ver só ele.':'Clique num tipo, num fluxo, no título de um fluxo ou num ponto do desenho.'}</div>
+    ${tipos.map(cartaoTipo).join('')}
+    <div class="card"><h5>Os tipos de ponto · <a class="lk" data-tabgo="legenda">ver a tabela completa</a></h5>${ORDEM_TIPOS.map(k=>`<div class="tprow">${icone(k,13)}<b>${TN[k].rot}</b><span>${TIPO_DESC[k]}</span></div>`).join('')}</div>`;
+}
+function renderDetFluxo(box,fid){
+  const F=FL[fid],m=tokMedio(F),rs=RUNS.filter(r=>r.f===fid),u=rs[0];
+  const gat=F.nos.find(n=>n.tipo==='gatilho'),env=[...new Set(F.nos.flatMap(n=>n.envia||[]))];
+  const cru=CRUZ.filter(c=>c.de[0]===fid).map(c=>'dispara «'+FL[c.para[0]].nome+'» — '+c.rot).concat(CRUZ.filter(c=>c.para[0]===fid).map(c=>'é acordado por «'+FL[c.de[0]].nome+'» — '+c.rot));
+  const nErr=rs.filter(r=>r.fim==='erro').length;
+  box.innerHTML=`<div class="det-tit">${F.nome}</div>
+    <div class="det-chips"><span class="chip fl">${TF[F.tipo].rot}</span><span class="chip fl">${GAT[F.gat]}</span>${F.teto?`<span class="chip fl">teto ${F.teto} voltas</span>`:''}</div>
+    <div class="det-sub">${F.resumo} ${og('assistente').replace('<br>','')}</div>
+    <div class="card"><h5>Quando roda e o que faz</h5>${kv([
+      ['Começa quando'+og('código'),gat&&gat.espera?esc(gat.espera):'—'],
+      ['Termina em'+og('código'),lista(env,'só guarda o resultado')],
+      ['Liga com'+og('código'),lista(cru,'nenhum outro fluxo')],
+      ['Arquivo'+og('código'),'<span class="mono">'+F.arq+'</span> <button class="btn sm" data-copiar="'+F.arq+'">Copiar</button>']
+    ])}</div>
+    <div class="card"><h5>Última execução ${og('rastro').replace('<br>','')}</h5>${u?`<div class="ult"><b>#${u.n}</b> · ${u.h} ${chipEst(u.fim)} <span class="det-sub">${seg(u.dur)}${u.voltas?' · '+u.voltas+' voltas':''}</span></div>
+      <div class="kpis" style="margin-top:8px"><div class="kpi"><div class="v">${fmt(u.tin)}</div><div class="r">tokens de entrada</div></div><div class="kpi"><div class="v">${fmt(u.tout)}</div><div class="r">tokens de saída</div></div><div class="kpi"><div class="v">${u.calls.length}</div><div class="r">chamadas</div></div></div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:10px"><button class="btn sm" data-irlog="${u.n}:">Abrir nos Logs</button><span class="pts" title="últimas execuções">${rs.slice(0,8).map(r=>`<i class="${r.fim==='ok'?'':r.fim}"></i>`).join('')}</span><span class="det-sub">${nErr?nErr+' com erro de '+rs.length:'sem erro nas últimas '+rs.length}</span></div>`:'<p class="det-sub">Ainda não rodou.</p>'}</div>
+    ${tokContFluxo(F)}${(m.i+m.o)?cadeiaBarras(fid,null):''}
+    <details class="card decl"><summary>Declaração deste fluxo (JSON)</summary><div class="lbl2">O que o assistente escreve</div><pre class="bloco">${esc(declMin(F))}</pre><p class="det-sub">${NOTA_DECL}</p></details>`;
+  if(Q.get('decl'))box.querySelector('details').open=true;
+}
+function renderDetNo(box){
+  const s=S.selNo,n=NOME[s.f+'.'+s.n],F=FL[s.f],lg=ligacoes(s.f,s.n),ult=ultimoNo(s.f,s.n);
+  let corpo='';
+  if(S.det==='ficha'){
+    corpo=`<div class="card">${kv([
+      ['O que faz'+og('assistente'),esc(DESC[s.f+'.'+s.n]||'—')],
+      ['Espera'+og('código'),n.espera?'<span class="pill esp">'+rotEsp(n)+'</span> '+esc(n.espera)+(n.compart?'<div class="det-sub">'+esc(n.compart)+'</div>':''):'<span class="det-sub">não espera — roda quando o de trás termina</span>'],
+      ['Recebe de'+og('código'),lista(lg.rec,'é o começo do fluxo')],
+      ['Envia para'+og('código'),lista(lg.env,'fim do fluxo')],
+      ['Arquivo'+og('código'),'<span class="mono">'+n.arq+'</span> <button class="btn sm" data-copiar="'+n.arq+'">Copiar</button>'],
+      ['Última vez'+og('rastro'),ult?`#${ult.r.n} · ${ult.r.h}${ult.v>1?' · '+ult.v+' visitas':''}<br>${(ult.tin+ult.tout)?`entrada <b>${fmt(ult.tin)}</b> · saída <b>${fmt(ult.tout)}</b> · total <b>${fmt(ult.tin+ult.tout)}</b>`:seg(ult.dur)} <button class="btn sm" data-irlog="${ult.r.n}:${s.n}">ver nos Logs</button>`:'<span class="det-sub">ainda não rodou</span>']
+    ])}</div>
+    <details class="card decl"><summary>Declaração deste ponto (JSON)</summary>
+      <div class="lbl2">O que o assistente escreve</div><pre class="bloco">${esc('"'+n.id+'": "'+(DESC[s.f+'.'+s.n]||'')+'"')}</pre>
+      <div class="lbl2">Só se a leitura do código errar — correção</div><pre class="bloco">${esc('"correcoes": { "'+n.id+'": { "tipo": "'+n.tipo+'" } }')}</pre>
+      <p class="det-sub">${NOTA_DECL}</p></details>`;
+  }else if(S.det==='prompt'){
+    corpo=n.prompt?`${n.sistema?`<div class="card"><h5>Sistema</h5><pre class="bloco">${hl(n.sistema)}</pre></div>`:''}
+      <div class="card"><h5>${n.tipo==='embedding'?'Entrada':'Prompt (modelo)'}</h5><pre class="bloco">${hl(n.prompt)}</pre></div>
+      <div class="card"><h5>O que volta</h5><pre class="bloco">${esc(n.saida)}</pre></div>
+      <p class="det-sub">Este é o último texto realmente enviado (vem do rastro). As partes entre chaves, se houver, aparecem em amarelo. Cada execução está nos Logs.</p>`
+      :`<div class="card"><p>${(n.tipo==='llm'||n.tipo==='embedding')?'O texto enviado ainda não foi gravado. Rode o programa com a variável de ambiente OBSERVAR_TEXTO=1 para o rastro guardar o prompt e a resposta inteiros.':'Este ponto não chama o modelo.'}</p>${n.retorno?`<p class="det-sub">O que ele devolve (${n.retorno}) entra no prompt da próxima chamada.</p>`:''}</div>`;
+  }else{
+    corpo=`${n.tok?`<div class="card"><h5>Tokens neste ponto — por visita</h5>${meter(n.tok[0]+n.tok[1],JANELA,'var(--purple)')}
+      <div class="kpis" style="margin-top:8px"><div class="kpi"><div class="v">${fmt(n.tok[0])}</div><div class="r">entrada</div></div><div class="kpi"><div class="v">${fmt(n.tok[1])}</div><div class="r">saída</div></div><div class="kpi"><div class="v">${fmt(n.tok[0]+n.tok[1])}</div><div class="r">total</div></div></div>
+      <p class="det-sub" style="margin-top:8px">Por execução (×${n.vis||1} visitas): <b>${fmt((n.tok[0]+n.tok[1])*(n.vis||1))}</b> tokens.</p></div>`:'<div class="card"><p>Este ponto não gera tokens.</p></div>'}${contCard(n)}${cadeiaBarras(s.f,n.tok?s.n:null)}`;
+  }
+  box.innerHTML=`<div class="det-tit">${n.nome}</div>
+    <div class="det-chips">${chipTipo(n.tipo)}<a class="chip fl lk" data-fluxo-sel="${s.f}">${F.nome} ›</a></div>
+    <div class="seg"><button data-det="ficha" class="${S.det==='ficha'?'on':''}">Ficha</button><button data-det="prompt" class="${S.det==='prompt'?'on':''}">Prompt</button><button data-det="tokens" class="${S.det==='tokens'?'on':''}">Tokens e contagens</button></div>${corpo}`;
+  if(Q.get('decl')&&S.det==='ficha'){const d=box.querySelector('details');if(d)d.open=true;}
+}
+
+/* ============================================================
+   LOGS
+   ============================================================ */
+function runsFiltradas(){return RUNS.filter(r=>(!S.fFluxo||r.f===S.fFluxo)&&(!S.fEst||r.fim===S.fEst));}
+function runAtual(){return RUNS.find(r=>r.n===S.run)||RUNS[0];}
+function runBtn(r){
+  const F=FL[r.f],c=r.calls.find(x=>x.st==='erro');
+  return `<button class="run e-${r.fim} ${r.n===S.run?'sel':''}" data-run="${r.n}"><div class="run-1"><b>#${r.n}</b>${r.rodando?'<i class="dot-vivo"></i>':''}<span>${r.h}</span></div><div class="run-2">${F.nome}</div>
+    <div class="run-3"><span class="chip fl">${TF[F.tipo].rot}</span>${chipEst(r.fim)}<span>${seg(r.dur)} · ${fmt(r.tin+r.tout)} tok</span></div>
+    ${r.fim==='erro'?`<div class="run-err">${esc(c.erro)}</div>`:''}${r.fim==='teto'?`<div class="run-err amb">bateu o teto de ${F.teto} voltas</div>`:''}</button>`;
+}
+function renderRailLg(){
+  const box=$('#rail-lg');
+  const gs=causas(),nAt=gs.reduce((a,g)=>a+g.runs.length,0);
+  let h=`<div class="seg lsub"><button data-lsub="exec" class="${S.lsub==='exec'?'on':''}">Execuções · ${RUNS.length}</button><button data-lsub="erros" class="${S.lsub==='erros'?'on':''}">Erros e avisos · ${nAt}</button></div>`;
+  if(S.lsub==='exec'){
+    h+=`<div class="rail-tit">Fluxo</div><div class="filt">${IDS.map(i=>`<button class="fchip ${S.fFluxo===i?'on':''}" data-ffluxo="${i}">${FL[i].nome}</button>`).join('')}</div>
+     <div class="rail-tit">Estado</div><div class="filt">${['ok','erro','teto'].map(e=>`<button class="fchip ${S.fEst===e?'on':''}" data-fest="${e}">${ROT_FIM[e]}</button>`).join('')}</div>
+     <div class="rail-tit">Mostrando · ${runsFiltradas().length}</div>${runsFiltradas().map(runBtn).join('')}`;
+  }else{
+    h+=gs.map(g=>`<div class="cg ${g.nivel}"><div class="cg-h"><span class="chip ${g.nivel==='erro'?'erro':'teto'}">${g.nivel==='erro'?'erro':'aviso'}</span><b>${esc(g.txt)}</b></div><div class="cg-s">${g.runs.length}× · ${[...g.onde].map(esc).join(' · ')}</div>${g.runs.map(runBtn).join('')}</div>`).join('');
+  }
+  box.innerHTML=h;
+}
+function renderResumoLg(){
+  const box=$('#resumo-lg');
+  const r=runAtual(),F=FL[r.f],ll=r.calls.filter(c=>{const t=NOME[r.f+'.'+c.no].tipo;return t==='llm'||t==='embedding';}).length;
+  const janMax=Math.max(...r.calls.map(c=>c.tin+c.tout));
+  const ord=[];r.calls.forEach(c=>{if(!ord.length||ord[ord.length-1].no!==c.no)ord.push({no:c.no,n:1,id:c.id});else ord[ord.length-1].n++;});
+  const ec=r.calls.find(c=>c.st==='erro');
+  box.innerHTML=`<div class="resumo-1"><span class="tit">Execução #${r.n}</span>${chipEst(r.fim)}<span class="chip fl">${TF[F.tipo].rot}</span><b>${F.nome}</b></div>
+   <div class="resumo-2"><b>Disparada por</b> ${esc(r.gat)}<br>${esc(narrativa(r))}</div>
+   ${r.fim==='erro'?`<div class="faixa-erro" style="margin-bottom:10px"><b>O que deu errado:</b> ${esc(ec.erro)} — em «${NOME[r.f+'.'+ec.no].nome}» <span class="mono">${NOME[r.f+'.'+ec.no].arq}</span></div>`:''}
+   ${r.fim==='teto'?`<div class="faixa-erro amb" style="margin-bottom:10px"><b>Aviso:</b> chegou ao teto de ${F.teto} voltas sem aprovar; o usuário foi chamado.</div>`:''}
+   <div class="kp6">
+    <div class="kpi"><div class="v">${seg(r.dur)}</div><div class="r">duração</div></div>
+    <div class="kpi"><div class="v">${r.calls.length}</div><div class="r">chamadas (${ll} ao modelo)</div></div>
+    <div class="kpi"><div class="v">${r.voltas||'—'}</div><div class="r">${F.teto?'voltas de '+F.teto+' (teto)':'voltas'}</div></div>
+    <div class="kpi"><div class="v">${fmt(r.tin)}</div><div class="r">tokens de entrada</div></div>
+    <div class="kpi"><div class="v">${fmt(r.tout)}</div><div class="r">tokens de saída</div></div>
+    <div class="kpi"><div class="v">${JANELA?(janMax/JANELA*100).toFixed(1).replace('.',',')+' %':'—'}</div><div class="r">maior uso da janela</div></div></div>
+   <div class="trilha">${ord.map((o,i)=>`<span class="p ${S.call&&r.calls.find(c=>c.id===S.call)&&r.calls.find(c=>c.id===S.call).no===o.no?'sel':''}" data-callno="${o.id}" style="${corTipo(NOME[r.f+'.'+o.no].tipo)}">${NOME[r.f+'.'+o.no].nome}${o.n>1?' ×'+o.n:''}</span>${i<ord.length-1?'<span class="a">›</span>':''}`).join('')}</div>`;
+}
+function renderFerrLg(){
+  const box=$('#ferr-lg');
+  box.innerHTML=`<span class="seg"><button data-lview="linha" class="${S.lview==='linha'?'on':''}">Linha do tempo</button><button data-lview="desenho" class="${S.lview==='desenho'?'on':''}">Desenho da execução</button></span>`+
+   (S.lview==='desenho'?`<span class="sep"></span><button class="btn sm" data-zoomlg="-">−</button><span class="pct" id="pct-lg">100%</span><button class="btn sm" data-zoomlg="+">+</button><button class="btn sm" data-zoomlg="ajustar">Ajustar</button><span class="sep"></span><button class="btn sm" data-legendal="1">${S.legendaL?'Ocultar legenda':'Mostrar legenda'}</button><span class="rot" style="margin-left:auto">roda do mouse = zoom · arrastar = mover</span>`:'');
+}
+function renderPalcoLg(){
+  const r=runAtual(),host=$('#palco-lg');
+  if(S.lview==='desenho'){
+    host.dataset.modo='vp';
+    host.innerHTML=`<div class="vp" id="vp-lg"><div class="mundo" id="mundo-lg"></div></div>`;
+    mundoL=$('#mundo-lg');vistaL=new Vista($('#vp-lg'),mundoL,k=>{const p=$('#pct-lg');if(p)p.textContent=Math.round(k*100)+'%';});
+    $('#vp-lg').addEventListener('click',e=>{if(vistaL.moveu)return;clickMundo(e,true);});
+    layoutL=desenharMundo(mundoL,{ids:[r.f],run:r,comGrupo:false,sfx:'l'});
+    setTimeout(()=>{if(vistaL&&layoutL)vistaL.enquadrar({x:0,y:0,w:layoutL.W,h:layoutL.H});},30);
+    return;
+  }
+  host.dataset.modo='linha';
+  const T=Math.max(5,Math.ceil(r.dur/5)*5);
+  let m='';for(let i=0;i<=T;i+=T/5<1?1:Math.max(1,Math.round(T/5)))m+=`<span style="left:${i/T*100}%">${i} s</span>`;
+  const maxTok=Math.max(...r.calls.map(c=>c.tin+c.tout),1);
+  let out='',uv=-1;
+  r.calls.forEach(c=>{
+    const n=NOME[r.f+'.'+c.no];
+    if(c.volta>0&&c.volta!==uv&&(FL[r.f].tipo==='ciclo'||FL[r.f].tipo==='agente')){uv=c.volta;
+      out+=`<div class="grupo">${FL[r.f].tipo==='ciclo'?'Volta':'Rodada'} ${c.volta}</div>`;}
+    const tk=c.tin+c.tout;
+    out+=`<div class="linha ${S.call===c.id?'sel':''} ${c.st==='erro'?'l-erro':''}" data-call="${c.id}">
+      <span class="nome ${c.volta>0&&(FL[r.f].tipo==='ciclo'||FL[r.f].tipo==='agente')?'ind':''}">${icone(n.tipo,13)}${n.nome}${c.st==='erro'?' <span class="chip erro">erro</span>':''}${c.st==='barrou'?' <span class="chip teto">barrou</span>':''}</span>
+      <span class="faixa"><span style="left:${c.ini/T*100}%;width:${c.dur/T*100}%;background:${c.st==='erro'?'var(--red)':'var('+TN[n.tipo].cor+')'}"></span></span>
+      <span class="d">${seg(c.dur)}</span>
+      <span class="k">${tk?`<span class="b"><i style="width:${c.tin/maxTok*100}%;background:var(--blue)"></i><i style="width:${c.tout/maxTok*100}%;background:var(--amber)"></i></span>${fmt(tk)}`:'—'}</span></div>`;
+  });
+  host.innerHTML=`<div class="lg-corpo"><div class="eixo"><span>Chamada</span><div class="marcas">${m}</div><span style="text-align:right">Tempo</span><span>Tokens <span style="text-transform:none;letter-spacing:0;font-weight:600">(<span style="color:var(--blue)">entrada</span> · <span style="color:var(--amber)">saída</span>)</span></span></div>${out}</div>`;
+}
+function renderDetLg(){
+  const box=$('#det-lg'),r=runAtual(),c=r.calls.find(x=>x.id===S.call);
+  if(!c){box.innerHTML='<div class="det-tit">Detalhe da chamada</div><div class="det-sub">Clique numa linha, num passo da trilha ou num ponto do desenho.</div>';return;}
+  const n=NOME[r.f+'.'+c.no],idx=r.calls.indexOf(c)+1,fr=frase(r,c);
+  let corpo='';
+  if(S.ldet==='env')corpo=`<pre class="bloco">${esc(textoEnv(r,c))}</pre>`;
+  else if(S.ldet==='res')corpo=`<pre class="bloco">${esc(textoRes(r,c))}</pre>`;
+  else if(S.ldet==='tok'){
+    const tk=c.tin+c.tout,acc=r.calls.slice(0,idx).reduce((a,x)=>a+x.tin+x.tout,0);
+    const porNo={};r.calls.forEach(x=>{const k=x.no;porNo[k]=(porNo[k]||0)+x.tin+x.tout;});
+    const lst=Object.keys(porNo).filter(k=>porNo[k]>0).sort((a,b)=>porNo[b]-porNo[a]);const mx=Math.max(...lst.map(k=>porNo[k]),1),tot=r.tin+r.tout;
+    corpo=`<div class="card"><h5>Nesta chamada</h5>${tk?meter(tk,JANELA,'var(--purple)'):'<p>Sem tokens neste ponto.</p>'}
+      ${tk?`<div class="kpis" style="margin-top:8px"><div class="kpi"><div class="v">${fmt(c.tin)}</div><div class="r">entrada</div></div><div class="kpi"><div class="v">${fmt(c.tout)}</div><div class="r">saída</div></div><div class="kpi"><div class="v">${fmt(tk)}</div><div class="r">total</div></div></div><p class="det-sub" style="margin-top:8px">Acumulado até aqui: ${fmt(acc)}. Fonte: ${n.tipo==='llm'?'uso real devolvido pelo servidor':'contado localmente (tokenizador)'}.</p>`:''}</div>
+      <div class="card"><h5>Na cadeia desta execução</h5>${lst.map(k=>{const nn=NOME[r.f+'.'+k];return `<div class="brow ${k===c.no?'me':''}"><span>${nn.nome}</span><div class="b"><i style="width:${porNo[k]/mx*100}%;background:var(${TN[nn.tipo].cor})"></i></div><span class="n">${fmt(porNo[k])}</span></div>`;}).join('')}
+      <div class="meter-l" style="margin-top:8px"><span>total</span><b style="color:var(--text)">${fmt(tot)} tokens (${fmt(r.tin)} in · ${fmt(r.tout)} out)</b></div></div>${contCard(n)}`;
+  }else{
+    const lg=ligacoes(r.f,c.no);
+    corpo=`<div class="card">${kv([
+      ['O que faz'+og('assistente'),esc(DESC[r.f+'.'+c.no]||'—')],
+      ['Espera',n.espera?'<span class="pill esp">'+rotEsp(n)+'</span> '+esc(n.espera):'<span class="det-sub">não espera evento</span>'],
+      ['Recebe de',lista(lg.rec,'começo do fluxo')],['Envia para',lista(lg.env,'fim do fluxo')],
+      ['Arquivo','<span class="mono">'+n.arq+'</span> <button class="btn sm" data-copiar="'+n.arq+'">Copiar</button>']])}</div>`;
+  }
+  box.innerHTML=`<div class="det-tit">${n.nome}</div>
+   <div class="det-chips">${chipTipo(n.tipo)}${c.st==='erro'?'<span class="chip erro">erro</span>':''}${c.volta&&(FL[r.f].tipo==='ciclo'||FL[r.f].tipo==='agente')?`<span class="chip fl">${FL[r.f].tipo==='ciclo'?'volta':'rodada'} ${c.volta}</span>`:''}</div>
+   <div class="det-sub">chamada ${idx} de ${r.calls.length} · execução #${r.n} · ${seg(c.dur)}</div>
+   ${c.st==='erro'?'':`<div class="emport ${fr.nivel}"><span>Em português</span>${esc(fr.txt)}</div>`}
+   ${c.st==='erro'?`<div class="faixa-erro"><b>${esc(c.erro)}</b><div class="det-sub" style="margin-top:4px">no arquivo <span class="mono">${n.arq}</span></div></div>`:''}
+   <div class="seg"><button data-ldet="env" class="${S.ldet==='env'?'on':''}">Enviado</button><button data-ldet="res" class="${S.ldet==='res'?'on':''}">Resposta</button><button data-ldet="tok" class="${S.ldet==='tok'?'on':''}">Tokens e contagens</button><button data-ldet="fic" class="${S.ldet==='fic'?'on':''}">Ficha</button></div>${corpo}
+   ${S.ldet==='env'||S.ldet==='res'?'<div><button class="btn sm" data-copiar-txt="1">Copiar</button></div>':''}`;
+}
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+function clickMundo(e,logs){
+  const no=e.target.closest('.no');
+  if(!no){
+    if(logs)return;
+    const fh=e.target.closest('[data-fh]');
+    if(fh){S.selNo=null;S.selFluxo=fh.dataset.fh;renderPipeline(false);return;}
+    const gf=e.target.closest('[data-gfoco]');
+    if(gf){S.foco=gf.dataset.gfoco;S.selNo=null;S.selFluxo=null;renderPipeline();}
+    return;
+  }
+  if(logs){const r=runAtual();const cs=r.calls.filter(c=>c.no===no.dataset.n);if(cs.length){S.call=cs[0].id;renderLogs();}return;}
+  S.selNo={f:no.dataset.f,n:no.dataset.n};S.det='ficha';renderPipeline(false);
+}
+function renderLeg(){const a=$('#leg-pl');a.innerHTML=LEGENDA;a.style.display=S.legenda?'flex':'none';const b=$('#leg-lg');b.innerHTML=LEGENDA;b.style.display=(S.legendaL&&S.lview==='desenho')?'flex':'none';}
+function aplicarVivo(){
+  $$('.no.rodando,.frame.rodando,.rail-item.rodando').forEach(e=>e.classList.remove('rodando'));
+  if(!S.vivo)return;
+  S.vivoSet.forEach(k=>{
+    const i=k.indexOf('.'),f=k.slice(0,i),n=k.slice(i+1);
+    const no=document.querySelector('#mundo-pl .no[data-f="'+f+'"][data-n="'+n+'"]');if(no)no.classList.add('rodando');
+    const fr=document.querySelector('#mundo-pl .frame[data-frame="'+f+'"]');if(fr)fr.classList.add('rodando');
+    const ri=document.querySelector('#rail-pl .rail-item[data-foco="'+f+'"]');if(ri)ri.classList.add('rodando');
+  });
+}
+let vivoT=null;
+async function tickVivo(){
+  try{
+    if(await lerRastro(false)){
+      reconstruir();renderTopo();
+      if(S.tab==='pipeline')renderPipeline(false);else if(S.tab==='logs')renderLogs();
+    }
+  }catch(e){}
+}
+function ligarVivo(on){
+  S.vivo=on;clearInterval(vivoT);vivoT=null;
+  if(on){tickVivo();vivoT=setInterval(tickVivo,1000);}
+  if(S.tab==='pipeline'){renderFerrPl();aplicarVivo();}
+}
+const msgVazia=t=>'<div class="vazio">'+t+'</div>';
+const textoAvisos=()=>AVISOS.length?'<br><br>'+AVISOS.map(esc).join('<br>'):'';
+function renderPipeline(reenq){
+  if(!IDS.length){
+    ['#rail-pl','#det-pl','#ferr-pl'].forEach(s=>{$(s).innerHTML='';});$('#leg-pl').style.display='none';
+    $('#palco-pl').innerHTML=msgVazia('Nenhum fluxo encontrado.<br>Escreva uma descrição por fluxo em <span class="mono">Workshop/observar/descricoes/</span> (arquivo 06 da skill) e clique em Atualizar.'+textoAvisos());
+    return;
+  }
+  renderRailPl();renderFerrPl();renderLeg();renderPalcoPl(reenq);renderDetPl();aplicarVivo();
+}
+function renderLogs(){
+  if(!RUNS.length){
+    ['#rail-lg','#resumo-lg','#ferr-lg','#det-lg'].forEach(s=>{$(s).innerHTML='';});$('#leg-lg').style.display='none';
+    $('#palco-lg').innerHTML=msgVazia('Nenhuma execução no rastro ainda.<br>Rode o programa com as marcas instaladas (arquivo 07 da skill). O rastro fica em <span class="mono">'+esc(PROJ.rastro)+'</span>.'+textoAvisos());
+    return;
+  }
+  renderRailLg();renderResumoLg();renderFerrLg();renderLeg();renderPalcoLg();renderDetLg();
+}
+const TT={
+ gatilho:['o que acorda o fluxo: um evento, uma agenda, uma mensagem, um clique','mensagem que chega por webhook; requisição HTTP recebida','arquivo novo na pasta; agenda das 18:00; botão clicado','«Começou — {o que acordou}»'],
+ llm:['uma chamada ao modelo que gera texto','chamada a uma API de LLM (chat, mensagens)','chamada a um modelo local, num servidor no localhost','«Chamou o modelo — enviou X tokens, recebeu Y»'],
+ ferramenta:['função que o modelo pode pedir para rodar; às vezes ele chama alguma','função declarada no tool use da API','buscar, ler arquivo, chamar outro fluxo','«Rodou a ferramenta»'],
+ codigo:['passo comum do programa, sem modelo','formatar a resposta; gravar no banco','extrair texto; gravar arquivo','«Executou… (tempo)»'],
+ humano:['espera a resposta de uma pessoa','pedido de aprovação; formulário','chamar o usuário no teto de voltas','«Pediu ao usuário»'],
+ embedding:['modelo complementar: outro modelo que não gera texto','API de embeddings ou de reranking','modelo local de vetores','«Chamou o modelo…» (só entrada)'],
+ barreira:['bloqueia, limita ou corta: guardrail, restrição, timeout, limite','filtro de conteúdo; limite de taxa; limite de tokens; timeout da chamada','confiança mínima; validação de formato; limite de voltas','«Passou» ou «Barrou» — barrar vira aviso ou erro'],
+ fila:['espera a vez antes de seguir: fila de pedidos ao modelo','fila local diante do limite de requisições do provedor','um pedido por vez no servidor local; semáforo','«Ficou na fila por X s»'],
+ outro:['qualquer coisa que não cabe nos outros. O painel nunca esconde um ponto que não reconhece','cache; banco; webhook de saída','tudo o que for próprio do sistema','nome e duração']
+};
+function renderLegendaPagina(){
+  const lin=ORDEM_TIPOS.map(t=>`<tr><td><span class="sw-t" style="${corTipo(t)}"></span> ${icone(t,16)}<b>${TN[t].rot}</b></td><td>${TT[t][0]}</td><td>${TT[t][1]}</td><td>${TT[t][2]}</td><td>${TT[t][3]}</td></tr>`).join('');
+  const fl=Object.keys(TF).map(t=>`<tr><td><b>${TF[t].rot}</b></td><td>${TEXTO_TIPO[t]}</td><td><div class="mini">${MINI[t]()}</div></td></tr>`).join('');
+  $('#leg-pagina').innerHTML=`<h2>Legenda</h2>
+   <p class="det-sub">O painel serve para qualquer sistema: uma API de LLM, um modelo local, código próprio. Por isso os tipos de ponto são genéricos, e o que não é reconhecido aparece como <b>outro</b>.</p>
+   <div class="card"><h5>Tipos de ponto</h5><table class="tab-leg"><tr><th>Ponto</th><th>O que é</th><th>Num sistema com API de LLM</th><th>Num sistema próprio ou local</th><th>Aparece nos Logs como</th></tr>${lin}</table></div>
+   <div class="card"><h5>Tipos de fluxo</h5><table class="tab-leg"><tr><th>Fluxo</th><th>O que é</th><th>Desenho</th></tr>${fl}</table></div>
+   <div class="dupla" style="align-items:start">
+    <div class="card"><h5>Setas e selos</h5><table class="tab-leg">
+     <tr><td><i class="tr"></i></td><td>só começa quando o de trás termina</td></tr>
+     <tr><td><i class="tr v"></i></td><td>volta do laço (com o teto de voltas)</td></tr>
+     <tr><td><i class="tr x"></i></td><td>dispara outro fluxo</td></tr>
+     <tr><td><span class="pill esp">espera evento</span></td><td>o ponto espera algo acontecer (evento, agenda, pessoa)</td></tr>
+     <tr><td><span class="pill esp">na fila</span></td><td>o ponto espera a vez</td></tr>
+     <tr><td><span class="pill env">envia</span></td><td>o ponto manda algo para fora (arquivo, aviso, outro fluxo)</td></tr>
+     <tr><td><b style="color:var(--green)">● piscando</b></td><td>o ponto que está rodando agora (botão <b>Ao vivo</b>)</td></tr>
+     <tr><td><b>×2</b></td><td>quantas vezes o ponto rodou nesta execução (Logs)</td></tr></table></div>
+    <div class="card"><h5>De onde vem cada informação</h5><table class="tab-leg">
+     <tr><td><span class="og og-código">código</span></td><td>o painel lê o código-fonte (só leitura): arquivo, linha, quem chama quem, tipo provável do ponto</td></tr>
+     <tr><td><span class="og og-rastro">rastro</span></td><td>o que rodou de verdade: prompt enviado, resposta, tokens, tempos, erros, contagens</td></tr>
+     <tr><td><span class="og og-assistente">assistente</span></td><td>uma frase curta que só quem leu o código escreve: o que o fluxo e cada ponto fazem</td></tr></table></div>
+   </div>`;
+}
+function renderTudo(){
+  renderTopo();
+  $$('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===S.tab));
+  $$('.tela').forEach(t=>t.classList.toggle('on',t.id==='tela-'+S.tab));
+    if(S.tab==='pipeline')renderPipeline();else if(S.tab==='legenda')renderLegendaPagina();else renderLogs();
+}
+document.addEventListener('click',e=>{
+  const t=e.target;
+  let x;
+  if((x=t.closest('[data-tabgo]'))){S.tab=x.dataset.tabgo;renderTudo();return;}
+  if((x=t.closest('.tab-btn'))){S.tab=x.dataset.tab;renderTudo();return;}
+  if((x=t.closest('[data-fluxo-sel]'))){S.selNo=null;S.selFluxo=x.dataset.fluxoSel;renderPipeline(false);return;}
+  if((x=t.closest('[data-foco]'))){S.foco=x.dataset.foco;S.selNo=null;S.selFluxo=FL[S.foco]?S.foco:null;renderPipeline();return;}
+  if((x=t.closest('[data-irlog]'))){const [rn,nid]=x.dataset.irlog.split(':');S.tab='logs';S.lsub='exec';escolherRun(+rn);
+    if(nid){const c=runAtual().calls.find(k=>k.no===nid);if(c)S.call=c.id;}renderTudo();return;}
+  if((x=t.closest('[data-rot]'))){S.rot=x.dataset.rot;renderPipeline(false);return;}
+  if((x=t.closest('[data-zoom]'))){const a=x.dataset.zoom;if(a==='+')vistaP.zoomCentro(1.25);else if(a==='-')vistaP.zoomCentro(0.8);else vistaP.enquadrarLargura({x:0,y:0,w:layoutP.W,h:layoutP.H},0.6);return;}
+  if((x=t.closest('[data-zoomlg]'))){const a=x.dataset.zoomlg;if(a==='+')vistaL.zoomCentro(1.25);else if(a==='-')vistaL.zoomCentro(0.8);else vistaL.enquadrar({x:0,y:0,w:layoutL.W,h:layoutL.H});return;}
+  if((x=t.closest('[data-legendal]'))){S.legendaL=!S.legendaL;renderLeg();x.textContent=S.legendaL?'Ocultar legenda':'Mostrar legenda';return;}
+  if((x=t.closest('[data-legenda]'))){S.legenda=!S.legenda;renderLeg();x.textContent=S.legenda?'Ocultar legenda':'Mostrar legenda';return;}
+  if((x=t.closest('[data-det]'))){S.det=x.dataset.det;renderDetPl();return;}
+  if((x=t.closest('[data-lsub]'))){S.lsub=x.dataset.lsub;if(S.lsub==='erros'){const g=causas()[0];if(g&&!(runAtual().fim!=='ok'))escolherRun(g.runs[0].n);}renderLogs();return;}
+  if((x=t.closest('[data-run]'))){escolherRun(+x.dataset.run);renderLogs();return;}
+  if((x=t.closest('[data-ffluxo]'))){S.fFluxo=S.fFluxo===x.dataset.ffluxo?null:x.dataset.ffluxo;renderRailLg();return;}
+  if((x=t.closest('[data-fest]'))){S.fEst=S.fEst===x.dataset.fest?null:x.dataset.fest;renderRailLg();return;}
+  if((x=t.closest('[data-lview]'))){S.lview=x.dataset.lview;renderLogs();return;}
+  if((x=t.closest('[data-callno]'))){S.call=+x.dataset.callno;renderLogs();return;}
+  if((x=t.closest('[data-call]'))){S.call=+x.dataset.call;renderLogs();return;}
+  if((x=t.closest('[data-ldet]'))){S.ldet=x.dataset.ldet;renderDetLg();return;}
+  if((x=t.closest('[data-copiar]'))){try{navigator.clipboard.writeText(x.dataset.copiar);}catch(_){}const o=x.textContent;x.textContent='Copiado';setTimeout(()=>{x.textContent=o;},1100);return;}
+  if((x=t.closest('[data-copiar-txt]'))){const r=runAtual(),c=r.calls.find(k=>k.id===S.call);try{navigator.clipboard.writeText(S.ldet==='res'?textoRes(r,c):textoEnv(r,c));}catch(_){}x.textContent='Copiado';setTimeout(()=>{x.textContent='Copiar';},1100);return;}
+});
+$('#btn-atualizar').addEventListener('click',()=>carregar());
+$('#ao-vivo').addEventListener('change',e=>ligarVivo(e.target.checked));
+const Q=new URLSearchParams(location.search);
+if(Q.get('tab'))S.tab=Q.get('tab');
+if(Q.get('lsub'))S.lsub=Q.get('lsub');
+if(Q.get('lview'))S.lview=Q.get('lview');
+if(Q.get('foco')){S.foco=Q.get('foco');if(FL[S.foco])S.selFluxo=S.foco;}
+if(Q.get('sel')){const [f,n]=Q.get('sel').split('.');S.selNo={f,n};}
+if(Q.get('det'))S.det=Q.get('det');
+if(Q.get('vivo')){S.vivo=true;$('#ao-vivo').checked=true;}
+if(Q.get('run'))S.run=+Q.get('run');
+carregar().then(()=>{if(S.vivo)ligarVivo(true);});
+setInterval(()=>{fetch('/api/ping',{cache:'no-store'}).catch(()=>{});},5000);
+</script>
+</body>
+</html>

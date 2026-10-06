@@ -1,0 +1,26 @@
+{
+  "cartoes": [
+    {
+      "titulo": "De onde vêm as sugestões",
+      "dica": "As duas fontes somam. O programa mostra as 12 melhores, a partir de 2 letras digitadas.",
+      "campos": [
+        { "chave": "simbolos_do_projeto", "rotulo": "Nomes do projeto inteiro (funções, classes, seletores)", "tipo": "interruptor", "padrao": true,
+          "nota": "Vem do Índice de Símbolos, construído na aba Análise. Num projeto que nunca o construiu esta fonte fica vazia — e a de baixo cobre." },
+        { "chave": "palavras_do_arquivo", "rotulo": "Palavras que já estão no arquivo aberto", "tipo": "interruptor", "padrao": true,
+          "nota": "Funciona em qualquer linguagem e em qualquer arquivo de texto, sem índice nenhum." },
+        { "chave": "priorizar_arquivo_aberto", "rotulo": "Mostrar primeiro o que é do arquivo aberto", "tipo": "interruptor", "padrao": true }
+      ]
+    },
+    {
+      "titulo": "Como casar",
+      "campos": [
+        { "chave": "ignorar_maiusculas", "rotulo": "Ignorar maiúsculas e minúsculas", "tipo": "interruptor", "padrao": true,
+          "nota": "Desligado, \"ab\" não sugere \"Abrir\"." },
+        { "chave": "casar_no_meio", "rotulo": "Casar também pelo meio do nome", "tipo": "interruptor", "padrao": true,
+          "nota": "A partir de 3 letras: \"hist\" sugere \"abrirHistoricoLocal\", porque um pedaço do nome começa assim. Fica abaixo de quem casa pelo começo." },
+        { "chave": "teto", "rotulo": "Quantas sugestões entregar ao programa", "tipo": "numero", "padrao": 40, "min": 5, "max": 200, "passo": 5,
+          "nota": "O programa continua mostrando as 12 melhores; este número só decide quantas ele recebe para escolher." }
+      ]
+    }
+  ]
+}

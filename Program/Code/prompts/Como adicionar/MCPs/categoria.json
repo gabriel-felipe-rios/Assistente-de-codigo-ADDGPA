@@ -1,0 +1,35 @@
+{
+  "ordem": 3,
+  "nome": "MCPs",
+  "icone": "🔌",
+  "destino": "Arquivos/MCPs/",
+  "tabela": {
+    "colunas": [
+      "Tipo",
+      "O que faz"
+    ],
+    "linhas": [
+      {
+        "nome": "Local · código na pasta",
+        "texto": "o servidor mora dentro da pasta do item; o programa monta o caminho",
+        "prompt": "Prompt · Local, código na pasta.txt",
+        "contrato": "Contrato/Como criar MCP local (código na pasta).md"
+      },
+      {
+        "nome": "Local · roda um comando",
+        "texto": "sobe com `npx`, `uvx` ou `docker`; o comando precisa estar no PATH",
+        "prompt": "Prompt · Local, roda um comando.txt",
+        "contrato": "Contrato/Como criar MCP local (roda um comando).md"
+      },
+      {
+        "nome": "Remoto · só endereço",
+        "texto": "um endereço HTTP; **os seus dados saem da máquina**",
+        "prompt": "Prompt · Remoto, só endereço.txt",
+        "contrato": "Contrato/Como criar MCP remoto (só endereço).md"
+      }
+    ]
+  },
+  "botao": null,
+  "nota": "Cada prompt pede à IA um MCP daquele tipo, já no formato que o programa lê. Quando estiver pronto, ponha a pasta em `Arquivos/MCPs/`.",
+  "apoio": null
+}

@@ -1,0 +1,64 @@
+/* ═══ TRABALHOS → Linha do tempo e Métricas ════════════════════════════════
+   As duas sub-abas que só MOSTRAM número: nenhuma delas tem gesto, arraste
+   ou edição — e é por isso que ficam juntas, longe do resto.
+
+   ⚠️ A LEGENDA DE STATUS É A MESMA DO QUADRO, e o prefixo `.tr-` é
+   compartilhado de propósito: são as mesmas seis cores, e duas listas de cor
+   divergiriam na primeira mudança de tema.                                 */
+/* ── Linha do tempo ── */
+.tr-legenda { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; }
+.tr-legenda-i {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: var(--text-muted);
+}
+.tmp-raias { display: flex; flex-direction: column; gap: 9px; }
+.tmp-raia { display: flex; align-items: center; gap: 12px; }
+.tmp-rotulo {
+  width: 190px; flex-shrink: 0; display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px;
+}
+.tmp-trilho {
+  flex: 1; height: 15px; border-radius: 4px;
+  background: rgba(var(--black-rgb), .26); overflow: hidden;
+}
+.tmp-barra { height: 100%; border-radius: 4px; background: var(--gray); }
+.tmp-barra-fazendo    { background: var(--blue); }
+.tmp-barra-entregue   { background: var(--green); }
+.tmp-barra-falhou     { background: var(--red); }
+.tmp-barra-perguntou  { background: var(--amber); }
+.tmp-barra-aguardando { background: var(--cinza); }
+.tmp-numero {
+  width: 150px; flex-shrink: 0; text-align: right;
+  font-size: 11px; color: var(--text-muted);
+}
+
+/* ── Métricas ── */
+.mtr-tiles { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.mtr-tile {
+  flex: 1; min-width: 150px; padding: 14px 16px; border-radius: var(--radius);
+  background: rgba(var(--black-rgb), .18); border: 1px solid rgba(var(--white-rgb), .07);
+}
+.mtr-tile b { display: block; font-size: 23px; font-weight: 700; }
+.mtr-tile span { font-size: 11.5px; color: var(--text-muted); }
+.mtr-sec { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+
+.mtr-caixa {
+  padding: 15px; border-radius: var(--radius); margin-bottom: 14px;
+  background: rgba(var(--black-rgb), .16); border: 1px solid rgba(var(--white-rgb), .08);
+}
+.mtr-caixa h3 { font-size: 13.5px; font-weight: 700; margin-bottom: 12px; }
+.mtr-cota { margin-bottom: 11px; }
+.mtr-cota-rot { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.mtr-cota-rot b { color: var(--text); }
+.mtr-cota-vazia { font-size: 12px; color: var(--text-muted); }
+.mtr-trilho {
+  height: 9px; border-radius: 5px; overflow: hidden;
+  background: rgba(var(--black-rgb), .3);
+}
+.mtr-trilho span { display: block; height: 100%; background: var(--blue); border-radius: 5px; }
+
+.mtr-barras { display: flex; flex-direction: column; gap: 8px; }
+.mtr-barra-l { display: flex; align-items: center; gap: 12px; }
+.mtr-barra-rot { width: 175px; flex-shrink: 0; font-size: 12px; }
+.mtr-barra-l .mtr-trilho { flex: 1; height: 15px; }
+.mtr-barra-n { width: 62px; flex-shrink: 0; text-align: right; font-size: 11.5px; color: var(--text-muted); }

@@ -1,0 +1,103 @@
+/* ═══ TRABALHOS → sub-aba Fluxo ════════════════════════════════════════════
+   A cadeia de rolagem da casca e o desenho do fluxo.
+
+   ⚠️ AQUI `non-scaling-stroke` FUNCIONA, ao contrário da Oficina: quem amplia
+   é o próprio SVG. Não copiar a solução de um lado para o outro — elas
+   resolvem o mesmo sintoma por caminhos que não se substituem.             */
+/* ═══ FASE 4 — a sub-aba Fluxo ═════════════════════════════════════════════ */
+
+/* A cadeia de rolagem: a casca leva `min-height: 0` e é o PALCO que ganha a
+   altura que sobra. Sem o `min-height`, um flex-item nunca encolhe abaixo do
+   conteúdo e o diagrama empurraria a página inteira para baixo. */
+.flx-corpo { display: flex; flex-direction: column; min-height: 0; }
+.flx-palco { flex: 1; display: flex; gap: 14px; min-height: 0; }
+
+.flx-lateral {
+  width: var(--painel-arvore-largo, 240px); flex-shrink: 0;
+  display: flex; flex-direction: column; min-height: 0;
+}
+.flx-lateral-t {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-muted); margin-bottom: 7px;
+}
+.flx-execs { overflow-y: auto; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
+.flx-exec {
+  display: flex; flex-direction: column; gap: 2px; text-align: left;
+  padding: 8px 10px; border-radius: var(--radius); cursor: pointer;
+  background: var(--surface); border: 1px solid transparent; color: var(--text);
+  font-family: inherit;
+}
+.flx-exec:hover { border-color: rgba(var(--white-rgb), .14); }
+/* O destaque do escolhido é contorno + fundo, e não só opacidade: entre itens
+   parecidos, variar opacidade é imperceptível. */
+.flx-exec.ativa { border-color: var(--blue); background: rgba(var(--blue-rgb), .12); }
+.flx-exec b { font-size: 12px; font-weight: 600; }
+.flx-exec span { font-size: 10.5px; color: var(--text-muted); }
+.flx-aberta {
+  font-style: normal; font-size: 9.5px; font-weight: 700; padding: 1px 5px;
+  border-radius: 3px; background: rgba(var(--blue-rgb), .2); color: var(--blue);
+}
+.flx-lateral-nota { margin-top: 10px; }
+
+.flx-tela {
+  flex: 1; min-width: 0; position: relative; overflow: hidden;
+  border: 1px solid rgba(var(--white-rgb), .08); border-radius: var(--radius);
+  background: rgba(var(--black-rgb), .22);
+}
+.flx-svg { width: 100%; height: 100%; display: block; cursor: grab; }
+.flx-svg:active { cursor: grabbing; }
+
+/* ⚠️ AQUI `non-scaling-stroke` FUNCIONA, ao contrário da Oficina: quem amplia é
+   uma transform DO SVG (d3.zoom num `<g>`), e não uma CSS transform num
+   ancestral HTML. Sem ele, a borda de 1 px do cartão viraria 4 px no zoom 4× e
+   passaria a engolir a caixa que ela só deveria delimitar. */
+.flx-caixa, .flx-seta { vector-effect: non-scaling-stroke; }
+
+.flx-caixa { fill: var(--surface); stroke: var(--gray); stroke-width: 1; }
+.flx-cartao.esperando .flx-caixa { stroke-dasharray: 5 4; }
+.flx-cartao.em-ciclo .flx-caixa { stroke: var(--red); stroke-width: 2; }
+.flx-cartao { cursor: help; }
+
+/* A cor da coluna entra na borda esquerda do cartão, do mesmo jeito que entra
+   na coluna do Quadro — é a MESMA legenda, e reaproveitá-la é o que impede a
+   tela de inventar um segundo vocabulário de estado. */
+.flx-cor-neutro   { stroke: var(--cinza); }
+.flx-cor-azul     { stroke: var(--blue); }
+.flx-cor-alerta   { stroke: var(--amber); }
+.flx-cor-verde    { stroke: var(--green); }
+.flx-cor-vermelho { stroke: var(--red); }
+.flx-cor-cinza    { stroke: var(--cinza-escuro); }
+
+.flx-bg-neutro   { fill: var(--cinza); }
+.flx-bg-azul     { fill: var(--blue); }
+.flx-bg-alerta   { fill: var(--amber); }
+.flx-bg-verde    { fill: var(--green); }
+.flx-bg-vermelho { fill: var(--red); }
+.flx-bg-cinza    { fill: var(--cinza-escuro); }
+
+.flx-id { font-size: 11px; font-weight: 700; fill: var(--text-muted); }
+.flx-titulo { font-size: 12px; fill: var(--text); }
+.flx-meta { font-size: 9.5px; fill: var(--text-muted); }
+
+/* Seta cumprida é discreta; pendente é o que a tela veio dizer, e por isso é
+   ela que tem cor. Duas esperas com prazos diferentes não dividem a cor — mas
+   aqui a distinção é outra: já aconteceu × ainda não. */
+.flx-seta { fill: none; stroke-width: 1.4; }
+.flx-seta-cumprida { stroke: var(--cinza-escuro); }
+.flx-seta-pendente { stroke: var(--amber); stroke-dasharray: 6 4; }
+.flx-ponta-cumprida { fill: var(--cinza-escuro); }
+.flx-ponta-pendente { fill: var(--amber); }
+
+/* Segue o componente "Faixa de aviso com ação": flex, ícone, 9px 13px, raio 6px.
+   ⚠️ ÂMBAR, e não vermelho: vermelho é erro, âmbar é pendência. Um ciclo de
+   dependência não é uma falha do programa — é uma combinação que o usuário
+   ainda vai desfazer, e o que já foi feito continua bom. */
+.flx-ciclo {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; padding: 9px 13px; border-radius: 6px;
+  font-size: 12.5px; line-height: 1.6; color: var(--text);
+  background: rgba(var(--amber-rgb), .1); border: 1px solid rgba(var(--amber-rgb), .3);
+}
+.flx-ciclo-i { color: var(--amber); font-size: 15px; flex-shrink: 0; }
+.flx-ciclo-t { flex: 1; }
+.flx-ciclo b { color: var(--amber); }

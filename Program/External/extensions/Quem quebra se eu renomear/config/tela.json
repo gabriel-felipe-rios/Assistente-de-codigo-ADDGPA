@@ -1,0 +1,27 @@
+{
+  "cartoes": [
+    {
+      "titulo": "As duas peças",
+      "dica": "A fonte é o Índice de Identificadores do projeto (aba Análise). Sem ele, as duas ficam quietas.",
+      "campos": [
+        { "chave": "marcar_no_codigo", "rotulo": "Marcar no Editor o nome de cada definição que outros arquivos usam", "tipo": "interruptor", "padrao": true },
+        { "chave": "avisar_ao_salvar", "rotulo": "Avisar ao salvar quando um desses nomes sumiu", "tipo": "interruptor", "padrao": true,
+          "nota": "Só avisa — nunca impede o Ctrl+S." }
+      ]
+    },
+    {
+      "titulo": "Como a marca aparece",
+      "campos": [
+        { "chave": "cor", "rotulo": "Cor do fundo", "tipo": "escolha", "padrao": "amber",
+          "opcoes": [
+            { "valor": "amber", "rotulo": "Âmbar" },
+            { "valor": "purple", "rotulo": "Roxo" },
+            { "valor": "blue", "rotulo": "Azul" },
+            { "valor": "teal", "rotulo": "Verde-azulado" },
+            { "valor": "red", "rotulo": "Vermelho" }
+          ] },
+        { "chave": "intensidade", "rotulo": "Intensidade do fundo (%)", "tipo": "numero", "padrao": 12, "min": 4, "max": 40, "passo": 2 }
+      ]
+    }
+  ]
+}

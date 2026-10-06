@@ -1,0 +1,37 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+#exm-raiz {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#btn-analyze-matriz,
+#btn-analyze-matriz-io,
+#btn-analyze-treemap,
+#btn-analyze-sunburst,
+#btn-vp-recarregar {
+  display: none !important;
+}
+
+body.exm-sem-barra #exm-abas,
+body.exm-sem-barra #tab-projeto > .subtabs-bar,
+body.exm-sem-barra #tab-mapas > .subtabs-bar {
+  display: none;
+}
+
+/* Documentação: o que só faz sentido com o programa aberto não aparece no exportado.
+   A busca semântica precisa do banco de embeddings; regerar e recarregar leem o disco;
+   copiar manda ao chat do programa. */
+#doc-busca-modos [data-mode="semantica"],
+#btn-doc-regerar,
+#btn-doc-refresh,
+#btn-doc-copiar-caminho,
+#btn-doc-copiar-caminho-documento,
+#btn-doc-copiar-caminho-codigo,
+#btn-doc-copiar-documento {
+  display: none !important;
+}

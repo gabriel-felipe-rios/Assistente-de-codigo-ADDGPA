@@ -1,0 +1,93 @@
+/* ═══════════ Projeto › Remover e Contexto sem leitura — o MESMO componente ══
+   JS em `modulos/projeto-caminhos.js`; markup em `projeto-template.js`
+   (`_caminhosPainel`). Substituiu `ignore.css` e `contexto.css` na fase 06 da
+   obra «Qualidade da documentação» (D46, D47). Só tokens de cor. */
+.subtab-content--panels { overflow: hidden; padding: 0; }
+
+.pcam-corpo { display: flex; gap: 14px; padding: 14px; flex: 1; min-height: 0; overflow: hidden; }
+
+/* ── À esquerda: a Estrutura ── */
+.pcam-lateral {
+  width: 260px; flex-shrink: 0; background: var(--surface-dark);
+  border-radius: var(--radius); padding: 12px;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.pcam-lat-cab { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; flex-shrink: 0; }
+/* `.btn-icon` traz `margin-left: auto` (utils.css); com dois lado a lado isso
+   abre um vão entre eles — cada um se empurra pro canto por conta própria. */
+.pcam-lat-cab .btn-icon { margin-left: 0; }
+.pcam-lat-titulo {
+  margin-right: auto; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.pcam-arvore { flex: 1; min-height: 0; overflow: auto; }
+
+/* ── À direita: a lista ── */
+.pcam-principal {
+  flex: 1; min-width: 0; background: var(--surface); border-radius: var(--radius);
+  padding: 16px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px;
+}
+.pcam-cab { display: flex; align-items: center; gap: 12px; }
+.pcam-cab h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.pcam-cab .dropdown-wrap { margin-left: auto; }
+.pcam-nota { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+.pcam-nota b { color: var(--text); font-weight: 600; }
+
+/* A zona tracejada acende em verde quando algo vem da Estrutura (`.sobre`) ou
+   do Explorer (`.drop-active`, posto por `setupDropZoneMulti` no painel). */
+.pcam-soltar {
+  border: 1.5px dashed rgba(var(--white-rgb),0.18); border-radius: 6px; padding: 10px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+.pcam-soltar.sobre,
+.pcam-principal.drop-active .pcam-soltar {
+  border-color: var(--green); color: var(--green); background: rgba(var(--green-rgb),0.07);
+}
+
+.pcam-legenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-muted); }
+.pcam-ponto { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.pcam-ponto--arvore  { background: var(--blue); }
+.pcam-ponto--pasta   { background: var(--indigo); }
+.pcam-ponto--arquivo { background: var(--teal); }
+
+.pcam-lista { display: flex; flex-direction: column; gap: 8px; }
+.pcam-vazio { font-size: 12.5px; color: var(--text-muted); font-style: italic; }
+
+/* ── O item: borda de 6px pela cor do tipo ── */
+.pcam-item {
+  background: var(--surface-dark); border-radius: 6px; border-left: 6px solid;
+  padding: 9px 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.pcam-item--arvore  { border-left-color: var(--blue); }
+.pcam-item--pasta   { border-left-color: var(--indigo); }
+.pcam-item--arquivo { border-left-color: var(--teal); }
+.pcam-linha { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pcam-caminho {
+  font-family: ui-monospace, Consolas, monospace; font-size: 13px; color: var(--text);
+  overflow-wrap: anywhere; min-width: 0;
+}
+.pcam-escopo {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  color: var(--text-muted); background: rgba(var(--black-rgb),0.25);
+  border-radius: 10px; padding: 2px 8px; white-space: nowrap;
+}
+.pcam-acoes { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.pcam-btn {
+  background: transparent; border: 1px solid rgba(var(--white-rgb),0.12); border-radius: 5px;
+  color: var(--text-muted); font-size: 12px; font-family: inherit; padding: 2px 8px;
+  cursor: pointer; transition: color var(--t), background var(--t);
+}
+.pcam-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.06); }
+.pcam-btn--tirar:hover { color: var(--red); background: rgba(var(--red-rgb),0.12); }
+
+/* ── Só no Contexto sem leitura: a descrição ── */
+.pcam-desc-rot {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+.pcam-desc {
+  width: 100%; background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 5px; color: var(--text); font-family: inherit; font-size: 12.5px;
+  padding: 7px 9px; resize: vertical; min-height: 44px;
+}
+.pcam-desc:focus { outline: none; border-color: var(--blue); }

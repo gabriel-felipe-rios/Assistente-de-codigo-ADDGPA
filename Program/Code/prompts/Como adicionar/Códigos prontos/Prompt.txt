@@ -1,0 +1,38 @@
+Preciso de um CÓDIGO PRONTO para a biblioteca do meu assistente de código.
+
+O QUE O CÓDIGO DEVE FAZER: [descreva aqui]
+LINGUAGEM / STACK: [diga aqui]
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do código pronto>/
+    Descrição.md        (obrigatório)
+    <os arquivos de código>
+
+REGRAS DO FORMATO
+
+1. O Descrição.md é o que o programa lê para montar o cartão na tela:
+
+     # <Nome do item>
+
+     <uma frase dizendo o que ele faz>
+
+   A PRIMEIRA linha que não começa com # é a descrição que aparece na tela, e ela
+   é cortada em 200 caracteres. Escreva uma frase só, direta, sem introdução do
+   tipo "Este documento descreve".
+
+2. O nome da pasta é o nome que aparece na tela. Pode ter maiúscula, acento e
+   espaço — é nome de exibição, não identificador.
+
+3. Um código pronto é um trecho que eu vou COPIAR para dentro de um projeto e
+   adaptar. Escreva-o autocontido: sem import de coisa que só existe no seu
+   exemplo, sem caminho absoluto, sem chave de API embutida.
+
+4. Se precisar de dependência externa, diga quais no Descrição.md, em uma linha.
+
+5. Pode ter subpastas — nesta categoria elas são copiadas junto.
+
+ONDE VOU SALVAR
+  Arquivos/Códigos prontos/<Nome do código pronto>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome e o caminho de cada um.

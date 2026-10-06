@@ -1,0 +1,97 @@
+{
+  "type": "object",
+  "properties": {
+    "fala": {
+      "type": "string",
+      "description": "Uma ou duas frases suas, para o usuário ler, dizendo o que você vai fazer agora e por quê. Só aparece na tela quando vem junto de \"chamadas\" — com relatório ou com precisa_de_voce ela é gravada e não é mostrada, porque o desfecho já é mostrado por inteiro logo abaixo. Pode ser string vazia."
+    },
+    "chamadas": {
+      "type": "array",
+      "description": "DELEGAR: as perguntas a subagentes desta rodada, dentro do máximo que o prompt diz. Use quando falta informação.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subagente": {
+            "type": "string",
+            "description": "O id de um dos subagentes ativos, exatamente como escrito na lista que você recebeu."
+          },
+          "pergunta": {
+            "type": "string",
+            "description": "Uma pergunta específica, que se responde sozinha sem o resto do contexto."
+          }
+        },
+        "required": ["subagente", "pergunta"]
+      }
+    },
+    "precisa_de_voce": {
+      "type": "object",
+      "description": "PARAR E PERGUNTAR: quando a tarefa não dá para pesquisar sem uma decisão do usuário. Use com parcimônia, e só no começo.",
+      "properties": {
+        "sub_tag": {
+          "type": "string",
+          "enum": ["tarefa_vaga", "falta_decisao"],
+          "description": "\"tarefa_vaga\" quando não dá para saber por onde começar; \"falta_decisao\" quando dá para entender o pedido mas a escolha é do usuário."
+        },
+        "motivo": {
+          "type": "string",
+          "description": "Uma ou duas frases dizendo o que falta."
+        }
+      },
+      "required": ["sub_tag", "motivo"]
+    },
+    "relatorio": {
+      "type": "object",
+      "description": "ENTREGAR: quando terminou de pesquisar.",
+      "properties": {
+        "resumo": {
+          "type": "string",
+          "description": "Uma a três frases: o que a tarefa exige, em linhas gerais."
+        },
+        "arquivos": {
+          "type": "array",
+          "description": "Um item por lugar concreto onde a mão vai encostar. É a parte que mais importa.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "arquivo": {
+                "type": "string",
+                "description": "Caminho relativo de um arquivo QUE JÁ EXISTE, exatamente como o subagente devolveu."
+              },
+              "linha": {
+                "type": "string",
+                "description": "Número ou intervalo. String vazia quando nenhum subagente confirmou — nunca invente."
+              },
+              "mudanca": {
+                "type": "string",
+                "description": "O que muda NESSE arquivo. Coisa nova começa por CRIAR, com o caminho completo sugerido."
+              },
+              "evidencia": {
+                "type": "string",
+                "description": "Qual subagente disse isso e com base em quê. String vazia se você não tem essa informação — não invente para preencher."
+              }
+            },
+            "required": ["arquivo", "mudanca"]
+          }
+        },
+        "restricoes": {
+          "type": "array",
+          "description": "O que o projeto já decidiu e que restringe a solução. Lista vazia se não houver nenhuma.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "decisao": { "type": "string", "description": "O que o projeto já decidiu." },
+              "fonte": { "type": "string", "description": "O arquivo da base onde isso está escrito." },
+              "implicacao": { "type": "string", "description": "Como isso restringe a solução." }
+            },
+            "required": ["decisao", "fonte", "implicacao"]
+          }
+        },
+        "observacoes": {
+          "type": "string",
+          "description": "O que mais o leitor precisa saber. String vazia se não houver nada."
+        }
+      },
+      "required": ["resumo", "arquivos", "restricoes", "observacoes"]
+    }
+  }
+}

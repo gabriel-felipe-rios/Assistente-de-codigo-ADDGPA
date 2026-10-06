@@ -1,0 +1,20 @@
+{
+  "nome": "Tingir a janela",
+  "versao": "2",
+  "descricao": "Uma cor por projeto, em volta da janela — para saber de relance em qual projeto você está.",
+  "prefixo": "tin",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "comando", "id": "tin.menu-do-editor", "lugares": ["editor.menu"],
+      "arquivo": "frontend/encaixes/menu-editor.js" },
+    { "recurso": "comando", "id": "tin.menu-da-arvore", "lugares": ["arvore.menu"],
+      "arquivo": "frontend/encaixes/menu-arvore.js" },
+    { "recurso": "comando", "id": "tin.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js" },
+    { "recurso": "reacao", "id": "tin.ao-abrir-projeto", "evento": "projeto.abriu",
+      "arquivo": "frontend/eventos/abriu.js" },
+    { "recurso": "reacao", "id": "tin.ao-fechar-projeto", "evento": "projeto.fechou",
+      "arquivo": "frontend/eventos/fechou.js" }
+  ],
+  "escreve_fora": []
+}

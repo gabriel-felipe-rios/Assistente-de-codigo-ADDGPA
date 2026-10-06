@@ -1,0 +1,81 @@
+/* ══════════════════════════ COMPONENTE: BARRA DE BUSCA DE ÁRVORE (busca-arvore.js) ══
+   A barra que fica ACIMA de uma árvore de pastas: campo de texto, botão
+   Buscar e os modos de busca (Por nome / Por conteúdo / …).
+
+   Nasceu como `.doc-search-*`, exclusiva da aba Documentação. Virou componente
+   quando as três telas de árvore da aba Análise (Mapa de I/O, Relações,
+   Tree-sitter) passaram a precisar da mesma barra: o pedido do usuário foi que
+   ficassem iguais às da Documentação, e "iguais" garantido por cópia dura duas
+   semanas. Aqui é o mesmo CSS, literalmente.
+
+   Quem usa decide QUAIS modos existem — a Documentação tem três (o terceiro é
+   o semântico), a Análise tem dois. O componente não sabe o que cada modo faz. */
+
+.bsa-barra {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  flex-shrink: 0;
+}
+
+.bsa-linha {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.bsa-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.bsa-input:focus { outline: none; border-color: var(--accent); }
+.bsa-input::placeholder { color: var(--text-muted); }
+
+.bsa-modos {
+  display: flex;
+  gap: 4px;
+}
+
+.bsa-modo-btn {
+  background: transparent;
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.bsa-modo-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+.bsa-modo-btn:not(.active):not(:disabled):hover {
+  background: rgba(var(--white-rgb),0.05);
+  color: var(--text);
+}
+/* Modo que não se aplica à fonte selecionada — a busca semântica só existe
+   onde há índice de embeddings. Desabilitar é melhor que aceitar o clique e
+   devolver erro depois; o `title` diz o motivo no hover. */
+.bsa-modo-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Aviso de corte ("500 arquivos, mostrando os primeiros N") e mensagem de erro
+   da busca por conteúdo. Fica na própria barra, não no lugar do conteúdo: o
+   resultado da busca é a árvore filtrada, e ela continua sendo o que se olha. */
+.bsa-aviso {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+.bsa-aviso:empty { display: none; }
+.bsa-aviso--erro { color: var(--red); }

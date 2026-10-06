@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Linha do tempo -->
+<!-- Cabeçalho -> fio vertical central com eventos agrupados por data, alternando lado -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Linha do tempo</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.header{height:40px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0}
+.pagina{flex:1;min-height:0;overflow:auto;padding:16px 0}
+.trilho{max-width:600px;margin:0 auto;position:relative;padding-left:96px}
+.trilho::before{content:"";position:absolute;left:78px;top:4px;bottom:4px;width:2px;background:var(--superficie-hover)}
+.dia{margin-bottom:16px;position:relative}
+.dia .data{position:absolute;left:-96px;top:1px;width:64px;text-align:right;color:var(--texto-secundario);font-size:10.5px;font-weight:700}
+.evt{position:relative;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:8px;padding:9px 11px;margin-bottom:8px;display:flex;flex-direction:column;gap:3px}
+.evt::before{content:"";position:absolute;left:-23px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--primaria);border:2px solid var(--fundo)}
+.evt.pos::before{background:var(--positiva)}
+.evt.neg::before{background:var(--negativa)}
+.evt .t{font-weight:600;font-size:11.5px}
+.evt .s{color:var(--texto-secundario);font-size:11px}
+</style></head><body>
+<div class="header"><span style="font-weight:700">Histórico do pedido #4821</span><button class="bt sec">Filtrar por tipo</button></div>
+<div class="pagina"><div class="trilho">
+  <div class="dia">
+    <div class="data">Hoje</div>
+    <div class="evt pos"><span class="t">Entrega confirmada</span><span class="s">Recebido por Marina, 14h02</span></div>
+    <div class="evt"><span class="t">Saiu para entrega</span><span class="s">Centro de distribuição · 08h40</span></div>
+  </div>
+  <div class="dia">
+    <div class="data">Ontem</div>
+    <div class="evt"><span class="t">Em trânsito</span><span class="s">Chegou ao hub regional</span></div>
+    <div class="evt neg"><span class="t">Tentativa sem sucesso</span><span class="s">Endereço não localizado</span></div>
+  </div>
+  <div class="dia">
+    <div class="data">22 ago</div>
+    <div class="evt"><span class="t">Pedido faturado</span><span class="s">Nota 88 214 emitida</span></div>
+    <div class="evt"><span class="t">Pagamento aprovado</span><span class="s">Cartão final 4090</span></div>
+  </div>
+</div></div>
+</body></html>

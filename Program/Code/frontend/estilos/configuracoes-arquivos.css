@@ -1,0 +1,57 @@
+/* ═══ CONFIGURAÇÕES → Arquivos: a grade de destino por categoria ═══════════
+   Onde cada categoria da biblioteca vai parar, no preset do assistente
+   externo.
+
+   ⚠️ É UMA GRADE, E NÃO UMA LISTA, porque a pergunta é de duas dimensões:
+   categoria × campo (destino, arquivo de entrada, formato). Numa lista, o
+   usuário perde de vista que a mesma coluna significa a mesma coisa em todas
+   as linhas.                                                                */
+/* ── Configurações > Arquivos: a grade de destino por categoria ───────────────
+   Uma linha por categoria da biblioteca: nome à esquerda, os três campos à
+   direita. Grade, e não `config-field-row` empilhado, porque as três perguntas
+   ("para onde", "com que nome de entrada", "como chega") são a MESMA pergunta
+   repetida por categoria — lendo em coluna dá para comparar os assistentes de
+   relance, que é justamente o que a tela existe para responder. */
+.cfa-grade { display: flex; flex-direction: column; gap: 10px; }
+.cfa-linha { display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.06);
+  border-radius: 8px; padding: 12px 14px; }
+.cfa-linha-nome { font-size: 14px; font-weight: 600; color: var(--text); }
+.cfa-linha-campos { display: grid; grid-template-columns: 2fr 1.4fr 1.2fr; gap: 10px; }
+.cfa-linha-campos label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* O `(renomeia na cópia)` do rótulo: em caixa baixa e mais apagado, porque é
+   uma ressalva sobre o campo, e não o nome dele. */
+.cfa-linha-campos label > span i { text-transform: none; font-style: normal;
+  opacity: .75; letter-spacing: 0; }
+.cfa-linha-campos label > span { font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .4px; }
+.cfa-linha-campos input, .cfa-linha-campos select {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 5px; color: var(--text); font-family: inherit; font-size: 13px;
+  padding: 6px 8px; min-width: 0; }
+.cfa-linha-campos input:focus, .cfa-linha-campos select:focus {
+  outline: none; border-color: rgba(var(--blue-rgb),0.55); }
+/* Ver o 🔴 de `.cpr-campo-solto select option`: a lista aberta não herda o
+   fundo do campo, e sem isto ela sai clara num tema escuro. */
+.cfa-linha-campos select option { background: var(--surface-dark); color: var(--text); }
+
+/* Abaixo de 1100px os três campos não cabem lado a lado sem espremer o caminho,
+   que é o mais longo dos três — a linha vira duas. */
+@media (max-width: 1100px) {
+  .cfa-linha { grid-template-columns: 1fr; gap: 8px; }
+  .cfa-linha-campos { grid-template-columns: 1fr 1fr; }
+}
+
+.cfa-normalizacao { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;
+  font-size: 13px; color: var(--text-muted); }
+.cfa-normalizacao b { color: var(--text); font-weight: 600; }
+
+.cpr-pill-padrao { font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+  color: var(--text-muted); }
+
+/* A linha de uma categoria "só destino" (o Servidor MCP): um campo largo e a
+   nota que explica por que os outros dois não existem ali. Sem a nota, o campo
+   sozinho parece um campo que perdeu os irmãos. */
+.cfa-linha-campos-simples { grid-template-columns: 1fr; }
+.cfa-campo-largo { grid-column: 1 / -1; }
+.cfa-campo-nota { grid-column: 1 / -1; margin: 0; font-size: 12px; color: var(--text-muted); }

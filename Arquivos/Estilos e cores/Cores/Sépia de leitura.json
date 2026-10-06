@@ -1,0 +1,81 @@
+{
+  "nome": "Sépia de leitura",
+  "descricao": "Paleta clara e quente, de papel envelhecido. Fundo creme, texto marrom-escuro e acentos terrosos. Feita para telas de leitura longa.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(0,0,0,0.10). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#F5EFE3",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#FFFBF2",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#EDE4D2",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#E4D9C3",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#2E261A",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#7A6B54",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#A6642A",
+      "apelido": "âmbar",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#8A5121",
+      "apelido": "âmbar (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#5F7A3C",
+      "apelido": "oliva",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#4C6330",
+      "apelido": "oliva (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#B03A28",
+      "apelido": "tijolo",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#8F2E1F",
+      "apelido": "tijolo (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#7A5C9E",
+      "apelido": "ameixa",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#634A80",
+      "apelido": "ameixa (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#C4B08A",
+      "apelido": "areia",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#A8956F",
+      "apelido": "areia (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

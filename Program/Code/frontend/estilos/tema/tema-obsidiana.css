@@ -1,0 +1,133 @@
+/* ═══════════════════════════════════════════════════════════ TEMA: OBSIDIANA ══
+   Quase a mesma paleta do Carvão — as seis cores de ação, os acentos e as
+   identidades de agente são idênticos — trocando só o fundo: onde o Carvão é
+   grafite neutro, este puxa para o roxo-escuro, quase preto.
+
+   ── O que muda em relação ao Carvão ──
+   1. O fundo (#17191C → #14121B) e as três superfícies que dependem dele
+      ganham um matiz roxo, em vez do cinza neutro do Carvão.
+   2. `--text-muted` esquenta um pouco (de #A2A9B0 para #A79FB0) para não
+      destoar do fundo roxo.
+   3. Todo o resto — as seis cores de ação, os acentos, as identidades de
+      agente e subagente — é uma cópia exata do Carvão. Não há razão para
+      esses tokens mudarem só porque o fundo mudou.
+
+   ⚠️ A FAMÍLIA de cada agente e subagente é a mesma dos outros temas: o
+   Leitor continua amarelo, o Analista rosa, o Chat e a Fila dividem a mesma
+   laranja. Muda o tom do fundo, nunca o papel de cada cor. */
+
+:root {
+  /* ── Paleta base ────────────────────────────────────────────────────────── */
+  --bg:           #14121B;
+  --surface:      #1E1A26;
+  --surface-hover:#282230;
+  --surface-dark: #0C0A11;
+  --text:         #F2F3F5;
+  --text-muted:   #A79FB0;
+
+  /* ── As seis cores de ação, e seus -hover ────────────────────────────────
+     Idênticas ao Carvão: só o fundo muda neste tema. */
+  --blue-rgb:         77,171,235;
+  --blue:             rgb(var(--blue-rgb));
+  --blue-hover:       #3E8FC4;
+  --green-rgb:        62,214,128;
+  --green:            rgb(var(--green-rgb));
+  --green-hover:      #34B36B;
+  --red-rgb:          240,98,84;
+  --red:              rgb(var(--red-rgb));
+  --red-hover-rgb:    205,71,57;
+  --red-hover:        rgb(var(--red-hover-rgb));
+  --purple-rgb:       175,113,203;
+  --purple:           rgb(var(--purple-rgb));
+  --purple-hover:     #9A5CB8;
+  --teal-rgb:         38,208,174;
+  --teal:             rgb(var(--teal-rgb));
+  --teal-hover:       #1E9F86;
+  --gray:             #3A4048;
+  --gray-hover:       #49515A;
+
+  /* ── O véu ────────────────────────────────────────────────────────────────
+     Fundo escuro ⇒ véu claro, como no Carvão. */
+  --white-rgb:  255,255,255;
+  --black-rgb:  0,0,0;
+
+  /* ── Fundos dos painéis do Designer (o chrome, não a paleta do usuário) ── */
+  --designer-thumb-bg:   #0C0A11;  /* = --surface-dark do próprio tema */
+  --designer-preview-bg: #09070E;
+  --designer-panel-bg:   #17131D;
+
+  /* ── Acentos ──────────────────────────────────────────────────────────── */
+  --amber-rgb:      247,169,42;
+  --amber:          rgb(var(--amber-rgb));
+  --amber-text:     #17100A;
+  --yellow-rgb:     245,206,45;
+  --yellow:         rgb(var(--yellow-rgb));
+  --yellow-soft:    #f5dc8c;
+  --mint:           #97efc0;
+  --sky:            #8bb0f9;
+  --sky-light:      #b6dff8;
+  --blue-light:     #8ed3fa;
+  --laranja-light:  #f7cb94;
+  --green-light:    #a9efc7;
+  --violeta-light:  #cec1fd;
+  --rosa-light:     #FBB8DE;
+  --coral:          #FA8080;
+  --coral-light:    #FDB4B4;
+  --coral-alt:      #ff9b8c;
+  --coral-strong:   #ff7d7d;
+  --lilas-claro:    #e0b9ef;
+  --ciano-mapa-rgb: 34,196,229;
+  --ciano-mapa:     rgb(var(--ciano-mapa-rgb));
+  --cinza-rgb:          160,175,176;
+  --cinza:              rgb(var(--cinza-rgb));
+  --cinza-escuro-rgb:   138,150,151;
+  --cinza-escuro:       rgb(var(--cinza-escuro-rgb));
+  --cinza-azulado-rgb:  120,133,147;
+  --cinza-azulado:      rgb(var(--cinza-azulado-rgb));
+  --mapa-sem-fluxo: #333A42;
+
+  /* Cores sem gêmeo opaco — uso único cada. */
+  --green-alt-rgb:     92,187,96;
+  --esmeralda-rgb:     70,220,166;
+  --vermelho-puro-rgb: 255,38,38;
+  --vermelho-vivo-rgb: 255,84,84;
+  --mapa-fundo-rgb:    9,9,13;
+
+  /* ── Identidade dos 5 agentes da Fila — mesma família, outro tom ───────── */
+  --indigo-rgb:          123,126,246;
+  --indigo:              rgb(var(--indigo-rgb));
+  --rosa:                #F888C4;
+  --turquesa:            #47E2CE;
+  --agente-orquestrador: #B79EFB;  /* violeta */
+  --agente-contexto:     var(--blue);
+  --agente-analise-rgb:  235,143,63;
+  --agente-analise:      rgb(var(--agente-analise-rgb)); /* laranja */
+  --agente-verificacao:  var(--green);
+  --agente-relatorio:    #F05BAE;  /* rosa-forte */
+  --agente-desconhecido: var(--cinza);
+
+  /* ── Identidade dos subagentes do Chat ─────────────────────────────────── */
+  --sub-buscador:      #7BB8FB;  /* azul-claro */
+  --sub-navegador:     var(--green);
+  --sub-leitor:        var(--yellow);
+  --sub-arquiteto:     var(--teal);
+  --sub-analista:      #F0447C;  /* rosa */
+  --sub-semantico:     var(--purple);
+  --sub-sistema:       var(--coral);
+  /* As cores que um subagente de EXTENSÃO pode escolher (`"cor"` no item do
+     manifesto; `XT_SUBAGENTE_CORES`). O programa não conhece subagente de
+     extensão pelo nome — só esta paleta. */
+  --sub-cor-violeta:   #B79EFB;
+  --sub-cor-indigo:    var(--indigo);
+  --sub-cor-rosa:      var(--rosa);
+  --sub-cor-turquesa:  var(--turquesa);
+  /* Prompts fixos (antigos "modos"). A chave do token é a chave do prompt. */
+  --sub-estruturar:                  #45DFF2;  /* ciano */
+  --sub-estruturar-e-quebrar-tarefa: #CE9BFB;  /* lilás */
+  --sub-revisar:       var(--amber);
+  --sub-usuario:       var(--blue);
+  --sub-chat:          var(--agente-analise);
+  /* Chat e Fila dividem a laranja de propósito — ver tema-ardosia.css. */
+  --sub-fila:             var(--agente-analise);
+  --sub-fila-verificador: var(--mint);
+}

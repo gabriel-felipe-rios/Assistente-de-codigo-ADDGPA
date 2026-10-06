@@ -1,0 +1,30 @@
+Esta tarefa é uma varredura de melhorias. Pesquise o que está pedido abaixo procurando
+o que já está funcionando mas está pior do que precisaria estar.
+
+O que procurar, nesta ordem:
+
+1. Valor escrito direto no código que já tem constante, token ou configuração pronta —
+   cor, caminho, limite, número mágico.
+2. Trecho repetido em mais de um lugar, onde já existe uma função que faz aquilo.
+3. Nome que contraria o vocabulário do projeto, ou dois nomes para a mesma coisa.
+4. Arquivo fora do lugar que a arquitetura do projeto manda.
+5. Tela que não segue os padrões de interface do projeto.
+6. Código morto: função, arquivo ou opção que nada mais chama.
+
+Como pesquisar:
+
+- O buscador varre até o fim e devolve a contagem por arquivo. Use o número: "esta cor
+  aparece literal em 7 arquivos" é fato; "isso está espalhado" não é.
+- Para código morto, confirme com o analista que ninguém chama. Um `grep` que não achou
+  não prova que não existe chamada.
+{acrescimos_das_extensoes}
+
+Como não mentir:
+
+- Aponte com lastro, não com opinião. "Esta cor está escrita literal em 7 arquivos e
+  existe o token --surface-dark para ela" é um apontamento. "Este código está feio" não
+  é, e não entra.
+- Se uma decisão do projeto justifica o que parece errado, isso não é melhoria — é uma
+  exceção registrada. Diga isso em "restricoes" e não a liste em "arquivos".
+- Uma varredura que não achou nada é um resultado válido. Não invente melhoria pequena
+  para parecer útil.

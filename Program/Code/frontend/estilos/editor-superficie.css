@@ -1,0 +1,265 @@
+/* ═════════════════════════ EDITOR — A SUPERFÍCIE DE EDIÇÃO ══
+   ⚠️ ARQUIVO SÓ COM AS MÉTRICAS DAS TRÊS CAMADAS, e isso é a documentação de
+   uma invariante, não organização. A superfície é um `<textarea>` TRANSPARENTE
+   por cima de um `<pre>` PINTADO, mais uma terceira camada com os números de
+   linha. O texto que se lê é o do `<pre>`; o texto que se digita é o do
+   `<textarea>`. Se qualquer métrica divergir entre os dois — fonte, corpo,
+   entrelinha, espaçamento de letra, largura de tabulação, preenchimento —,
+   o que se lê para de ficar embaixo do cursor, e o desalinhamento cresce
+   arquivo abaixo até virar uma linha inteira de diferença.
+
+   Por isso o seletor das métricas é UM só, com os três elementos juntos:
+   separar em três blocos é como isso volta a divergir. Não acrescente regra de
+   métrica a `.ed-pre-inner` ou `.ed-ta` sozinho em `editor.css` — se vale para
+   um, vale para os três, e o lugar é aqui.
+
+   ⚠️ AS CAMADAS ESPELHO NÃO ROLAM: ELAS SE MOVEM POR `transform`. Cada uma é
+   uma caixa que recorta (`overflow: hidden`) com um filho que carrega o texto,
+   e o filho recebe `translate(-scrollLeft, -scrollTop)` do textarea. A versão
+   óbvia — copiar `ta.scrollTop` para `pre.scrollTop` — funciona no meio do
+   arquivo e QUEBRA NO FIM: o textarea tem barra de rolagem e as camadas
+   espelho não, então a altura útil difere em ~6px, o máximo de rolagem
+   (`scrollHeight - clientHeight`) difere junto, e o espelho trava 6px antes de
+   chegar ao fim. Medido e reproduzido em 30/08/2026. `transform` não tem
+   máximo: o deslocamento pedido é sempre o deslocamento aplicado, e o
+   alinhamento passa a ser exato por construção, em qualquer ponto e com
+   qualquer barra de rolagem.
+
+   ⚠️ SEM QUEBRA DE LINHA (`white-space: pre`), e não é preferência. Com
+   `pre-wrap` o textarea reserva a largura da barra de rolagem vertical e as
+   camadas espelho não: os dois passariam a quebrar em colunas diferentes, e aí
+   nenhuma métrica igual salva o alinhamento. */
+
+.ed-pilha {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--editor-bg);
+}
+
+/* ── As caixas que recortam ── */
+.ed-pre, .ed-gutter {
+  position: absolute;
+  top: 0; bottom: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+.ed-pre {
+  /* Recuado pela largura da barra de rolagem do textarea — ver `--ed-barra`. */
+  right: var(--ed-barra, 0px);
+  /* O `pre` não recebe clique: quem tem foco e cursor é o textarea. É também
+     por isto que o plugin `match-braces` do Prism não funciona aqui — ele
+     depende de mouseover sobre o `pre`. Ver editor-pintura.js. */
+  pointer-events: none;
+}
+.ed-gutter {
+  left: 0;
+  background: var(--editor-bg);
+  border-right: 1px solid rgba(var(--white-rgb), 0.06);
+  user-select: none;
+  z-index: 2;
+}
+
+.ed-ta {
+  position: absolute;
+  /* ⚠️ `left: 0` NÃO É DECORATIVO. Sem ele, um <textarea> absoluto com só
+     `right` declarado cai na largura intrínseca do elemento (~180px, as 20
+     colunas do padrão do navegador) e vira uma faixa estreita encostada na
+     direita. O texto colorido continua aparecendo — quem desenha é o <pre> —
+     mas a camada que recebe clique, seleção, roda do mouse e clique do meio
+     passa a ser só aquela faixa: o editor parece inteiro e não responde a
+     nada fora dela. Foi assim que quebrou em 30/08/2026, e não deu erro
+     nenhum. */
+  inset: 0;
+  /* ⚠️ `scroll` no eixo Y, e não `auto`. Com `auto` a barra aparece e some
+     conforme o arquivo é maior ou menor que o painel, e cada aparição muda a
+     LARGURA ÚTIL do textarea. Em modo quebra isso muda a coluna em que o texto
+     quebra — e as camadas espelho, que não têm barra, quebram em outra coluna.
+     Com `scroll` a largura é constante, e `--ed-barra` (medido em
+     `ajustarMargem`) recua as espelho exatamente o mesmo tanto. */
+  overflow-y: scroll;
+  overflow-x: auto;
+  resize: none;
+  outline: none;
+  border: 0;
+  background: transparent;
+  /* O texto do textarea é invisível: o que se lê é o `pre` colorido embaixo.
+     Só o cursor fica visível, e é ele que diz onde se está digitando. */
+  color: transparent;
+  caret-color: var(--editor-text);
+}
+
+/* ── A métrica que não pode divergir ──
+   ⚠️ O QUE É CONFIGURÁVEL ENTRA COMO VARIÁVEL, NUNCA COMO `style` INLINE. As
+   quatro primeiras saem de Configurações → Editor, e quem as escreve é
+   `modulos/editor-metricas.js`, num `:root` só. Escrever a fonte em cada camada
+   por JS seria três atribuições e três lugares para esquecer uma — exatamente o
+   que este seletor único existe para impedir. Com variável, as três camadas não
+   têm valor próprio: têm a mesma referência, e divergir vira impossível.
+
+   Em `:root` e não em `.ed-pilha`: a superfície do painel de Histórico local é
+   uma quarta instância, e no `:root` ela recebe a métrica sem ninguém precisar
+   lembrar dela. */
+.ed-pre-inner, .ed-ta, .ed-gutter-inner {
+  margin: 0;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace;
+  font-size:     var(--ed-fonte, 12.5px);
+  line-height:   var(--ed-entrelinha, 1.65);
+  tab-size:      var(--ed-tab, 4);
+  -moz-tab-size: var(--ed-tab, 4);
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+  box-sizing: border-box;
+  padding: 10px 18px 10px 14px;
+  /* ⚠️ AS DUAS ANDAM JUNTAS. Com `pre-wrap` sozinho, o <textarea> quebra uma
+     palavra sem espaço em QUALQUER ponto (comportamento nativo) e o <pre> com
+     `overflow-wrap: normal` não quebra — ele estoura para a direita. Abrir um
+     `.min.js` de uma linha só desalinha tudo, e é justamente o arquivo que se
+     abre para "dar uma olhada". `anywhere` faz os dois quebrarem pela mesma
+     regra. */
+  white-space:   var(--ed-quebra, pre);
+  overflow-wrap: var(--ed-quebra-palavra, normal);
+}
+
+.ed-pre-inner, .ed-gutter-inner {
+  display: block;
+  /* O ponto de partida da transformação. `will-change` porque estes dois se
+     movem a cada evento de rolagem. */
+  transform: translate(0, 0);
+  will-change: transform;
+}
+
+/* ⚠️ O MINIMAPA NÃO PODE HERDAR O `will-change` ACIMA, e a diferença entre ele e as
+   duas camadas espelho é a razão inteira. O <pre> e a régua se movem a cada rolagem e
+   mostram uma janela de ~600px de altura: promover vale a pena, e o navegador rasteriza
+   só os ladrilhos visíveis. O minimapa é o arquivo TODO em tamanho real (`max-content`,
+   sem quebra), encolhido de uma vez por `scale()` — a camada INTEIRA fica visível, não
+   há ladrilho a pular, e com `will-change` o Chromium a rasteriza em 1:1. No
+   `index.html` deste programa são 18.686 × 1.600 px: mais de 100MB de textura para
+   desenhar uma tira de 90px de largura, refeita a cada arquivo aberto. Isso trava a
+   MÁQUINA, não só o programa — relatado pelo usuário em 04/09/2026.
+
+   Ele nunca animou `transform`: recebe um `scale` de uma vez, quando o conteúdo muda.
+   A promoção era herança acidental de `.ed-pre-inner`, que o clone carrega junto para
+   ter a mesma fonte e entrelinha do código (ver `editor-busca.css`).
+
+   ⚠️ A EXCEÇÃO MORA AQUI, e não em `editor-busca.css` com o resto do minimapa: os
+   `@import` de `style.css` carregam `editor-busca.css` (linha 94) ANTES deste arquivo
+   (linha 97), e lá uma regra de mesma especificidade perderia em silêncio. */
+.ed-minimapa .ed-minimapa-inner { will-change: auto; }
+
+/* ── Os blocos da pintura ──
+   O <pre> (e o clone do minimapa) é uma lista de blocos de ~50 linhas, um
+   elemento por bloco (`pintarBlocos`, editor-superficie.js). Cada um é um BLOCO
+   de layout, e não um <span> em linha, por dois motivos medidos em 04/09/2026:
+
+   · Em linha, todos os blocos formam UM contexto de formatação só, e trocar o
+     conteúdo de um obriga o navegador a refazer o layout de todos — 905 linhas
+     e 7.700 <span> a cada tecla. Como blocos, o layout de cada um é
+     independente: a tecla remede um bloco de 50 linhas.
+   · A altura de um bloco vira exatamente "linhas × entrelinha", igual em cru e
+     em colorido — é isso que permite trocar um estado pelo outro (a janela de
+     cor) sem mover nada.
+
+   ⚠️ NENHUMA MÉTRICA AQUI — sem margem, preenchimento ou borda. Um pixel a mais
+   por bloco desalinharia o texto do cursor a partir do segundo bloco. E nada de
+   `contain: paint`: linha longa estoura o bloco para a direita e precisa
+   continuar visível (o <pre> anda por `transform`, não por rolagem própria). */
+.ed-bl { display: block; }
+
+.ed-pre-inner { color: var(--editor-text); padding-left: 14px; }
+.ed-gutter-inner {
+  text-align: right;
+  color: var(--editor-gutter);
+  padding-left: 12px;
+  padding-right: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Com o texto transparente, a seleção nativa vira um bloco sólido sem letra
+   dentro. Translúcida, o texto do `pre` continua legível por baixo. */
+.ed-ta::selection { background: rgba(var(--blue-rgb), 0.30); }
+
+/* Erro de sintaxe (Obra 12) — mesma regra do Ctrl+F logo abaixo: só o que não
+   muda a métrica do texto (aqui, `border-bottom` em vez de `background`,
+   porque a marca precisa ficar visível mesmo com o `.ed-achado` por cima). */
+.lint-err {
+  border-bottom: 2px wavy var(--red);
+  text-decoration: none;
+}
+
+/* O realce do Ctrl+F. Só fundo e raio — nenhum preenchimento, nenhuma borda,
+   nenhum peso de fonte. Qualquer uma das três muda a métrica do texto dentro
+   do `pre` e desalinha tudo a partir dali. Mesma regra de `.term-achado`. */
+.ed-achado {
+  background: var(--editor-achado);
+  color: inherit;
+  border-radius: 3px;
+}
+
+/* A marca de uma extensão no ponto `editor.decorador` (tipo 12). O PROGRAMA
+   não pinta nada aqui: a aparência sai da classe que a extensão devolveu, num
+   `<style data-xt>` dela. Esta regra existe só para fixar o contrato de
+   MÉTRICA, que é a única parte que não pode ficar a critério de quem escreve a
+   extensão.
+
+   ⚠️ A marca pode mudar cor, fundo, sublinhado e riscado; NÃO pode mudar
+   largura nem altura. O `<pre>` é o espelho do `<textarea>` caractere a
+   caractere — um `padding`, uma `border` com largura ou um `font-*` diferente
+   empurram tudo a partir dali e o cursor deixa de cair sobre a letra que ele
+   mostra. Mesma regra que `.ed-achado` e `.lint-err` já seguem acima.
+
+   Na prática: `color`, `background`, `text-decoration` e `border-bottom` são
+   seguros (é o que `.lint-err` e `.ed-achado` usam); `padding`, `margin`,
+   `border-left/right`, `font-*` e `letter-spacing` não são.
+
+   ⚠️ Só o `display` é IMPOSTO aqui, e de propósito: um `inline-block` muda a
+   quebra de linha do `pre` e desalinha só as linhas marcadas — o defeito mais
+   difícil de enxergar deste ponto. O resto fica com a extensão, porque um
+   `border-bottom` pontilhado é justamente o que várias delas precisam, e uma
+   regra que zerasse a borda aqui venceria a classe da extensão por
+   especificidade e faria o sublinhado dela sumir sem explicação. */
+span[data-xt-marca] {
+  display: inline;
+}
+.ed-achado-atual {
+  background: var(--editor-achado-atual);
+  color: inherit;
+  border-radius: 3px;
+}
+
+/* ── Modo quebra de linha ──
+   A régua vira um ESPELHO FANTASMA: um bloco por linha lógica contendo o texto
+   daquela linha em transparente, na mesma largura e métrica do <pre>. A altura
+   de cada bloco fica igual à da linha correspondente POR CONSTRUÇÃO, sem medir
+   nada — e o número, posicionado por cima, acompanha.
+
+   ⚠️ Sem isto a régua MENTE em modo quebra: ela é um bloco de texto
+   ("1
+2
+3"), e uma linha que ocupa três linhas visuais empurra todos os
+   números abaixo dela. Uma régua errada é pior que régua nenhuma. */
+.ed-gutter-inner.ed-gutter--fantasma {
+  /* A largura é a do <pre>, escrita pelo JS. */
+  color: transparent;
+  text-align: left;
+  /* ⚠️ A LARGURA E O PREENCHIMENTO NÃO ESTÃO AQUI DE PROPÓSITO — `pintarRegua`
+     os copia do `.ed-pre-inner` em tempo de execução. É a largura de CONTEÚDO
+     (caixa menos preenchimento) que decide onde o texto quebra; repeti-la aqui
+     seria manter o mesmo número em dois arquivos, e foi assim que o fantasma
+     quebrou a linha minificada num ponto diferente do <pre> em 30/08/2026. */
+}
+.ed-gutter-linha { position: relative; }
+/* O número flutua sobre a faixa estreita e visível da régua. `left` negativo
+   cancela o preenchimento herdado acima — que existe para o texto fantasma
+   quebrar certo, não para empurrar o número. */
+.ed-gutter-linha > i {
+  position: absolute;
+  left: -14px;
+  top: 0;
+  font-style: normal;
+  color: var(--editor-gutter);
+  text-align: right;
+}

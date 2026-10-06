@@ -1,0 +1,81 @@
+{
+  "nome": "Rosa magenta",
+  "descricao": "Paleta vibrante estilo synthwave. Fundo roxo-escuro azulado, acentos em magenta, rosa neon e ciano elétrico.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.10). Border-radius padrão: 10px — cantos mais arredondados.",
+  "cores": {
+    "fundo": {
+      "hex": "#15101F",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#211830",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#2D2140",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#0E0916",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#F5E9F7",
+      "uso": "Todo texto principal — branco levemente rosado"
+    },
+    "texto_secundario": {
+      "hex": "#A491B5",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#E8399B",
+      "apelido": "magenta",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#C42780",
+      "apelido": "magenta (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#3DE0E0",
+      "apelido": "ciano",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#2BBDBD",
+      "apelido": "ciano (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#F04747",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#CC3535",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#8B5CF6",
+      "apelido": "roxo",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#7040DB",
+      "apelido": "roxo (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#FF8FC7",
+      "apelido": "rosa claro",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#E070A8",
+      "apelido": "rosa claro (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

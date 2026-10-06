@@ -1,0 +1,111 @@
+/* ═══ CHAT → as ações de uma mensagem ══════════════════════════════════════
+   Hoje só copiar. Aparecem no hover e não ocupam espaço próprio: uma barra
+   fixa por mensagem roubaria altura de todas para servir a uma.            */
+/* ── Ações de uma mensagem (hoje só copiar) ───────────────────────────────
+   Sempre visíveis, mas apagadas: um botão que só aparece no hover não existe
+   para quem não sabe que ele existe, e este foi pedido justamente por não ter
+   sido encontrado. Acende inteiro quando o mouse entra no balão. */
+.message-acoes {
+  display: flex; align-items: center; gap: 4px; margin-top: 3px;
+  opacity: 0.3; transition: opacity var(--t);
+}
+.message:hover .message-acoes,
+.message-acoes:focus-within { opacity: 1; }
+/* Alinhado com o lado do balão: o seu fica à direita, o dele à esquerda. */
+.message-user .message-acoes { justify-content: flex-end; }
+
+/* ⚠️ O botão de copiar de um balão é IRMÃO do 📋 do rodapé, e a regra é uma só
+   para os dois: mesma tela, mesmo trabalho, mesmo desenho. Ele já foi um
+   `.btn-icon` — caixa com borda —, e a caixa encostada num balão de conversa
+   parecia um controle de outra tela colado ali.
+
+   Sem borda e sem fundo também é o que o glifo pede: 📋 é EMOJI, não obedece a
+   `color`, e o único jeito de apagá-lo é a opacidade. Um `.btn-icon` deixaria a
+   borda acesa em volta de um ícone apagado. */
+.btn-copy-payload,
+.message-copiar {
+  background: none; border: none; cursor: pointer;
+  padding: 2px 4px; line-height: 1;
+  /* O 📋 ignora esta cor, mas o ✓ que o substitui por 1,4 s não: sem ela, o
+     botão copiado ficaria com o preto padrão de `<button>` sobre fundo escuro. */
+  color: var(--text-muted);
+  transition: opacity var(--t);
+}
+.btn-copy-payload { font-size: 14px; opacity: 0.6; }
+.btn-copy-payload:hover { opacity: 1; }
+.message-copiar { font-size: 13px; }
+/* ⚠️ O botão do balão NÃO tem opacidade própria: a dele é a do `.message-acoes`
+   inteiro, e ele acende junto com a barrinha no hover do balão. Dar-lhe uma aqui
+   multiplicaria as duas e ele nunca ficaria opaco de verdade. */
+.message-copiar.copied { color: var(--green); }
+
+/* O selo "+N rodadas concedidas", dentro da faixa do teto de rodadas. Medidas
+   do componente Selo (Padrões de interface › Componentes › Selo): a mesma cor
+   nos três lugares — texto, borda e fundo a 12%. Roxo, a cor do botão que ele
+   substitui (`.btn-special`), para se ler como "aquele botão já foi usado". */
+.chat-selo-concedidas {
+  flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+  padding: 1px 6px; border-radius: 4px; margin-left: 6px;
+  color: var(--purple); border: 1px solid var(--purple);
+  background: rgba(var(--purple-rgb),0.12);
+}
+
+/* Cursor de streaming */
+.message-assistant.streaming .message-content::after {
+  content: '▋'; animation: blink 1s step-end infinite; color: var(--text-muted);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Markdown dentro das mensagens */
+.message-content pre {
+  background: var(--surface-dark); border-radius: 6px; padding: 10px 12px;
+  margin: 8px 0; overflow-x: auto;
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12.5px;
+}
+.message-content code {
+  background: rgba(var(--white-rgb),0.1); padding: 1px 5px; border-radius: 3px;
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 12.5px;
+}
+.message-content pre code { background: transparent; padding: 0; }
+
+/* Chat input */
+.chat-input-area {
+  border-top: 1px solid rgba(var(--white-rgb),0.06); padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.chat-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.chat-agent-select {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 4px 10px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--t), color var(--t);
+}
+.chat-agent-select:focus, .chat-agent-select:hover { border-color: var(--blue); color: var(--text); }
+.chat-agent-select option { background: var(--surface-dark); }
+.chat-context-checkbox {
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  font-size: 12px; color: var(--text-muted); transition: color var(--t);
+  padding: 2px 6px;
+}
+.chat-context-checkbox:hover { color: var(--text); }
+.chat-context-checkbox input[type="checkbox"] {
+  accent-color: var(--blue); cursor: pointer; width: 14px; height: 14px;
+}
+.chat-context-checkbox:has(input:disabled) {
+  opacity: 0.4; cursor: default; pointer-events: none;
+}
+.ctx-token-badge {
+  font-size: 10px; color: var(--text-muted); opacity: 0.7;
+  background: rgba(var(--white-rgb),0.06); border-radius: 3px;
+  padding: 1px 4px; white-space: nowrap;
+}
+.ctx-tokens-total {
+  font-size: 11px; color: var(--blue); margin-left: 4px;
+  white-space: nowrap;
+}
+

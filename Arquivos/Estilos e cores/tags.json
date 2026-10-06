@@ -1,0 +1,214 @@
+{
+  "tags": [
+    {
+      "nome": "acessibilidade"
+    },
+    {
+      "nome": "clara"
+    },
+    {
+      "nome": "denso"
+    },
+    {
+      "nome": "desktop"
+    },
+    {
+      "nome": "escura"
+    },
+    {
+      "nome": "ferramenta"
+    },
+    {
+      "nome": "leitura"
+    },
+    {
+      "nome": "mobile"
+    },
+    {
+      "nome": "plano"
+    },
+    {
+      "nome": "profundidade"
+    },
+    {
+      "nome": "quente"
+    }
+  ],
+  "itens": {
+    "Estilos/Abas horizontais.html": [
+      "desktop",
+      "denso"
+    ],
+    "Estilos/Abas verticais.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Assistente em passos.html": [
+      "desktop",
+      "mobile"
+    ],
+    "Estilos/Barra de comando.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Canvas infinito.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Chat com contexto.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Dashboard em grade.html": [
+      "desktop",
+      "denso"
+    ],
+    "Estilos/Documentação.html": [
+      "desktop",
+      "leitura"
+    ],
+    "Estilos/Editor com inspetor.html": [
+      "desktop",
+      "ferramenta",
+      "denso"
+    ],
+    "Estilos/Foco único.html": [
+      "mobile",
+      "leitura"
+    ],
+    "Estilos/Janelas flutuantes.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Linha do tempo.html": [
+      "desktop",
+      "mobile",
+      "leitura"
+    ],
+    "Estilos/Lista e detalhe.html": [
+      "desktop",
+      "mobile"
+    ],
+    "Estilos/Navegação inferior.html": [
+      "mobile"
+    ],
+    "Estilos/Painel dividido.html": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Estilos/Quadro kanban.html": [
+      "desktop",
+      "denso"
+    ],
+    "Estilos/Rolagem em seções.html": [
+      "desktop",
+      "mobile",
+      "leitura"
+    ],
+    "Estilos/Tabela densa.html": [
+      "desktop",
+      "denso"
+    ],
+    "Cores/Alto contraste.json": [
+      "escura",
+      "acessibilidade"
+    ],
+    "Cores/Alto contraste claro.json": [
+      "clara",
+      "acessibilidade"
+    ],
+    "Cores/Azul petróleo escuro.json": [
+      "escura"
+    ],
+    "Cores/Ciano oceano.json": [
+      "escura"
+    ],
+    "Cores/Grafite neutro.json": [
+      "escura"
+    ],
+    "Cores/Laranja.json": [
+      "escura",
+      "quente"
+    ],
+    "Cores/Menta clínica.json": [
+      "clara"
+    ],
+    "Cores/Nórdico claro.json": [
+      "clara"
+    ],
+    "Cores/Pastel discreto.json": [
+      "clara"
+    ],
+    "Cores/Rosa magenta.json": [
+      "escura"
+    ],
+    "Cores/Roxo.json": [
+      "escura"
+    ],
+    "Cores/Sépia de leitura.json": [
+      "clara",
+      "quente",
+      "leitura"
+    ],
+    "Cores/Solarizado escuro.json": [
+      "escura",
+      "ferramenta"
+    ],
+    "Cores/Terminal fósforo.json": [
+      "escura",
+      "ferramenta"
+    ],
+    "Cores/Verde floresta.json": [
+      "escura"
+    ],
+    "Cores/Vermelho carmesim.json": [
+      "escura",
+      "quente"
+    ],
+    "Tipografia/Sistema compacta.json": [
+      "desktop",
+      "denso"
+    ],
+    "Tipografia/Serifada editorial.json": [
+      "leitura"
+    ],
+    "Tipografia/Geométrica marcante.json": [
+      "desktop",
+      "mobile"
+    ],
+    "Tipografia/Monoespaçada técnica.json": [
+      "desktop",
+      "ferramenta"
+    ],
+    "Texturas e materiais/Vidro fosco.json": [
+      "profundidade"
+    ],
+    "Texturas e materiais/Grão e ruído.json": [
+      "plano"
+    ],
+    "Texturas e materiais/Papel.json": [
+      "plano",
+      "leitura"
+    ],
+    "Texturas e materiais/Metal escovado.json": [
+      "plano",
+      "ferramenta"
+    ],
+    "Texturas e materiais/Gradiente vivo.json": [
+      "profundidade"
+    ],
+    "Texturas e materiais/Sombra dura.json": [
+      "profundidade"
+    ],
+    "Texturas e materiais/Sombra difusa.json": [
+      "profundidade"
+    ],
+    "Texturas e materiais/Neon.json": [
+      "profundidade",
+      "escura"
+    ],
+    "Texturas e materiais/Plano.json": [
+      "plano"
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Documentação -->
+<!-- Navegação de capítulos à esquerda -> texto de largura contida ao centro -> índice da página à direita -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Documentação</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex}
+.nav{width:212px;background:var(--superficie);border-right:1px solid var(--superficie-hover);flex-shrink:0;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.grupo{color:var(--texto-secundario);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin:9px 8px 3px}
+.nl{padding:4px 9px;border-radius:5px;color:var(--texto-secundario);font-size:11.5px}
+.nl.on{background:var(--superficie-hover);color:var(--texto);border-left:2px solid var(--primaria)}
+.texto{flex:1;min-width:0;overflow:auto;display:flex;justify-content:center;padding:22px 24px}
+.col{width:100%;max-width:560px;display:flex;flex-direction:column;gap:11px}
+.h1{font-size:22px;font-weight:700}
+.h2{font-size:14px;font-weight:700;margin-top:8px}
+.par{color:var(--texto-secundario);line-height:1.65}
+.cod{background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:7px;padding:10px 11px;font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--texto-secundario);white-space:pre}
+.aviso{border-left:3px solid var(--especial);background:var(--superficie);border-radius:0 7px 7px 0;padding:9px 11px;color:var(--texto-secundario)}
+.indice{width:186px;flex-shrink:0;border-left:1px solid var(--superficie-hover);padding:22px 14px;display:flex;flex-direction:column;gap:5px}
+.il{color:var(--texto-secundario);font-size:11px}
+.il.on{color:var(--primaria)}
+.il.sub{padding-left:11px;font-size:10.5px}
+</style></head><body>
+<div class="nav">
+  <div class="grupo">Começando</div>
+  <div class="nl">Instalação</div><div class="nl">Primeiro projeto</div>
+  <div class="grupo">Referência</div>
+  <div class="nl on">Configuração</div><div class="nl">Comandos</div><div class="nl">Variáveis de ambiente</div>
+  <div class="grupo">Avançado</div>
+  <div class="nl">Plugins</div><div class="nl">Publicação</div>
+</div>
+<div class="texto"><div class="col">
+  <div class="rot">Referência</div>
+  <div class="h1">Configuração</div>
+  <div class="par">O arquivo de configuração fica na raiz do projeto e é lido uma vez, na inicialização. Toda chave é opcional; o que não estiver escrito assume o padrão.</div>
+  <div class="h2">Formato</div>
+  <div class="par">É um JSON simples, sem comentários. Chaves desconhecidas são ignoradas em silêncio.</div>
+  <div class="cod">{
+  "porta": 8080,
+  "modo": "producao",
+  "registro": { "nivel": "aviso" }
+}</div>
+  <div class="aviso">A largura do texto é contida de propósito: linha longa demais cansa a leitura.</div>
+  <div class="h2">Precedência</div>
+  <div class="par">Variável de ambiente vence o arquivo, e argumento de linha de comando vence as duas.</div>
+</div></div>
+<div class="indice">
+  <div class="rot">Nesta página</div>
+  <div class="il on">Configuração</div>
+  <div class="il sub">Formato</div>
+  <div class="il sub">Precedência</div>
+  <div class="il sub">Exemplos</div>
+</div>
+</body></html>

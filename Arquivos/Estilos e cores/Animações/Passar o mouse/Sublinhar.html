@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Animação: Passar o mouse · Sublinhar -->
+<!-- A demonstração roda em laço; a regra escrita abaixo dela é o que vai ao modelo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Passar o mouse — Sublinhar</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;padding:12px;
+     display:flex;flex-direction:column;gap:10px;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+h1{font-size:13.5px;font-weight:700;flex-shrink:0}
+h1 small{display:block;font-weight:400;font-size:11px;color:var(--texto-secundario);margin-top:2px}
+.palco{flex:1;min-height:0;background:var(--superficie-escura);border:1px solid var(--superficie-hover);
+       border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.regra{flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:4px}
+.regra .tt{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-secundario);font-weight:700}
+.regra dl{display:grid;grid-template-columns:104px 1fr;gap:3px 10px;font-size:11px}
+.regra dt{color:var(--texto-secundario)}
+.regra dd.nunca{color:var(--negativa)}
+/* Acessibilidade: quem pediu menos movimento vê o estado final, sem transição. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+.linha{display:flex;gap:22px}
+.lk{position:relative;padding-bottom:3px;color:var(--texto-secundario)}
+.lk::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--primaria);
+  transform:scaleX(0);transform-origin:left center;transition:transform .16s ease-out}
+.lk.h{color:var(--texto)}
+.lk.h::after{animation:hs 2.4s ease-out infinite}
+@keyframes hs{0%,20%{transform:scaleX(0)}35%,80%{transform:scaleX(1)}100%{transform:scaleX(0)}}</style></head><body>
+<h1>Sublinhar<small>Um traço da cor primária cresce da esquerda para a direita sob o elemento.</small></h1>
+<div class="palco">
+<div class="linha">
+  <span class="lk">Visão geral</span>
+  <span class="lk h">Relatórios</span>
+  <span class="lk">Configurações</span>
+</div>
+</div>
+<div class="regra"><span class="tt">Regra</span><dl><dt>Duração</dt><dd>160 ms</dd><dt>Curva</dt><dd>ease-out</dd><dt>O que anima</dt><dd>scaleX do traço, de 0 a 1, com transform-origin à esquerda</dd><dt>O que nunca anima</dt><dd class="nunca">não anime a largura do traço (reflow a cada quadro) nem mude a cor do texto junto</dd></dl></div>
+</body></html>

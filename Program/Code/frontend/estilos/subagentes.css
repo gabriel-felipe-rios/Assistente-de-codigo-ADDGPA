@@ -1,0 +1,429 @@
+/* ── Subagentes do chat ─────────────────────────────────────────────────── */
+
+/* Caixa de configuração dos subagentes (sub-aba Subagentes) */
+.subagentes-config-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.subagentes-config-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.subagentes-config-row label {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.subagentes-config-row input[type="number"] {
+  /* A largura acompanha o MAIOR valor que estes campos aceitam, que hoje é
+     100000 — seis dígitos. Os 64px de antes foram dimensionados quando o maior
+     era 2000, de quatro; com `box-sizing: border-box`, o padding e a borda
+     comem 18px e sobravam 46px de texto, o suficiente para quatro dígitos e
+     meio. Era por isso que o teto do ler_arquivo aparecia como "1500".
+     A folga extra é para a setinha de incremento, que o Chromium desenha por
+     cima do texto ao passar o mouse. */
+  width: 88px;
+  padding: 6px 8px;
+  background: var(--surface-dark);
+  color: var(--text);
+  border: 1px solid var(--surface-hover);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+/* Botões de ativar/desativar todos (sub-aba Subagentes) */
+.chat-agentes-bulk-row {
+  display: flex;
+  gap: 8px;
+  /* O padding horizontal iguala o conteúdo ao da caixa de configuração acima,
+     que tem `padding: 12px 16px` e fundo próprio. Sem ele os botões ficavam
+     16px mais à esquerda que tudo. O margin-top separa da caixa de cima. */
+  padding: 0 16px;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+.chat-agentes-bulk-row .btn {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+/* Separador de grupo. O primeiro não leva margem no topo: a lista já começa
+   com um, e o respiro extra deixaria a caixa de configuração longe demais. */
+.chat-agentes-separador {
+  margin: 14px 0 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--surface-hover);
+  padding-bottom: 4px;
+}
+.chat-agentes-separador:first-child { margin-top: 0; }
+.chat-agentes-grupo-dica {
+  margin: -2px 0 4px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+/* A borda esquerda é a FONTE do agente — de onde ele lê. A cor vem do
+   registry em agentes-fontes.js, aplicada inline; aqui fica só a espessura.
+   Antes eram duas bordas de 3px marcando "especial" e "sem toggle", finas
+   demais e sem legenda nenhuma que dissesse o que significavam. */
+.chat-agente-item { border-left: 5px solid transparent; }
+
+.chat-agente-especial { background: rgba(var(--purple-rgb), 0.04); }
+
+/* Card informativo: aparece na lista, mas não tem o que ligar ou desligar.
+   O selo ocupa a coluna do toggle para os cards não saírem desalinhados. */
+.chat-agente-sem-toggle {
+  background: rgba(var(--white-rgb), 0.03);
+}
+
+/* ── Legenda e selo de FONTE ─────────────────────────────────────────────
+   Outro eixo, e outra legenda, que a legenda por agente do Log: aquela diz
+   QUEM falou; esta diz O QUE cada um consegue ler. */
+.agente-fonte-legenda {
+  padding: 10px 16px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.07);
+  margin-bottom: 4px;
+}
+.agente-fonte-legenda-titulo {
+  font-size: 11.5px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.agente-fonte-legenda-tiras {
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+}
+.agente-fonte-legenda-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; color: var(--text-muted); cursor: help;
+}
+.agente-fonte-tira {
+  width: 16px; height: 5px; border-radius: 3px; flex-shrink: 0;
+}
+
+/* Vai junto ao NOME, não na coluna do botão — ali já mora o .chat-agente-selo
+   ("No envio"), que é outra coisa. */
+.agente-fonte-selo {
+  display: inline-block; vertical-align: middle;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+  padding: 1px 6px; border-radius: 4px;
+  border: 1px solid; margin-left: 6px; cursor: help;
+}
+.chat-agente-selo {
+  flex-shrink: 0;
+  min-width: 90px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px dashed rgba(var(--white-rgb), 0.18);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  cursor: default;
+}
+
+/* Notificações ao vivo na conversa */
+.subagent-round {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
+/* Só a Fila desenha este cabeçalho (`_makeSubagentRound` com rótulo). Ele é
+   uma etiqueta, não um título: fica discreto de propósito, porque o que
+   interessa na conversa são os blocos abaixo dele. */
+.subagent-round-cabecalho {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 2px 0 0 2px;
+}
+.subagent-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.subagent-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--surface-hover);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: subagent-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes subagent-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Placeholder enquanto o modelo escreve o JSON de chamada */
+.subagent-thinking {
+  color: var(--text-muted);
+}
+
+/* ── Cores por agente (legenda + títulos dos grupos no Log) ─────────────── */
+.legend-buscador      { background: var(--sub-buscador); }
+.legend-navegador     { background: var(--green); }
+.legend-leitor        { background: var(--yellow); }
+.legend-arquiteto     { background: var(--teal); }
+.legend-analista      { background: var(--sub-analista); }
+.legend-semantico     { background: var(--sub-semantico); }
+.legend-sistema       { background: var(--coral); }
+/* Os dois da Fila. Não estão em AGENTES_DEFINICOES — são o agente principal
+   daquela tela e o subagente que só existe lá —, mas entram nesta mesma lista
+   para que legenda, bolinha da barra de tokens e título do grupo peguem a cor
+   pelo mesmo caminho dos outros. */
+.legend-fila              { background: var(--sub-fila); }
+.legend-fila-verificador  { background: var(--sub-fila-verificador); }
+.legend-estruturar { background: var(--sub-estruturar); }
+.legend-estruturar-e-quebrar-tarefa { background: var(--sub-estruturar-e-quebrar-tarefa); }
+.legend-revisar    { background: var(--sub-revisar); }
+/* Os subagentes de EXTENSÃO na legenda do Chat e da Fila: o contêiner some
+   do layout, e as bolinhas entram no mesmo flex das outras. A cor de cada
+   um vem de `#sub-ext-cores` (`subagentes-de-extensoes.js`), porque o id
+   deles tem ponto (`pfx.nome`) e o programa não os conhece pelo nome. */
+.legend-extensoes  { display: contents; }
+
+.chat-log-group[data-agente="usuario"]       .chat-log-group-nome { color: var(--blue); }
+.chat-log-group[data-agente="chat"]          .chat-log-group-nome { color: var(--agente-analise); }
+.chat-log-group[data-agente="buscador"]      .chat-log-group-nome { color: var(--sub-buscador); }
+.chat-log-group[data-agente="navegador"]     .chat-log-group-nome { color: var(--green); }
+.chat-log-group[data-agente="leitor"]        .chat-log-group-nome { color: var(--yellow); }
+.chat-log-group[data-agente="arquiteto"]     .chat-log-group-nome { color: var(--teal); }
+.chat-log-group[data-agente="analista"]      .chat-log-group-nome { color: var(--sub-analista); }
+.chat-log-group[data-agente="semantico"]     .chat-log-group-nome { color: var(--sub-semantico); }
+.chat-log-group[data-agente="sistema"]       .chat-log-group-nome { color: var(--coral); }
+.chat-log-group[data-agente="fila"]          .chat-log-group-nome { color: var(--sub-fila); }
+.chat-log-group[data-agente="fila-verificador"] .chat-log-group-nome { color: var(--sub-fila-verificador); }
+.chat-log-group[data-agente="verificador-camada1"] .chat-log-group-nome { color: var(--sub-fila-verificador); }
+.chat-log-group[data-agente="estruturar"] .chat-log-group-nome { color: var(--sub-estruturar); }
+.chat-log-group[data-agente="estruturar-e-quebrar-tarefa"] .chat-log-group-nome { color: var(--sub-estruturar-e-quebrar-tarefa); }
+.chat-log-group[data-agente="revisar"]    .chat-log-group-nome { color: var(--sub-revisar); }
+.chat-log-group-ferramenta .chat-log-group-nome { opacity: 0.75; }
+
+/* ── Barra de uso da janela de contexto (aba Contexto) ──────────────────── */
+.context-usage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.context-usage-bar {
+  width: 120px;
+  height: 8px;
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.context-usage-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: var(--text-muted);
+  transition: width 0.4s ease, background 0.4s ease;
+}
+.context-usage-fill.ok   { background: var(--green); }
+.context-usage-fill.warn { background: var(--yellow); }
+.context-usage-fill.full { background: var(--red); }
+.context-usage-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Blocos retráteis com pergunta + resposta do subagente */
+.subagent-block {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--teal);
+  overflow: hidden;
+}
+.subagent-block-erro {
+  border-left-color: var(--red);
+}
+.subagent-block summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text);
+  user-select: none;
+}
+.subagent-block summary:hover {
+  background: var(--surface-hover);
+}
+.subagent-block-body {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--surface-dark);
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* ── Sub-abas Configuração e Ferramentas (Chat e Fila) ───────────────────────
+   As duas telas usam as mesmas classes, porque o markup delas vem do mesmo
+   módulo (`agentes/subagentes-config-tab.js`). Só tokens de base.css. */
+
+.subagentes-config-grupo {
+  padding: 12px 16px 0;
+}
+.subagentes-config-titulo {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.subagentes-config-ajuda {
+  margin: -4px 0 4px;
+  color: var(--text-muted);
+  font-size: 12px;
+  opacity: 0.75;
+}
+.subagentes-config-nota {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* ── Tabela da sub-aba Ferramentas (só leitura) ─────────────────────────────
+   O subagente ocupa UMA célula por bloco, com rowspan — sem isso a coluna da
+   esquerda vira uma lista de nomes repetidos. O nome, o emoji e a cor são os
+   mesmos dos cards da sub-aba Subagentes e do Log: `--sub-{id}` de base.css. */
+.ferramentas-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px 8px;
+  flex-wrap: wrap;
+}
+.ferramentas-filtro {
+  flex: 1;
+  min-width: 180px;
+  padding: 6px 10px;
+  background: var(--surface-dark);
+  color: var(--text);
+  border: 1px solid var(--surface-hover);
+  border-radius: var(--radius);
+}
+.ferramentas-chip {
+  padding: 4px 9px;
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.ferramentas-tetos {
+  margin: 0 16px 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+  opacity: 0.75;
+}
+/* A tabela rola dentro da própria caixa: com quatro colunas de texto, deixar a
+   página rolar na horizontal quebraria o resto da tela. */
+.ferramentas-tabela-wrap {
+  overflow: auto;
+  padding: 0 16px 16px;
+}
+.ferramentas-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.ferramentas-tabela th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-dark);
+  color: var(--text-muted);
+  text-align: left;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+.ferramentas-tabela .col-subagente  { width: 24%; }
+.ferramentas-tabela .col-ferramenta { width: 16%; }
+.ferramentas-tabela .col-devolve    { width: 30%; }
+.ferramentas-tabela td {
+  padding: 9px 12px;
+  color: var(--text);
+  border-top: 1px solid rgba(var(--white-rgb), 0.05);
+  vertical-align: top;
+}
+.ferramentas-tabela code {
+  color: var(--teal);
+  font-size: 11.5px;
+}
+
+/* Cabeçalho de seção: quem CHAMA aquele bloco de subagentes. Na Fila são dois,
+   porque o Verificador é acionado pelo programa, não pelo agente da tela. */
+.ferramentas-tabela .ferr-grupo td {
+  padding: 16px 12px 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: var(--surface-dark);
+  border-top: none;
+}
+.ferramentas-tabela tbody tr:first-child.ferr-grupo td { padding-top: 8px; }
+
+/* A célula do subagente. A faixa colorida à esquerda é o mesmo sinal do card. */
+.ferramentas-tabela .ferr-ag {
+  border-left: 3px solid var(--ferr-cor, var(--gray));
+  background: rgba(var(--white-rgb), 0.02);
+}
+.ferramentas-tabela .ferr-ag-nome {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+/* A descrição cabe aqui porque o rowspan já abriu a altura — ela não empurra
+   nada, e evita uma quinta coluna numa tabela que já é larga. */
+.ferramentas-tabela .ferr-ag-desc {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+.ferramentas-tabela .ferr-erro { color: var(--text-muted); }
+.ferramentas-tabela .ferr-vazio {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px;
+}
+
+/* ── Trava de cinco pontas: o motivo ao lado do botão desabilitado ───────── */
+.trava-motivo {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.trava-bloqueado {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

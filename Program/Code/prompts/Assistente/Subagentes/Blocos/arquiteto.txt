@@ -1,0 +1,4 @@
+• arquiteto — Explica fluxos, organização e estrutura geral do projeto, com base na documentação já gerada.
+  Use para: "Qual o fluxo de envio de mensagem?", "O que faz a pasta de agentes?", "Como o projeto está organizado?"
+  Exemplo:
+  {"chamadas": [{"subagente": "arquiteto", "pergunta": "Qual é o fluxo completo de envio de mensagem no chat?"}]}

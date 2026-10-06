@@ -1,0 +1,81 @@
+{
+  "nome": "Laranja",
+  "descricao": "Paleta quente com tons de laranja e âmbar. Fundo escuro marrom-acinzentado, acentos em laranja e dourado.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#1C1A17",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#272420",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#312E29",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#110F0D",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#F5ECD7",
+      "uso": "Todo texto principal — creme quente, não branco puro"
+    },
+    "texto_secundario": {
+      "hex": "#A89880",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#E8721A",
+      "apelido": "laranja",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#C85F10",
+      "apelido": "laranja (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#F0A500",
+      "apelido": "âmbar",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#D08F00",
+      "apelido": "âmbar (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#CC4A2A",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#AA3A1A",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#C4956A",
+      "apelido": "marrom claro",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#A87A50",
+      "apelido": "marrom claro (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#D4B896",
+      "apelido": "bege",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#B89870",
+      "apelido": "bege (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

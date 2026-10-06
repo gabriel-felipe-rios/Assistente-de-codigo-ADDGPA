@@ -1,0 +1,12 @@
+{
+  "nome": "Cor do código",
+  "versao": "2",
+  "descricao": "As gramáticas do Prism para 297 linguagens: é o que faz o código da aba Editor aparecer colorido. Só dado — o motor fica no programa.",
+  "prefixo": "gra",
+  "tipos": ["4"],
+  "acrescenta": [
+    { "recurso": "editor", "id": "gra.cor", "parte": "cor", "linguagens": ["*"],
+      "pasta": "components" }
+  ],
+  "escreve_fora": []
+}

@@ -1,0 +1,26 @@
+{
+  "tamanhos": {
+    "celular": [
+      390,
+      844
+    ],
+    "tablet": [
+      768,
+      1024
+    ],
+    "computador": [
+      1920,
+      1080
+    ]
+  },
+  "nao_guardar": true,
+  "modo_setas": "escolhida",
+  "opacidade": 0,
+  "cor": "--blue-rgb",
+  "ganho_ligado": true,
+  "ganho": 30,
+  "reducao_ligada": true,
+  "reducao": 20,
+  "origem_setas": "elemento",
+  "bolinha": "vazada"
+}

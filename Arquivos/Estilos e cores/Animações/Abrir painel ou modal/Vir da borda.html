@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Animação: Abrir painel ou modal · Vir da borda -->
+<!-- A demonstração roda em laço; a regra escrita abaixo dela é o que vai ao modelo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Abrir painel ou modal — Vir da borda</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;padding:12px;
+     display:flex;flex-direction:column;gap:10px;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+h1{font-size:13.5px;font-weight:700;flex-shrink:0}
+h1 small{display:block;font-weight:400;font-size:11px;color:var(--texto-secundario);margin-top:2px}
+.palco{flex:1;min-height:0;background:var(--superficie-escura);border:1px solid var(--superficie-hover);
+       border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.regra{flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:4px}
+.regra .tt{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-secundario);font-weight:700}
+.regra dl{display:grid;grid-template-columns:104px 1fr;gap:3px 10px;font-size:11px}
+.regra dt{color:var(--texto-secundario)}
+.regra dd.nunca{color:var(--negativa)}
+/* Acessibilidade: quem pediu menos movimento vê o estado final, sem transição. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+.veu{position:absolute;inset:0;background:rgba(0,0,0,.55);animation:vb 3.2s ease-out infinite}
+.gav{position:absolute;right:0;top:0;bottom:0;width:190px;background:var(--superficie);
+  border-left:1px solid var(--superficie-hover);padding:12px;display:flex;flex-direction:column;gap:7px;
+  animation:gb 3.2s cubic-bezier(.22,.61,.36,1) infinite}
+.gav .t{font-weight:700;font-size:12.5px}
+.gav .l{color:var(--texto-secundario);font-size:11px}
+.fundo{position:absolute;inset:0;padding:12px;color:var(--texto-secundario);font-size:11px}
+@keyframes vb{0%{opacity:0}12%,86%{opacity:1}100%{opacity:0}}
+@keyframes gb{0%{transform:translateX(100%)}12%,86%{transform:none}100%{transform:translateX(100%)}}</style></head><body>
+<h1>Vir da borda<small>O painel entra deslizando da borda em que ele vive — gaveta da direita entra pela direita.</small></h1>
+<div class="palco">
+<div class="fundo">Conteúdo da página, parado.</div>
+<div class="veu"></div>
+<div class="gav"><span class="t">Filtros</span><span class="l">Entra e sai pela direita — a borda onde a gaveta vive.</span></div>
+</div>
+<div class="regra"><span class="tt">Regra</span><dl><dt>Duração</dt><dd>300 ms</dd><dt>Curva</dt><dd>cubic-bezier(.22,.61,.36,1)</dd><dt>O que anima</dt><dd>translate do painel a partir da borda de origem, junto da opacidade do véu</dd><dt>O que nunca anima</dt><dd class="nunca">não faça vir da borda errada: o painel entra e sai sempre pelo mesmo lado, e a distância nunca passa da largura dele</dd></dl></div>
+</body></html>

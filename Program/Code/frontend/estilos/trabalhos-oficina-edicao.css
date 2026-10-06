@@ -1,0 +1,202 @@
+/* ═══ TRABALHOS → Oficina: alças, pega, edição e popovers ══════════════════
+   As alças de ligação (uma por lado), a pega de redimensionar, a edição no
+   lugar, a paleta de cor, a escolha do tipo de ligação e o popover.
+
+   ⚠️ AS ALÇAS FICAM FORA DA BORDA, e é isso que as torna alça em vez de
+   enfeite: dentro do cartão elas disputariam o clique com o conteúdo.
+
+   ⚠️ O POPOVER É UM MECANISMO SÓ. A paleta, o seletor de tipo de ligação e a
+   lista de agentes usam as MESMAS classes — três desenhos divergiriam na
+   primeira mudança, e dois abertos ao mesmo tempo ficariam empilhados.     */
+/* ── As alças de ligação, uma por lado ── */
+/* ⚠️ Ficam FORA da borda, e é isso que as torna alça em vez de enfeite: dentro
+   do cartão elas disputariam o clique com o log e o campo de mensagem, e
+   arrastar dali começaria a mover o cartão.
+
+   ⚠️ QUATRO, e não só à direita: com uma alça só, ligar um nó ao vizinho da
+   esquerda obrigava o fio a atravessar o cartão inteiro para sair pelo lado
+   errado. Com quatro, o fio sai sempre pelo lado que olha para o destino. */
+.ofi-alca {
+  position: absolute; width: 14px; height: 14px; border-radius: 50%;
+  cursor: crosshair; background: var(--surface); border: 2px solid var(--blue);
+  opacity: 0; transition: opacity var(--t), transform var(--t);
+}
+.ofi-alca-dir   { right: -7px;  top: 50%;  margin-top: -7px; }
+.ofi-alca-esq   { left: -7px;   top: 50%;  margin-top: -7px; }
+.ofi-alca-cima  { top: -7px;    left: 50%; margin-left: -7px; }
+.ofi-alca-baixo { bottom: -7px; left: 50%; margin-left: -7px; }
+/* Invisíveis até o cursor chegar: quatro bolinhas permanentes por cartão, com
+   dez cartões na tela, é mais ruído do que informação. */
+.ofi-no:hover .ofi-alca, .ofi-no.selecionado .ofi-alca { opacity: .55; }
+.ofi-alca:hover { opacity: 1; transform: scale(1.3); }
+
+/* ── A pega de redimensionar ── */
+.ofi-pega {
+  position: absolute; right: 0; bottom: 0; width: 14px; height: 14px;
+  cursor: nwse-resize; opacity: 0; transition: opacity var(--t);
+  background: linear-gradient(135deg, transparent 50%, rgba(var(--white-rgb), .38) 50%);
+  border-bottom-right-radius: var(--radius);
+}
+.ofi-no:hover .ofi-pega, .ofi-no.selecionado .ofi-pega { opacity: 1; }
+/* No nó de texto a mesma pega muda o CORPO DA LETRA, e não a caixa — o cursor
+   de redimensionar prometeria a caixa e entregaria outra coisa. */
+.ofi-pega[data-pega-tipo="texto"] { cursor: ns-resize; }
+
+/* ── Editar no lugar (dois cliques) ── */
+/* ⚠️ O respiro do estado de edição é `padding`, e não `margin`: margem
+   empurraria o vizinho e o cartão inteiro "pularia" ao entrar em edição. */
+.ofi-editavel { cursor: text; border-radius: 3px; }
+.ofi-editando {
+  outline: 1px solid var(--blue); outline-offset: 1px;
+  background: rgba(var(--blue-rgb), .1); cursor: text;
+  white-space: pre-wrap; user-select: text;
+}
+.ofi-ponto-cor { cursor: pointer; }
+/* A bolinha de cor de um nó que não tem avatar (nota e texto). Apagada até o
+   hover do cartão, como as ações da área Agentes: presente, discreta, e sem
+   virar um ponto colorido chamando atenção no meio de um texto solto. */
+.ofi-ponto-solto {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; display: inline-block;
+  border: 1px solid rgba(var(--white-rgb), .3); opacity: 0; transition: opacity var(--t);
+}
+.ofi-no:hover .ofi-ponto-solto, .ofi-no.selecionado .ofi-ponto-solto { opacity: 1; }
+.ofi-texto .ofi-ponto-solto { position: absolute; left: -14px; top: 7px; }
+.ofi-ponto-cor:hover { outline: 2px solid var(--text); outline-offset: 1px; }
+
+/* ⚠️ O TRAÇO INVISÍVEL QUE RECEBE O CLIQUE. Um fio de 1,6 px é fino demais para
+   acertar com o mouse; este é o mesmo caminho com 14 px de traço transparente,
+   desenhado por baixo. Sem ele, "clicar na seta para apagá-la" só funcionaria
+   para quem acertasse o pixel. */
+.ofi-fio-pega {
+  fill: none; stroke: transparent; stroke-width: calc(14px / var(--ofi-k, 1));
+  pointer-events: stroke; cursor: pointer;
+}
+/* A ligação escolhida. Contorno claro e mais grosso — variar só a opacidade
+   entre fios parecidos é imperceptível. */
+.ofi-fio-sel { stroke: var(--text) !important; stroke-width: calc(3.4px / var(--ofi-k, 1)); }
+
+/* ⚠️ A SETA APAGADA É OBRIGAÇÃO DE TELA, e não enfeite. Ela significa "você
+   pode trabalhar com este" — e isso só vale enquanto os DOIS terminais estão
+   abertos: fechado, o vizinho não entra no `Equipe.md` e o agente do outro
+   lado não sabe que ele existe. O mesmo desenho para os dois casos, sem pista
+   nenhuma, é uma armadilha.
+
+   ⚠️ A PISTA É OPACIDADE, E NÃO TRACEJADO — o tracejado já é a assinatura da
+   ligação de dependência (`.ofi-fio-dependencia`), e reusá-lo aqui faria duas
+   coisas diferentes parecerem a mesma. Quem decide a classe é
+   `ofiFioDormindo`, em `trabalhos-oficina.js`.
+
+   A pega de clique NÃO é apagada: seta dormindo continua selecionável e
+   apagável como qualquer outra. */
+.ofi-fio-dormindo { opacity: .3; }
+
+/* O fio provisório do arraste. Tracejado e sem seta: ele ainda não é ligação
+   nenhuma — o tipo só é escolhido quando o arraste termina em cima de um nó. */
+.ofi-fio-provisorio {
+  stroke: var(--blue); stroke-dasharray: calc(5px / var(--ofi-k, 1)) calc(4px / var(--ofi-k, 1));
+  stroke-width: calc(2px / var(--ofi-k, 1)); pointer-events: none;
+}
+/* Quem receberia a ligação se o botão fosse solto agora. Sem esta marca,
+   largar entre dois cartões parece ter funcionado e não liga nada. */
+.ofi-no.ofi-alvo { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+/* ── A paleta do seletor de cor ── */
+/* Mesmo desenho da cor de grupo/tag em Gerenciar projetos: atalhos do tema numa
+   linha, mais o seletor nativo (`.gg-cor-input`, reaproveitado de lá) para
+   qualquer cor. */
+.ofi-paleta { display: flex; flex-wrap: wrap; gap: 7px; margin: 4px 0 2px; }
+.ofi-cor-rapida {
+  width: 26px; height: 26px; border-radius: 50%; cursor: pointer; padding: 0;
+  border: 2px solid rgba(var(--white-rgb), .18);
+}
+.ofi-cor-rapida:hover { border-color: var(--text); transform: scale(1.1); }
+.ofi-cor-livre { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--text-muted); }
+.ofi-cor-livre span { flex: 1; }
+
+/* ── Escolher o tipo da ligação, dentro do popover ── */
+/* ⚠️ CADA TIPO É UMA LINHA À VISTA, e não uma opção de `<select>`. Os quatro
+   fazem coisas muito diferentes (um segura processo, outro passa arquivo,
+   outro reinicia o outro lado) e a descrição do efeito só cabe embaixo do nome.
+   Num `<select>` ela some assim que o menu fecha, e a escolha vira adivinhação. */
+.ofi-lig-sentido {
+  display: flex; align-items: center; gap: 6px; font-size: 11.5px;
+  padding: 6px 8px; border-radius: var(--radius);
+  background: rgba(var(--white-rgb), .05);
+}
+.ofi-lig-sentido b { min-width: 0; overflow: hidden; text-overflow: clip; white-space: nowrap; }
+.ofi-lig-seta { color: var(--text-muted); flex-shrink: 0; }
+.ofi-lig-sentido .btn { margin-left: auto; flex-shrink: 0; }
+.ofi-lig-nota-arraste { margin-left: auto; font-size: 10px; color: var(--text-muted); flex-shrink: 0; }
+
+/* O campo de texto de dentro de um popover — hoje só o nome do grupo. Ele mora
+   no `body`, então não herda nada do canvas: precisa do tamanho e das cores por
+   escrito. */
+.ofi-campo {
+  width: 100%; font: inherit; font-size: 12.5px;
+  padding: 7px 9px; border-radius: var(--radius);
+  color: var(--text); background: rgba(var(--black-rgb), .22);
+  border: 1px solid rgba(var(--white-rgb), .12);
+}
+.ofi-campo:focus { border-color: var(--blue); outline: none; }
+
+.ofi-popover-sub {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
+  color: var(--text-muted); text-transform: uppercase; margin-top: 2px;
+}
+/* Escolha entre poucos rótulos curtos e comparáveis (qual produto). Não é linha
+   clicável: aqui não há efeito a explicar, é só um nome entre nomes. */
+.ofi-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.ofi-chip {
+  padding: 4px 9px; border-radius: 999px; cursor: pointer; font-size: 11px;
+  background: rgba(var(--white-rgb), .06); color: var(--text-muted);
+  border: 1px solid transparent; transition: background var(--t), color var(--t);
+}
+.ofi-chip:hover { color: var(--text); }
+.ofi-chip.on {
+  color: var(--blue); background: rgba(var(--blue-rgb), .12);
+  border-color: rgba(var(--blue-rgb), .35);
+}
+.ofi-avatar-vazio { background: rgba(var(--white-rgb), .12); color: var(--text-muted); }
+/* O modo com que o terminal foi aberto, no cabeçalho do cartão. */
+.ofi-tag-modo { background: rgba(var(--blue-rgb), .18); color: var(--blue); }
+
+.ofi-lig-ops { display: flex; flex-direction: column; gap: 4px; }
+.ofi-lig-op {
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+  padding: 7px 9px; border-radius: var(--radius); cursor: pointer;
+  background: transparent; border: 1px solid transparent; color: var(--text);
+  transition: background var(--t), border-color var(--t);
+}
+.ofi-lig-op:hover { background: rgba(var(--blue-rgb), .12); border-color: rgba(var(--blue-rgb), .35); }
+.ofi-lig-op-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.ofi-lig-op-txt b { font-size: 12px; font-weight: 600; }
+.ofi-lig-op-txt small { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+
+/* A amostra do traço é o MESMO desenho do fio no canvas — tracejado é
+   dependência, cheio azul é mão única, grosso verde-água é ida e volta. Sem
+   ela, o nome do tipo não se liga ao que o usuário vê depois no desenho. */
+.ofi-lig-op-traco { width: 22px; height: 0; flex-shrink: 0; border-top: 2px solid var(--cinza); }
+.ofi-lig-op-dependencia  { border-top-style: dashed; }
+.ofi-lig-op-mao-unica    { border-top-color: var(--blue); }
+.ofi-lig-op-ida-e-volta  { border-top-width: 3px; border-top-color: var(--teal); }
+
+/* ── Popover: o painel leve que não escurece a tela ── */
+/* ⚠️ NÃO É MODAL, e a diferença é de peso, não de gosto. Modal escurece a tela
+   inteira e tira o canvas de vista — para trocar a cor de um cartão, isso some
+   justamente com o que se está tentando olhar: as cores dos vizinhos. Modal
+   fica para o que muda dado (ligar, desconectar, excluir); popover, para o que
+   muda aparência. */
+.ofi-popover {
+  position: fixed; z-index: 120; width: 258px;
+  display: flex; flex-direction: column; gap: 9px;
+  padding: 12px 14px; border-radius: 10px;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb), .12);
+  box-shadow: 0 14px 40px rgba(var(--black-rgb), .55);
+}
+/* O popover de ligação carrega três linhas com descrição; 258px cortaria cada
+   descrição em quatro linhas. `max-width` em vez de largura fixa deixa os dois
+   conteúdos escolherem o que precisam. */
+.ofi-popover:has(.ofi-lig-ops) { width: 320px; }
+.ofi-popover:has(.ofi-lig-ops) .ofi-lig-ops { max-height: 300px; overflow-y: auto; }
+.ofi-popover-t { font-size: 12.5px; font-weight: 700; }
+.ofi-popover-nota { font-size: 10.5px; color: var(--text-muted); line-height: 1.5; }

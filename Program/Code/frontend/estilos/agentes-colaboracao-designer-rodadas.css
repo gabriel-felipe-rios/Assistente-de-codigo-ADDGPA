@@ -1,0 +1,233 @@
+/* ═══ DESIGNER → as rodadas ════════════════════════════════════════════════
+   O histórico de idas e voltas com o modelo, dentro da sub-aba Designer.    */
+/* ── Rodadas ── */
+/* #design-messages é flex column com gap 16px (chat.css). O bloco da rodada vira
+   um filho flex, e precisa repetir isso — sem o gap, a mensagem do usuário e o
+   grid de variações ficam colados. */
+.design-rodada {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.design-rodada-sep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.design-rodada-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--white-rgb),0.10);
+}
+.design-rodada-titulo {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+.design-rodada-origem { font-size: 11px; color: var(--green); }
+
+/* Barra de rodadas. NÃO é o componente "Barra de sub-abas" do projeto: aquele
+   troca de painel, este só rola até uma âncora dentro da mesma conversa. */
+.design-rodadas-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 16px;
+  background: rgba(var(--blue-rgb),0.07);
+  border-bottom: 1px solid rgba(var(--blue-rgb),0.18);
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.design-rodada-chip {
+  background: rgba(var(--white-rgb),0.06);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: inherit;
+  padding: 3px 11px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--t), border-color var(--t), background var(--t);
+}
+.design-rodada-chip:hover { color: var(--text); background: rgba(var(--white-rgb),0.12); }
+.design-rodada-chip.ativa {
+  color: var(--text);
+  font-weight: 600;
+  border-color: var(--blue);
+  background: rgba(var(--blue-rgb),0.24);
+}
+
+.design-variations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.design-variations-grid[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+
+.design-variations-grid[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* 3 e 4 variações ficam em UMA linha. A altura do card é consequência da largura
+   (ver .design-var-preview, aspect-ratio 1280/800): em 2×2 num painel largo cada
+   card passava de 500px de altura e a rodada inteira — comentário + 4 miniaturas —
+   não caberia na tela. Estreitar só a caixa, mantendo a largura, não resolveria:
+   cortaria o pé da interface renderizada, porque a escala é calculada pela largura
+   medida (ajustarEscalaMiniatura em designer-chat.js). Reduzir a largura do card
+   encolhe as duas dimensões junto e não corta nada. */
+.design-variations-grid[data-count="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.design-variations-grid[data-count="4"] {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Painel estreito: 4 colunas deixariam a miniatura ilegível, então volta a 2×2 e a
+   rodada passa a rolar — melhor rolar do que não dar para ver. */
+@media (max-width: 1200px) {
+  .design-variations-grid[data-count="3"],
+  .design-variations-grid[data-count="4"] {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.design-variation-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(var(--white-rgb),0.02);
+  transition: all 0.2s ease;
+}
+/* Seleção transitória: "esta vai ser a base da próxima geração". */
+.design-variation-card.selected-var {
+  border-color: var(--green);
+  background: rgba(var(--green-alt-rgb), 0.08);
+  box-shadow: 0 0 0 1px rgba(var(--green-alt-rgb), 0.3);
+}
+/* Registro histórico: "desta aqui nasceu a rodada seguinte". Classe separada de
+   .selected-var de propósito — as duas convivem no mesmo card e significam
+   coisas diferentes. */
+.design-variation-card.variacao-base { border-color: var(--purple); }
+/* Selo conforme Padrões de interface/Componentes/Selo.md */
+.design-var-selo-base {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+  padding: 1px 6px; border-radius: 4px; margin-left: 6px;
+  color: var(--purple);
+  border: 1px solid var(--purple);
+  background: rgba(var(--purple-rgb), 0.12);
+}
+
+.design-var-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05);
+  background: rgba(var(--white-rgb),0.01);
+}
+
+.design-var-loading-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 20px;
+}
+
+.design-loading-spinner {
+  font-size: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Wrapper que cria o efeito de miniatura. A proporção acompanha o viewport
+   simulado no iframe (1280×800) — com altura fixa a miniatura era cortada,
+   porque a altura escalada não tinha relação com a largura real do card. */
+.design-var-preview {
+  width: 100%;
+  aspect-ratio: 1280 / 800;
+  overflow: hidden;
+  position: relative;
+  background: var(--text);
+}
+
+/* Iframe renderiza em tamanho real e é escalado para caber. A escala real é
+   escrita por ajustarEscalaMiniatura() em designer-chat.js, a partir da largura
+   medida do card: ela muda com o tamanho da janela e com o nº de variações.
+   O scale abaixo é só o valor inicial, até a primeira medição. */
+.design-var-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 800px;
+  border: none;
+  transform: scale(0.34);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* Camada transparente sobre o iframe: clique e roda do mouse pertencem ao card
+   e à conversa, nunca ao documento renderizado dentro dele. */
+.design-var-shield { position: absolute; inset: 0; z-index: 1; }
+
+.design-var-actions { display: flex; gap: 6px; align-items: center; }
+
+/* A mensagem do assistente precisa da largura toda por causa do grid de
+   variações; só o texto é limitado, para não virar uma linha atravessando a
+   tela — foi o que aconteceu quando o HTML cru era despejado como texto. */
+#design-messages .message-assistant { max-width: 100%; width: 100%; }
+#design-messages .message-assistant > .message-content { max-width: 820px; }
+
+.design-error-msg {
+  color: var(--red);
+  font-size: 12px;
+  padding: 6px 8px;
+  background: rgba(var(--vermelho-puro-rgb),0.1);
+  border-radius: 4px;
+}
+
+.design-modal {
+  width: 90vw;
+  height: 90vh;
+  max-width: 1200px;
+  max-height: 900px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 10px 40px rgba(var(--black-rgb),0.5);
+  z-index: 201;
+}
+
+.design-modal-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.1);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.design-modal-iframe {
+  flex: 1;
+  border: none;
+  background: var(--text);
+}
+

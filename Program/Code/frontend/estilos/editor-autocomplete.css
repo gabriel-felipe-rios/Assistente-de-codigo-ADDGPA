@@ -1,0 +1,71 @@
+/* ══════════════════════════ EDITOR: O POPUP DE AUTOCOMPLETE ══
+   A lista de sugestões que aparece enquanto se digita (M5, Obra 4 de
+   "Extensões do programa").
+
+   ⚠️ Herda as medidas do Menu de contexto de propósito — mesmo `--surface`,
+   mesma borda, mesma sombra, mesmo raio. São duas caixas flutuantes que
+   aparecem no cursor a poucos centímetros uma da outra; duas aparências
+   diferentes fariam a interface parecer montada por duas pessoas. */
+
+.ed-ac {
+  position: fixed;
+  /* Acima do menu de contexto (400): quando os dois abrem, o autocomplete é o
+     que o usuário acabou de provocar com a tecla. */
+  z-index: 420;
+  min-width: 220px;
+  max-width: 460px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 34px rgba(var(--black-rgb), 0.5);
+  user-select: none;
+}
+
+.ed-ac-item {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 5px 9px; border-radius: 5px;
+  cursor: pointer;
+  /* `nowrap` + `ellipsis`: uma sugestão de nome longo não pode quebrar em duas
+     linhas e desalinhar a lista inteira que se navega com a seta. */
+  white-space: nowrap; overflow: hidden;
+}
+
+/* 🔴 O DESTAQUE É DA LINHA SELECIONADA, e ele é o único estado visual que
+   importa aqui: a navegação é por teclado, e sem ele não há como saber o que o
+   Enter vai aceitar. O `:hover` usa o MESMO fundo de propósito — o mouse e a
+   seta escolhem a mesma coisa, e duas cores diriam que são coisas diferentes. */
+.ed-ac-item.ativo,
+.ed-ac-item:hover { background: rgba(var(--purple-rgb), 0.18); }
+
+.ed-ac-texto {
+  font-family: var(--mono, monospace); font-size: 12.5px;
+  color: var(--text); flex: 0 1 auto;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* O detalhe (o tipo do símbolo, o arquivo onde ele mora) encolhe primeiro: se
+   algo tem de sumir por falta de espaço, é ele, nunca o nome que vai ser
+   inserido. */
+.ed-ac-detalhe {
+  font-size: 11px; color: var(--text-muted);
+  margin-left: auto; flex: 0 1 auto;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── O espelho que mede onde o cursor está ──
+   Um <textarea> não diz em que pixel o cursor caiu, e não há API para isso. O
+   truque é o mesmo da régua de linhas: um clone com a mesma fonte e a mesma
+   largura, com o texto até o cursor, medido e jogado fora.
+
+   ⚠️ `visibility: hidden` e NÃO `display: none`: o elemento escondido por
+   `display` não tem caixa, e `offsetLeft`/`offsetTop` devolveriam zero — o
+   popup nasceria sempre no canto superior esquerdo da tela. */
+.ed-ac-espelho {
+  position: absolute; top: 0; left: 0;
+  visibility: hidden; pointer-events: none;
+  white-space: pre-wrap; word-wrap: break-word;
+  overflow: hidden;
+}

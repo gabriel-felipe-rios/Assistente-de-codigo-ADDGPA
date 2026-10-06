@@ -1,0 +1,104 @@
+/* ═══ BACKUPS → Mapa: a Árvore e o diff numerado ═══════════════════════════
+   ⚠️ RÓTULO NUNCA É CORTADO COM RETICÊNCIAS neste mapa — a regra vem do bloco
+   anterior e vale aqui também: nome de arquivo cortado no meio é nome de outro
+   arquivo, e o usuário não tem como saber qual.
+
+   ⚠️ O DIFF É NUMERADO POR LINHA, e a numeração é do lado do CSS (contador),
+   não do HTML. Números no markup viajariam junto no copiar. */
+/* ── Árvore ─────────────────────────────────────────────────────
+   Ela usa o componente compartilhado (`.arvore-pastas` / `.arvp-*`), que é o
+   mesmo do Resumo indexado, da Documentação e de mais quatro telas. O que mora
+   aqui é só a DECORAÇÃO de Backups: a cor da situação e a barra de título com os
+   dois botões. Redefinir a aparência da árvore aqui seria criar a sexta cópia
+   por outro caminho. */
+.bm-arvores { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; }
+.bm-arvore-col { display: flex; flex-direction: column; min-height: 0; }
+.bm-arvore-barra {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-bottom: 8px; flex-shrink: 0;
+}
+.bm-arvore-botoes { margin-left: auto; display: flex; gap: 4px; }
+.bm-arvore { font-size: 13px; }
+
+/* A situação entra como tarja na borda esquerda da linha — a mesma cor das
+   outras sete leituras, o mesmo vocabulário. */
+.bm-arv-linha { border-left: 3px solid rgba(var(--bm-cor, var(--cinza-rgb)), .9); }
+.bm-arv-linha .arvp-selo {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted); font-size: 11px;
+}
+.bm-arv-linha.bm-criado   .arvp-selo { color: var(--green-light); }
+.bm-arv-linha.bm-removido .arvp-selo { color: var(--coral); }
+.bm-arv-linha .arvp-selo.bm-selo-binario {
+  color: var(--amber-text); background: var(--amber);
+  border-radius: 99px; padding: 1px 7px; font-size: 10px;
+}
+
+
+.bm-trecho {
+  margin: 6px 0 10px 24px;
+  border: 1px solid rgba(var(--white-rgb), .08);
+  border-radius: var(--radius); overflow: hidden;
+}
+.bm-trecho-barra {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 6px 10px; background: rgba(var(--white-rgb), .04);
+}
+/* ⚠️ O `padding` HORIZONTAL SAIU. Ele era o que fazia o gutter grudado
+   (`position: sticky`) descolar da borda esquerda ao rolar: o texto passava por
+   baixo dos 10 px de folga. O respiro agora é do próprio número e do texto. */
+.bm-diff {
+  margin: 0; padding: 8px 0; overflow-x: auto;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px;
+  line-height: 1.55; background: var(--surface-dark);
+}
+/* O corpo do modal de diff do Treemap/Sunburst. Só a rolagem: a marcação de
+   dentro é a mesma `.bm-diff` da Árvore, e o quadro é o `.modal-prompt` que o
+   Visualizar prompt já usava. */
+.bm-modal-diff-corpo { flex: 1; overflow: auto; padding: 0; min-height: 80px; }
+.bm-modal-diff-corpo .bm-diff { background: none; padding: 10px 0; }
+
+/* ── O diff numerado ──────────────────────────────────────────────────────
+   Uma GRADE por linha: número de antes · número de agora · o código. Os três no
+   MESMO elemento, senão a rolagem horizontal do `.bm-diff` desalinha as colunas
+   — foi por isso que o gutter do Visualizar pipeline (duas colunas em flex) não
+   serviu de molde aqui, só de vocabulário visual.
+   `min-content` nas duas primeiras: elas encolhem para o maior número que
+   houver, e não roubam largura do código na Árvore, que é estreita. */
+.bm-diff-l {
+  display: grid; grid-template-columns: min-content min-content 1fr;
+}
+/* Os números ficam PARADOS quando o código rola para o lado. É o que o GitHub
+   faz, e é o que torna um diff de linha longa legível. */
+.bm-diff-num {
+  position: sticky; z-index: 1;
+  min-width: 3ch; padding: 0 8px;
+  text-align: right; user-select: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted); opacity: .5;
+  background: var(--surface-dark);
+}
+.bm-diff-num:first-child { left: 0; }
+/* O segundo número gruda DEPOIS do primeiro. `4ch + 16px` é a largura mínima do
+   primeiro (3ch + os dois paddings); com número maior os dois rolam juntos, que
+   é o comportamento aceitável — o alinhamento entre número e código nunca quebra
+   porque os três são a mesma grade. */
+.bm-diff-num:nth-child(2) { left: calc(3ch + 16px); }
+.bm-diff-txt { padding: 0 12px; }
+
+.bm-diff-l.mais  { color: var(--green-light); background: rgba(var(--green-rgb), .10); }
+.bm-diff-l.menos { color: var(--coral);       background: rgba(var(--red-rgb), .10); }
+/* ⚠️ TINGIR COM `--green-rgb` / `--red-rgb`, NUNCA com `--white-rgb` ou
+   `--black-rgb`: no tema Papel `--white-rgb` vale `0,0,0` (ele é o *véu*, não a
+   cor branca), e uma faixa "branca" sairia preta sobre fundo claro. */
+.bm-diff-l.mais  .bm-diff-num { background: rgba(var(--green-rgb), .10); }
+.bm-diff-l.menos .bm-diff-num { background: rgba(var(--red-rgb), .10); }
+
+/* O salto entre pedaços do arquivo. Era o `@@ -161,7 +161,7 @@` escrito por
+   extenso, que não dizia nada que os números da linha seguinte não digam melhor.
+   Virou o que ele sempre foi: uma separação. */
+.bm-diff-l.salto {
+  display: block; height: 1px; margin: 6px 0;
+  background: rgba(var(--cinza-rgb), .35);
+}
+

@@ -1,0 +1,143 @@
+/* ══════════════════════════════════════════════════════════ TEMA: ARDÓSIA ══
+   As cores com que o programa sempre foi — azul-ardósia, o `--bg: #2C3E50`.
+   É o tema padrão: sem nada gravado em `settings.json`, é este que carrega.
+
+   ── Como ler este arquivo ──
+   Cada cor que precisa compor transparência é declarada UMA VEZ, como triplet
+   RGB, e o uso opaco deriva dela: `--blue-rgb` é a declaração, `--blue` é
+   `rgb(var(--blue-rgb))`. Antes eram 14 cores escritas duas vezes, em formatos
+   diferentes, mantidas à mão — e uma delas já tinha divergido no passado.
+
+   ⚠️ Um tema é uma paleta COMPLETA. Não herda de nenhum padrão: quem abrir
+   `tema-papel.css` encontra todos os mesmos tokens, com outros valores. É mais
+   verboso e é de propósito — herança faria um token esquecido num tema puxar
+   silenciosamente a cor de outro. */
+
+:root {
+  /* ── Paleta base ────────────────────────────────────────────────────────── */
+  --bg:           #2C3E50;
+  --surface:      #34495E;
+  --surface-hover:#3d566e;
+  --surface-dark: #1a252f;
+  --text:         #FFFFFF;
+  --text-muted:   #BDC3C7;
+
+  /* ── As seis cores de ação, e seus -hover ─────────────────────────────────
+     Declaradas em RGB porque quase todas compõem transparência em algum lugar
+     (`rgba(var(--blue-rgb), 0.12)` no hover do botão voltar, por exemplo). */
+  --blue-rgb:         52,152,219;
+  --blue:             rgb(var(--blue-rgb));
+  --blue-hover:       #2980B9;
+  --green-rgb:        46,204,113;
+  --green:            rgb(var(--green-rgb));
+  --green-hover:      #27AE60;
+  --red-rgb:          231,76,60;
+  --red:              rgb(var(--red-rgb));
+  --red-hover-rgb:    192,57,43;
+  --red-hover:        rgb(var(--red-hover-rgb));
+  --purple-rgb:       155,89,182;
+  --purple:           rgb(var(--purple-rgb));
+  --purple-hover:     #8E44AD;
+  --teal-rgb:         26,188,156;
+  --teal:             rgb(var(--teal-rgb));
+  --teal-hover:       #16A085;
+  --gray:             #4a5568;
+  --gray-hover:       #5a6478;
+
+  /* ── O véu ────────────────────────────────────────────────────────────────
+     ⚠️ `--white-rgb` NÃO significa "branco": significa **a cor do véu**, a
+     camada translúcida que desenha borda e hover sobre a superfície. São 325
+     usos em 33 arquivos de estilo, sempre como `rgba(var(--white-rgb), α)`.
+     Num tema escuro o véu é claro; no Papel ele é escuro. É por ele estar aqui,
+     e não em `tokens-fixos.css`, que o tema claro funciona sem tocar nos 33. */
+  --white-rgb:  255,255,255;
+  --black-rgb:  0,0,0;
+
+  /* ── Fundos dos painéis de visualização do Designer ───────────────────────
+     ⚠️ Estes são o CHROME do Designer (a moldura em volta do preview), não a
+     paleta que o usuário escolheu — essa vem do JSON dele e o programa só
+     mostra. Acompanham o tema; a paleta do usuário nunca. */
+  --designer-thumb-bg:   #1a252f;  /* = --surface-dark do próprio tema */
+  --designer-preview-bg: #0d0d14;
+  --designer-panel-bg:   #1e1e2e;
+
+  /* ── Acentos ──────────────────────────────────────────────────────────── */
+  --amber-rgb:      243,156,18;
+  --amber:          rgb(var(--amber-rgb)); /* laranja/alerta */
+  --amber-text:     #1a1200;               /* texto escuro sobre fundo --amber */
+  --yellow-rgb:     241,196,15;
+  --yellow:         rgb(var(--yellow-rgb)); /* amarelo forte — aviso, subagente Leitor */
+  --yellow-soft:    #f3d573; /* amarelo claro — destaque suave */
+  --mint:           #8ce8b4; /* verde-menta — saída de comando, badge de sucesso */
+  --sky:            #7aa2f7; /* azul claro — acento secundário */
+  --sky-light:      #a9d8f5; /* azul claro (mais claro ainda) — texto sobre badge azul */
+  --blue-light:     #7ec8f7; /* corpo de bloco de payload do tipo "usuário" */
+  --laranja-light:  #f5c080; /* corpo de bloco de payload do tipo "assistente" */
+  --green-light:    #9ee8bc; /* corpo de bloco de payload do tipo "modo" */
+  --violeta-light:  #c4b5fd; /* corpo de bloco de payload do tipo "contexto" */
+  --rosa-light:     #F9A8D4; /* corpo de bloco de payload do tipo "regra injetada" */
+  --coral:          #F87171; /* cabeçalho de bloco de payload do tipo "aviso" */
+  --coral-light:    #FCA5A5; /* corpo de bloco de payload do tipo "aviso" */
+  --coral-alt:      #ff8a7a; /* variação de coral usada em utils.css */
+  --coral-strong:   #ff6b6b; /* variação de coral usada em regras.css */
+  --lilas-claro:    #d7aae8; /* lilás claro — relacoes.css */
+  --ciano-mapa-rgb: 0,180,216;
+  --ciano-mapa:     rgb(var(--ciano-mapa-rgb)); /* ciano — grafo do mapa */
+  --cinza-rgb:          149,165,166;
+  --cinza:              rgb(var(--cinza-rgb)); /* status neutro (mapa de I/O, agente desconhecido) */
+  --cinza-escuro-rgb:   127,140,141;
+  --cinza-escuro:       rgb(var(--cinza-escuro-rgb));
+  --cinza-azulado-rgb:  108,122,137;
+  --cinza-azulado:      rgb(var(--cinza-azulado-rgb));
+  --mapa-sem-fluxo: #3a4a5a; /* neutro do Treemap: arquivo sem fluxo de controle */
+
+  /* Cores sem gêmeo opaco — só existem como triplet, num uso único cada. */
+  --green-alt-rgb:     76,175,80;  /* verde ligeiramente diferente de --green, agentes.css */
+  --esmeralda-rgb:     52,211,153; /* verde-esmeralda distinto de --green, chat.css */
+  --vermelho-puro-rgb: 255,0,0;    /* uso único em agentes.css */
+  --vermelho-vivo-rgb: 255,60,60;  /* uso único em regras.css */
+  --mapa-fundo-rgb:    14,14,24;   /* overlay de fundo do grafo do mapa, mapas.css */
+
+  /* ── Identidade dos 5 agentes da Fila ─────────────────────────────────────
+     ⚠️ O que muda entre temas é o TOM, nunca a família: o Leitor é sempre
+     amarelo, o Analista sempre rosa. Quem aprendeu a reconhecer uma cor numa
+     tela precisa reconhecê-la na outra, e em qualquer tema. */
+  --indigo-rgb:          99,102,241;
+  --indigo:              rgb(var(--indigo-rgb)); /* documentacao.css e fallback em regras.css */
+  --rosa:                #F472B6;
+  --turquesa:            #2DD4BF;
+  --agente-orquestrador: #A78BFA;
+  --agente-contexto:     var(--blue);
+  --agente-analise-rgb:  230,126,34;
+  --agente-analise:      rgb(var(--agente-analise-rgb));
+  --agente-verificacao:  var(--green);
+  --agente-relatorio:    #EC4899;
+  --agente-desconhecido: var(--cinza);
+
+  /* ── Identidade dos subagentes do Chat (legenda + títulos do Log) ───────── */
+  --sub-buscador:      #60A5FA;
+  --sub-navegador:     var(--green);
+  --sub-leitor:        var(--yellow);
+  --sub-arquiteto:     var(--teal);
+  --sub-analista:      #E91E63;
+  --sub-semantico:     var(--purple);
+  --sub-sistema:       var(--coral);
+  /* As cores que um subagente de EXTENSÃO pode escolher (`"cor"` no item do
+     manifesto; `XT_SUBAGENTE_CORES`). O programa não conhece subagente de
+     extensão pelo nome — só esta paleta. */
+  --sub-cor-violeta:   #A78BFA;
+  --sub-cor-indigo:    var(--indigo);
+  --sub-cor-rosa:      var(--rosa);
+  --sub-cor-turquesa:  var(--turquesa);
+  /* Prompts fixos (antigos "modos"). A chave do token é a chave do prompt. */
+  --sub-estruturar:                  #22D3EE;
+  --sub-estruturar-e-quebrar-tarefa: #C084FC;
+  --sub-revisar:       var(--amber);
+  --sub-usuario:       var(--blue);
+  --sub-chat:          var(--agente-analise);
+  /* Os dois agentes da tela da Fila. A Fila é o agente principal DELA, como o
+     Chat é o da tela dele — mesmo papel, mesma cor, de propósito: quem
+     aprendeu a reconhecer a laranja numa tela a reconhece na outra. */
+  --sub-fila:             var(--agente-analise);
+  --sub-fila-verificador: var(--mint);
+}

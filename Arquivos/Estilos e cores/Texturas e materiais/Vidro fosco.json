@@ -1,0 +1,17 @@
+{
+  "nome": "Vidro fosco",
+  "descricao": "Superfície translúcida com desfoque do que está atrás e borda clara de 1 px. Dá profundidade sem sombra pesada.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "painéis flutuantes",
+    "modais",
+    "topbar sobre conteúdo rolável",
+    "sidebar sobreposta"
+  ],
+  "nao_use_em": [
+    "fundo da página",
+    "texto",
+    "campos de formulário"
+  ],
+  "css": "background: color-mix(in srgb, var(--superficie) 62%, transparent);\nbackdrop-filter: blur(14px) saturate(1.2);\nborder: 1px solid color-mix(in srgb, var(--texto) 16%, transparent);"
+}

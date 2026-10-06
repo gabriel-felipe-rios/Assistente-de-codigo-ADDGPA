@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Quadro kanban -->
+<!-- Topbar -> barra de filtros -> colunas verticais com cards arrastáveis, rolagem horizontal -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Quadro kanban</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:36px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.filtros{height:34px;background:var(--superficie);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;gap:7px;padding:0 12px;flex-shrink:0}
+.chip{padding:3px 10px;border-radius:11px;border:1px solid var(--superficie-hover);color:var(--texto-secundario);font-size:11px}
+.chip.on{border-color:var(--primaria);color:var(--primaria)}
+.quadro{flex:1;min-height:0;display:flex;gap:11px;padding:12px;overflow-x:auto}
+.col{width:216px;flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;display:flex;flex-direction:column;padding:9px;gap:7px}
+.colh{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;font-weight:700}
+.colh .n{color:var(--texto-secundario);font-weight:600}
+.tar{background:var(--superficie-hover);border-radius:7px;padding:8px 9px;display:flex;flex-direction:column;gap:4px}
+.tar .t{font-size:11.5px;font-weight:600}
+.tar .e{display:flex;gap:5px;align-items:center;color:var(--texto-secundario);font-size:10.5px}
+.pt{width:7px;height:7px;border-radius:50%;display:inline-block}
+</style></head><body>
+<div class="topbar"><span style="font-weight:700">Quadro do time</span><button class="bt">+ Tarefa</button></div>
+<div class="filtros"><span class="rot">Filtros:</span><span class="chip on">Minhas</span><span class="chip">Atrasadas</span><span class="chip">Sem responsável</span></div>
+<div class="quadro">
+  <div class="col"><div class="colh"><span>A fazer</span><span class="n">3</span></div>
+    <div class="tar"><span class="t">Revisar textos da home</span><span class="e"><i class="pt" style="background:var(--especial)"></i>Design · 2 d</span></div>
+    <div class="tar"><span class="t">Migrar imagens antigas</span><span class="e"><i class="pt" style="background:var(--utilitaria)"></i>Infra · 5 d</span></div>
+    <div class="tar"><span class="t">Escrever changelog</span><span class="e"><i class="pt" style="background:var(--texto-secundario)"></i>Sem prazo</span></div>
+  </div>
+  <div class="col"><div class="colh"><span>Em andamento</span><span class="n">2</span></div>
+    <div class="tar"><span class="t">Nova tela de pedidos</span><span class="e"><i class="pt" style="background:var(--primaria)"></i>Marina · hoje</span></div>
+    <div class="tar"><span class="t">Corrigir cálculo do frete</span><span class="e"><i class="pt" style="background:var(--negativa)"></i>Atrasada</span></div>
+  </div>
+  <div class="col"><div class="colh"><span>Em revisão</span><span class="n">1</span></div>
+    <div class="tar"><span class="t">Ajuste de contraste</span><span class="e"><i class="pt" style="background:var(--especial)"></i>Aguardando Ana</span></div>
+  </div>
+  <div class="col"><div class="colh"><span>Concluído</span><span class="n">2</span></div>
+    <div class="tar"><span class="t">Exportar relatório</span><span class="e"><i class="pt" style="background:var(--positiva)"></i>Entregue</span></div>
+    <div class="tar"><span class="t">Login por e-mail</span><span class="e"><i class="pt" style="background:var(--positiva)"></i>Entregue</span></div>
+  </div>
+</div>
+</body></html>

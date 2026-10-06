@@ -1,0 +1,113 @@
+/* ═══ AGENTES → a segunda barra: o que veio do cache ═══════════════════════
+   ⚠️ SÃO DUAS BARRAS, E NÃO UMA COM DUAS CORES. A primeira mede o progresso da
+   rodada; esta mede quanto dela foi respondido do cache. Uma barra só faria o
+   usuário ler "80% pronto" sem saber se o programa trabalhou ou releu.     */
+/* ── A segunda barra: o que veio do cache ─────────────────────────────────────
+   A barra de cima conta só o trabalho DE VERDADE (`a_processar`); esta conta o
+   que foi reaproveitado por hash igual. Antes as duas coisas eram somadas num
+   número só, e a barra saltava — 113 para 121 — porque o cache devolve dezenas
+   de arquivos em milissegundos.
+
+   Fica escondida quando não há nada reaproveitado: num projeto rodando do zero
+   a tela continua igual à de antes. */
+.agente-progress-reaproveitado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.agente-progress-reaproveitado .agente-progress-bar-track { flex: 1; }
+.agente-progress-rot {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 96px;
+  flex-shrink: 0;
+}
+/* Verde apagado, e não azul: pela convenção de cor do programa, azul é
+   "acontecendo agora" e verde é "terminou" — e estes ARQUIVOS já estavam
+   prontos antes de a rotina começar. Apagado porque é informação secundária:
+   quem olha a tela quer saber do trabalho que falta. */
+.agente-progress-bar-cache { background: rgba(var(--green-rgb), 0.55); }
+
+.agente-current-file {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 14px;
+}
+/* D7: na Documentação Técnica e no Resumo de Pastas, uma linha por item em
+   andamento, com a fase dele. Azul é andamento; âmbar é tentativa — a
+   mesma convenção do resto do programa (azul = acontecendo agora). */
+.agente-current-file.em-linhas {
+  display: flex; flex-direction: column; gap: 4px; white-space: normal;
+}
+.agente-current-file.em-linhas > span {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.agente-fase           { color: var(--sky-light); }
+.agente-fase-tentativa { color: var(--amber); }
+
+.agente-result-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agente-result-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.agente-stat {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.agente-stat-ok   { background: rgba(var(--green-rgb),0.15); color: var(--green); }
+.agente-stat-warn { background: rgba(var(--yellow-rgb),0.15);  color: var(--yellow); }
+.agente-stat-err  { background: rgba(var(--red-rgb),0.15);   color: var(--red); }
+.agente-stat-date { color: var(--text-muted); font-size: 11px; font-weight: 400; }
+
+.agente-issue-list {
+  background: var(--surface-dark);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.agente-issue-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+/* Duas colunas: o texto empilhado à esquerda, o botão de abrir à direita.
+   O caminho é longo, então quem encolhe é a coluna de texto (min-width: 0). */
+.agente-issue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+  font-size: 12px;
+}
+.agente-issue-item:last-child { border-bottom: none; }
+.agente-issue-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.agente-issue-file   {
+  color: var(--text); font-family: 'Consolas', monospace;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.agente-issue-reason { color: var(--text-muted); font-size: 11px; }
+.agente-issue-abrir  { flex-shrink: 0; }
+

@@ -1,0 +1,91 @@
+/* ═══ CONFIGURAÇÕES → Teclado ══════════════════════════════════════════════
+   A grade de quatro colunas com a tecla de cada comando do programa, e o selo
+   de "mesma tecla".
+
+   ⛔ O MÍNIMO POSSÍVEL: o cartão é `.config-cartao`, que já existe. O que está
+   aqui é só o que não é cartão — a grade, o campo de captura, o ↺ e o selo.
+
+   ⚠️ NENHUMA COR NOVA. Tudo por token declarado em `estilos/tema/`, que é o
+   único lugar que declara token; este arquivo não declara `:root`.
+
+   ⚠️ A CADEIA DE ROLAGEM: a casca leva `min-height: 0` e SÓ a
+   `.tecla-rolagem` rola. O `min-height: 0` é a parte que se esquece, e é a que
+   quebra — sem ele o filho cresce e quem rola passa a ser a página.         */
+
+/* ── A grade ──
+   ⚠️ ESTE BLOCO SERVE A DUAS CATEGORIAS: a grade inteira aqui, e as duas
+   linhas da barra em "Acesso rápido". É a MESMA grade, lida do mesmo registro
+   (`modulos/teclas.js`) — uma configuração só, mostrada em dois lugares.
+   Escrever a segunda é o que faz a tecla que a tela mostra deixar de ser a
+   tecla que dispara. */
+.tecla-grade {
+  display: grid; grid-template-columns: 1fr 150px 158px 30px; gap: 0 14px;
+  align-items: center;
+}
+.tecla-cab {
+  font-size: 10.5px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  padding-bottom: 6px; border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+}
+/* `display: contents` para as quatro células da linha caírem direto na grade —
+   sem isto a linha vira uma célula só e a grade perde as colunas. */
+.tecla-lin { display: contents; }
+.tecla-cel { padding: 7px 0; font-size: 12.5px; color: var(--text); }
+.tecla-cel.onde { color: var(--text-muted); font-size: 11.5px; }
+
+.tecla-campo {
+  width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+  font-size: 11.5px; color: var(--text); font-variant-numeric: tabular-nums;
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), 0.14); border-radius: 6px;
+  padding: 4px 8px;
+}
+.tecla-campo:hover { border-color: rgba(var(--white-rgb), 0.28); }
+.tecla-campo.vazio { color: var(--text-muted); font-style: italic; }
+/* Capturando: o campo tem de DIZER que está esperando uma tecla. É a única
+   pista de que o teclado está sendo escutado, e um campo que só existe para
+   receber teclado precisa mostrar isso. */
+.tecla-campo.capturando {
+  color: var(--teal); border-color: var(--teal);
+  background: rgba(var(--teal-rgb), 0.12); font-style: normal;
+}
+/* O foco por `Tab` tem de se ver — o campo é operado por teclado, e é
+   justamente onde um foco invisível dói. */
+.tecla-campo:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+
+.tecla-reset {
+  width: 24px; height: 24px; cursor: pointer; font-family: inherit; font-size: 13px;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid rgba(var(--white-rgb), 0.12); border-radius: 4px;
+}
+.tecla-reset:hover { color: var(--text); background: rgba(var(--white-rgb), 0.10); }
+
+/* ── O título de grupo ──
+   A grade é agrupada por "onde vale", e o título ocupa a linha inteira das
+   quatro colunas. Sem o agrupamento, quarenta linhas seguidas não dizem que
+   `Ctrl+F` é uma tecla DO EDITOR, e não do programa. */
+.grupo-tit {
+  grid-column: 1 / -1;
+  margin-top: 14px; padding-bottom: 4px;
+  font-size: 11px; font-weight: 700; color: var(--text);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.grupo-tit:first-of-type { margin-top: 4px; }
+
+/* ── A rolagem ──
+   ⚠️ UM filho rola, e a casca tem `min-height: 0`. Ver o aviso do topo. */
+.tecla-rolagem { overflow: auto; max-height: 52vh; min-height: 0; }
+
+/* ── O selo "mesma tecla" ──
+   Segue o componente Selo: medidas fixas, e a MESMA cor nos três lugares —
+   texto, borda e fundo a 12%. Duas palavras, que é o teto do componente.
+
+   ⚠️ Ele acende só quando os ALCANCES SE CRUZAM. Um aviso que aparece em toda
+   linha deixa de ser aviso — ver `config-teclado.js`. */
+.selo-conflito {
+  display: inline-block; margin-left: 6px;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
+  color: var(--amber); border: 1px solid var(--amber);
+  background: rgba(var(--amber-rgb), 0.12);
+  white-space: nowrap;
+}

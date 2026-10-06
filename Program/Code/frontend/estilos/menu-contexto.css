@@ -1,0 +1,87 @@
+/* ══════════════════════════════ COMPONENTE: MENU DE CONTEXTO ══
+   O menu do botão direito. Ver `modulos/menu-contexto.js` — inclusive o porquê
+   de a classe ser própria e não `.dropdown-menu`.
+
+   Os tokens são os mesmos que `.dropdown-menu` já usa (utils.css): é o mesmo
+   objeto visual do programa, só com outro comportamento de posição. */
+
+.menu-ctx {
+  position: fixed;
+  z-index: 400;
+  min-width: 210px;
+  /* Menu mais alto que a janela rola por dentro em vez de sair pela borda. */
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 34px rgba(var(--black-rgb), 0.5);
+  user-select: none;
+}
+
+.menu-ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t);
+}
+.menu-ctx-item:hover { background: rgba(var(--white-rgb), 0.09); }
+
+/* Largura fixa para os rótulos alinharem mesmo com item sem ícone — sem ela a
+   lista fica escadinha. */
+.menu-ctx-icone {
+  flex-shrink: 0;
+  width: 15px;
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.menu-ctx-rotulo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* O atalho é lembrete, não ação: cinza, e nunca compete com o rótulo. */
+.menu-ctx-atalho {
+  flex-shrink: 0;
+  padding-left: 14px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ação que apaga ou sobrescreve. `--coral-alt` é o mesmo vermelho que o aviso
+   do programa usa — vermelho de token, não vermelho novo. */
+.menu-ctx-perigo .menu-ctx-rotulo { color: var(--coral-alt); }
+
+.menu-ctx-inerte { opacity: 0.4; cursor: default; }
+.menu-ctx-inerte:hover { background: transparent; }
+
+.menu-ctx-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: rgba(var(--white-rgb), 0.10);
+}
+
+/* Cabeçalho de grupo — não é clicável e não deve parecer que é. */
+.menu-ctx-grupo {
+  padding: 7px 9px 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

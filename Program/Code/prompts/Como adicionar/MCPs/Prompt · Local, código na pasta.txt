@@ -1,0 +1,83 @@
+Preciso de um MCP LOCAL, COM O CÓDIGO NA PASTA, para a biblioteca do meu assistente de código.
+
+O QUE O SERVIDOR DEVE FAZER: [descreva aqui — as ferramentas que ele expõe e o que cada uma responde]
+
+Neste tipo (local), o código do servidor mora DENTRO da pasta do item. Ligar o
+MCP num projeto copia a pasta inteira para dentro dele e registra o servidor;
+desligar tira o registro e apaga a cópia.
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do MCP>/
+    mcp.json         (obrigatório, na raiz — é ele que faz a pasta ser um MCP)
+    Descrição.md     (o que a biblioteca mostra: o que ele faz e o que NÃO faz)
+    servidor.py      (e o que mais o servidor precisar)
+
+REGRAS DO FORMATO
+
+1. O mcp.json tem estes campos:
+
+     "nome"               igual ao nome da pasta, letra por letra
+     "versao"             texto livre
+     "descricao"          uma frase, mostrada na biblioteca
+     "tipo"               "local"
+     "comando"            o executável que lança o servidor (python, node…)
+     "args"               a linha de comando — pelo menos um item com ${PASTA}
+     "env"                variáveis de ambiente do processo (opcional)
+     "pasta_do_programa"  "" — quem preenche é o programa, na cópia
+
+   Exemplo mínimo:
+
+     {
+       "nome": "Meu MCP",
+       "versao": "1",
+       "descricao": "Uma frase dizendo o que ele responde.",
+       "tipo": "local",
+       "comando": "python",
+       "args": ["${PASTA}/servidor.py"],
+       "env": {},
+       "pasta_do_programa": ""
+     }
+
+2. Nunca escreva "command", "url" ou "type" no manifesto: o formato do registro
+   é derivado do "tipo", e quem o monta é o programa.
+
+3. ${PASTA} vira o caminho absoluto da CÓPIA dentro do projeto. Nunca escreva
+   caminho de máquina no manifesto: o destino da cópia é configurável, e o
+   molde precisa funcionar em qualquer pasta do programa.
+
+4. Senha e token NUNCA vão no manifesto. Escreva ${NOME_DA_VARIAVEL} e diga, na
+   Descrição.md, qual variável de ambiente eu preciso criar — o programa resolve
+   pela variável de mesmo nome na hora de ligar, e recusa se ela faltar.
+
+5. O bloco "configuracao" é opcional — sem ele o MCP é completo. Se declarar
+   "ferramentas", a tela só as LISTA. Só declare "lista_de_ligadas" (o
+   --enabled) se o SEU servidor souber ler esse argumento: ele é invenção deste
+   programa, não do protocolo, e um servidor que não o entende morre ao
+   recebê-lo.
+
+6. O servidor é MCP stdio: lê JSON-RPC de stdin, uma mensagem por linha, e
+   responde por stdout. Trata initialize (com "protocolVersion": "2024-11-05"),
+   notifications/initialized, ping, tools/list e tools/call.
+
+7. O servidor reconfigura stdout e stdin para utf-8 logo no início
+   (fluxo.reconfigure(encoding='utf-8', errors='replace')). Sem isso, no
+   Windows, o tools/list mata o processo sem mensagem nenhuma.
+
+8. Erro de ferramenta volta como TEXTO na resposta; nenhuma exceção escapa do
+   laço principal.
+
+9. A descrição de cada ferramenta começa dizendo SOBRE O QUÊ ela responde — é
+   o que o modelo lê para decidir se chama.
+
+10. A chave do registro é o nome da pasta em minúsculas, com hífen e sem acento,
+    e ela entra no endereço de cada ferramenta (mcp__<chave>__<ferramenta>).
+    Escolha o nome antes: renomear a pasta depois muda todos os endereços.
+
+11. __pycache__, .git, node_modules e .venv não vão junto na cópia — não conte
+    com eles do outro lado.
+
+ONDE VOU SALVAR
+  Arquivos/MCPs/<Nome do MCP>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════ AGENTES — EXECUÇÃO (Fila / Rotinas) ══ */
+/* O bloco `.vp-*` da sub-aba Visualizar pipeline saiu daqui para
+   `mapas-pipeline.css`: este arquivo estava em 410 linhas — a
+   faixa em que a AMF manda dividir — e metade era uma tela que não tem nada a
+   ver com Fila nem com Rotinas. */
+
+/* ── Sub-aba: Fila ──
+   A tela é a do Chat. Não "parecida com": ela usa as MESMAS classes —
+   .chat-layout, .chat-sidebar, .chat-main, .chat-list, .chat-list-item,
+   .chat-log-content, .chat-input-area — porque são a mesma coisa com
+   horizontes de tempo diferentes.
+
+   As três exceções são .fila-tabs-bar / .fila-tab-btn / .fila-tab-content, e
+   elas NÃO estão aqui: entram como seletor adicional nas próprias regras do
+   Chat, em chat.css. O motivo é `navegacao.js`, que fia as sub-abas do Chat
+   com um querySelectorAll GLOBAL — se a Fila usasse a classe do Chat, clicar
+   numa sub-aba de lá apagaria os painéis daqui.
+
+   Só sobra neste arquivo o que a Fila tem e o Chat não: estado da tarefa,
+   sub-tags e o relatório. */
+
+.fila-status-badge {
+  font-size: 11.5px; font-weight: 700; padding: 3px 11px; border-radius: 99px;
+  white-space: nowrap; align-self: flex-start;
+}
+.fila-status-badge.st-azul     { background: rgba(var(--blue-rgb),0.2);  color: var(--blue); }
+.fila-status-badge.st-neutro   { background: rgba(var(--white-rgb),0.1); color: var(--text-muted); }
+
+.fila-frescor-aviso {
+  background: rgba(var(--amber-rgb),0.1); border: 1px solid rgba(var(--amber-rgb),0.3);
+  border-radius: 6px; padding: 9px 13px; font-size: 12.5px; color: var(--amber);
+  margin: 10px 16px 0; flex-shrink: 0;
+}
+
+/* ── O item da lista ──
+   É o .chat-list-item do Chat, com UMA linha a mais. O .chat-item-info já
+   empilha (column, gap 3px), então o estado entra embaixo do título sem
+   mudar nada do que veio do Chat. */
+.fila-item-estado { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.fila-item-subtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.fila-subtag {
+  font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 99px;
+  background: rgba(var(--amber-rgb),0.12); color: var(--amber);
+  border: 1px solid rgba(var(--amber-rgb),0.3);
+}
+
+.fila-card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.fila-card-status-label { font-size: 11px; font-weight: 700; white-space: nowrap; }
+
+.st-neutro    { color: var(--text-muted); } .fila-card-dot.st-neutro    { background: var(--text-muted); }
+.st-azul      { color: var(--blue); }       .fila-card-dot.st-azul      { background: var(--blue); }
+.st-verde     { color: var(--green); }      .fila-card-dot.st-verde     { background: var(--green); }
+.st-vermelho  { color: var(--red); }        .fila-card-dot.st-vermelho  { background: var(--red); }
+.st-alerta    { color: var(--amber); }      .fila-card-dot.st-alerta    { background: var(--amber); }
+
+/* A variante VAZADA. "Na fila" e "Aguardando a vez" são o mesmo tipo de
+   espera e por isso dividem a mesma cor; o que muda é a forma — vazado para
+   quem ainda não entrou em jogo, cheio para quem já está esperando a vez.
+   Uma sexta cor faria parecerem coisas de naturezas diferentes, que não são. */
+.fila-card-dot.st-vazado { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
+.fila-card-dot.st-neutro.st-vazado { background: transparent; color: var(--text-muted); }
+
+.btn-fila-mini {
+  background: rgba(var(--white-rgb),0.08); border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 5px; color: var(--text-muted); font-size: 11.5px; padding: 4px 10px;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-fila-mini:hover { color: var(--text); background: rgba(var(--white-rgb),0.14); }
+
+/* ── A marca "vai continuar" ───────────────────────────────────────────────
+   É um SELO (ver `Padrões de interface/Componentes/Selo.md`): pílula pequena
+   ao lado do nome, que classifica sem competir. Reusa `.selo-tipo` de
+   `utils.css` para a forma, e só escolhe a cor aqui.
+
+   ⚠️ Roxo de propósito: as cinco cores de status (neutro, azul, alerta, verde,
+   vermelho) e o âmbar das sub-tags já estão ocupados. A marca não é nem estado
+   nem defeito — é uma intenção sua sobre a tarefa —, e uma cor emprestada de
+   qualquer um dos dois a faria ser lida como o que ela não é. */
+.fila-selo-continuar {
+  color: var(--purple); border-color: var(--purple);
+  background: rgba(var(--purple-rgb),0.12);
+  /* `.selo-tipo` traz `margin-left: 6px`, mas aqui o pai é flex com `gap: 6px`
+     e os dois se somariam. A borda continua roxa mesmo com o `border` de
+     `.selo-tipo` vindo depois no CSS: ele omite a cor, que cai em
+     `currentColor` — e `currentColor` é o roxo declarado acima. */
+  margin-left: 0;
+}
+
+.fila-continuar-wrap { display: flex; flex-direction: column; gap: 6px; }
+.fila-continuar-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+.fila-continuar-nota { font-size: 11.5px; color: var(--text-muted); opacity: 0.85; }
+/* O botão da opção escolhida. Mesma cor do selo — é a mesma informação, vista
+   do outro lado da tela. */
+.btn-fila-mini-marcado {
+  color: var(--purple); border-color: var(--purple);
+  background: rgba(var(--purple-rgb),0.14);
+}
+.btn-fila-mini-marcado:hover {
+  color: var(--purple); background: rgba(var(--purple-rgb),0.22);
+}
+
+.fila-card-aviso {
+  padding: 8px 11px; font-size: 12.5px; border-radius: 6px;
+  background: rgba(var(--white-rgb),0.05); color: var(--text-muted);
+}
+.fila-card-aviso.st-vermelho { background: rgba(var(--red-rgb),0.1); color: var(--red); }
+
+.fila-card-relatorio { margin-top: 8px; padding: 12px 14px; background: rgba(var(--black-rgb),0.18); border-radius: 6px; }
+/* ⚠️ SEM margem. Era `margin: 10px 24px`, e os dois valores estavam errados
+   pelo mesmo motivo: o pai (`.chat-messages`) já é um flex column com
+   `padding: 20px 24px` e `gap: 16px`. Os 24px horizontais se SOMAVAM ao padding
+   do pai, e o bloco ficava 24px mais para dentro que as bolhas ao lado; os 10px
+   verticais brigavam com o `gap`, que já cuida do espaçamento entre irmãos.
+   Zerar alinha com as bolhas sem inventar valor nenhum — que é o que a
+   convenção pede quando não existe token para o caso.
+   `align-self` põe o bloco do lado do assistente, que é de quem o relatório é. */
+.fila-relatorio-wrap { margin: 0; align-self: flex-start; max-width: 82%; }
+/* "Ver relatório" e "⎘ Copiar" ficam lado a lado; sem isto eles se encostam,
+   porque <button> é inline-block e não tem margem própria. O painel do
+   relatório é um <div> e continua caindo para a linha de baixo. */
+.fila-relatorio-wrap > .btn-fila-mini + .btn-fila-mini { margin-left: 6px; }
+.fila-relatorio-md { font-size: 13px; line-height: 1.65; }
+.fila-relatorio-md table { border-collapse: collapse; margin: 8px 0; width: 100%; }
+.fila-relatorio-md th, .fila-relatorio-md td {
+  border: 1px solid rgba(var(--white-rgb),0.1); padding: 5px 9px; font-size: 12.5px; text-align: left;
+}
+
+.fila-bolha-erro .chat-message-header { color: var(--red); }
+.fila-bolha-alerta .chat-message-header { color: var(--amber); }
+
+/* Aba Contexto — coluna única de rolar. A fileira de botões por turno saiu:
+   ela obrigava a escolher um turno antes de ver qualquer coisa, e numa
+   pesquisa de trinta rodadas virava uma fileira ilegível. O turno agora é um
+   cabeçalho no meio do fluxo. */
+.fila-contexto-envio {
+  font-size: 11.5px; font-weight: 700; color: var(--blue); margin: 16px 0 6px;
+  padding-top: 12px; border-top: 1px solid rgba(var(--blue-rgb),0.25);
+}
+.fila-contexto-envio:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+
+/* Aba Subagentes — reaproveita .subagentes-config-row e .chat-agentes-list
+   direto do Chat; só a rolagem é daqui. */
+#fila-agentes-list { flex: 1; overflow-y: auto; padding: 0 16px 16px; }
+
+/* Dropdown "Chamadas" da area de envio. Reaproveita .ctx-inicial-wrap,
+   .btn-ctx-inicial, .ctx-inicial-panel e .ctx-inicial-table de chat.css — e o
+   mesmo padrao do "Contexto inicial" do Chat, inclusive abrindo para cima. So
+   a largura e o cabecalho de rodada sao daqui. */
+.fila-chamadas-panel { min-width: 260px; }
+.fila-chamadas-rodada {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 2px 8px 8px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  margin-bottom: 6px;
+}
+/* Tres metricas na mesma linha, no formato "quanto de quanto". O numero atual
+   e o que se le de relance, entao so ele fica claro e em negrito. */
+.fila-chamadas-metrica { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fila-chamadas-metrica b { color: var(--text); font-weight: 700; }
+.fila-chamadas-metrica.correndo b { color: var(--green); }
+.fila-chamadas-vazio {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 6px 8px;
+}
+
+/* Aba Log — reaproveita .chat-log-group direto de chat.css, inclusive o verde
+   da faixa de titulo. Havia aqui um override que a pintava de cinza: com
+   `#id + .classe` ele vencia a regra de chat.css sempre, e as duas telas
+   ficavam com cores diferentes para o mesmo card. */
+
+/* ══════════════════════════════ Selos, filtros e separadores (Rotinas) ══ */
+/* Selos — duas dimensões, mesmo vocabulário dos chips de filtro:
+     COMO é produzido: ⚡ determinístico · 🧠 LLM
+     QUEM consome:     👤 humano · 🖥️ LM Studio · 🤖 assistente externo
+                       ⚙️ o próprio programa
+   A primeira dimensão deixa visível, sem abrir o card, se o resultado é
+   confiável por construção ou se passou por um modelo e pode errar. A segunda
+   já foi só "🤖 para a máquina" — dividiu-se porque "máquina" juntava
+   consumidores com necessidades opostas: o que não cabe na janela do LM Studio
+   é trivial para um assistente externo, e o inverso vale para custo por token.
+   Um agente pode ter mais de um selo em cada dimensão; os `data-tipo` e
+   `data-destino` do card são listas separadas por espaço (ver rotinas.js). */
+.agente-selos { display: inline-flex; gap: 3px; margin-left: 2px; }
+.agente-selo {
+  font-size: 12px; background: rgba(var(--black-rgb),0.3); border-radius: 4px;
+  padding: 1px 5px; cursor: help; line-height: 1.5;
+}
+.ac-selo { font-size: 11.5px; opacity: 0.8; cursor: help; margin-left: 2px; }
+
+.agente-filtros {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 11px 14px; margin-bottom: 16px;
+  background: rgba(var(--black-rgb),0.2); border-radius: 6px;
+}
+.agente-filtros-lbl {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px;
+  color: var(--text-muted); text-transform: uppercase;
+}
+.agente-filtros-sep { width: 1px; height: 18px; background: rgba(var(--white-rgb),0.15); margin: 0 3px; }
+.agente-chip {
+  background: rgba(var(--white-rgb),0.08); border: 1px solid rgba(var(--white-rgb),0.13);
+  border-radius: 14px; color: var(--text-muted); font-size: 12px;
+  padding: 4px 12px; cursor: pointer; font-family: inherit; transition: all var(--t);
+}
+.agente-chip:hover { background: rgba(var(--white-rgb),0.15); color: var(--text); }
+.agente-chip.on { background: rgba(var(--blue-rgb),0.2); border-color: var(--blue); color: var(--text); }
+
+/* Legenda dos selos, logo abaixo dos filtros. Mesma construção da
+   `.vis-legenda-bar` de Visualizar e da `.ac-legenda` de Acionamentos: rótulo
+   em caixa alta à esquerda, pares amostra+explicação em linha, quebrando
+   quando não couber. Os selos são os componentes de verdade (`.agente-badge`),
+   não cópias pintadas à mão — mudar a cor de um estado muda a legenda junto. */
+.agente-legenda-bar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin: -6px 0 18px 2px;
+  font-size: 11.5px; color: var(--text-muted);
+}
+.agente-legenda-lbl {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(var(--white-rgb),0.32);
+}
+.agente-legenda { display: inline-flex; align-items: center; gap: 6px; }
+.agente-legenda-nota { color: rgba(var(--white-rgb),0.38); }
+
+.agente-sec-title {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase;
+  color: var(--text-muted); margin: 22px 0 11px; padding-bottom: 7px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.09);
+}
+.agente-oculto { display: none !important; }
+

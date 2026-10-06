@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "description": "De que parte do programa o grupo cuida, de duas a cinco palavras. Vazio quando o Pedido diz que o nome e o resumo já existem."
+    },
+    "resumo": {
+      "type": "string",
+      "description": "O que o grupo faz, em duas ou três frases, sem nomes de arquivo. Vazio quando o Pedido diz que o nome e o resumo já existem."
+    },
+    "ligacoes": {
+      "type": "array",
+      "description": "Uma entrada para CADA ligação numerada, sem pular nenhuma e sem inventar número.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "description": "O número da ligação, exatamente como veio na lista."
+          },
+          "frase": {
+            "type": "string",
+            "description": "Para que este grupo usa o outro, no máximo 20 palavras."
+          }
+        },
+        "required": ["numero", "frase"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["nome", "resumo", "ligacoes"],
+  "additionalProperties": false
+}

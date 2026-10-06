@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- Animação: Abrir painel ou modal · Crescer do centro -->
+<!-- A demonstração roda em laço; a regra escrita abaixo dela é o que vai ao modelo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Abrir painel ou modal — Crescer do centro</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;padding:12px;
+     display:flex;flex-direction:column;gap:10px;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+h1{font-size:13.5px;font-weight:700;flex-shrink:0}
+h1 small{display:block;font-weight:400;font-size:11px;color:var(--texto-secundario);margin-top:2px}
+.palco{flex:1;min-height:0;background:var(--superficie-escura);border:1px solid var(--superficie-hover);
+       border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.regra{flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:4px}
+.regra .tt{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-secundario);font-weight:700}
+.regra dl{display:grid;grid-template-columns:104px 1fr;gap:3px 10px;font-size:11px}
+.regra dt{color:var(--texto-secundario)}
+.regra dd.nunca{color:var(--negativa)}
+/* Acessibilidade: quem pediu menos movimento vê o estado final, sem transição. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+.veu{position:absolute;inset:0;background:rgba(0,0,0,.55);animation:vc 3s ease-out infinite}
+.mod{position:absolute;left:50%;top:50%;width:230px;background:var(--superficie);
+  border:1px solid var(--superficie-hover);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:7px;
+  animation:mc 3s cubic-bezier(.2,.8,.3,1) infinite}
+.mod .t{font-weight:700;font-size:12.5px}
+.mod .l{color:var(--texto-secundario);font-size:11px}
+.fundo{position:absolute;inset:0;padding:12px;color:var(--texto-secundario);font-size:11px}
+@keyframes vc{0%{opacity:0}12%,88%{opacity:1}100%{opacity:0}}
+@keyframes mc{0%{opacity:0;transform:translate(-50%,-50%) scale(.96)}
+  12%,88%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.96)}}</style></head><body>
+<h1>Crescer do centro<small>O painel cresce de 96% para 100% a partir do próprio centro, ganhando opacidade.</small></h1>
+<div class="palco">
+<div class="fundo">Conteúdo da página, parado.</div>
+<div class="veu"></div>
+<div class="mod"><span class="t">Confirmar exclusão</span><span class="l">Cresce de 96% a 100%, a partir do centro.</span></div>
+</div>
+<div class="regra"><span class="tt">Regra</span><dl><dt>Duração</dt><dd>260 ms</dd><dt>Curva</dt><dd>cubic-bezier(.2,.8,.3,1)</dd><dt>O que anima</dt><dd>scale (0.96 → 1) e opacidade do painel; opacidade do véu</dd><dt>O que nunca anima</dt><dd class="nunca">não parta de escala menor que 0.92 — abaixo disso o painel parece pular na cara do usuário</dd></dl></div>
+</body></html>

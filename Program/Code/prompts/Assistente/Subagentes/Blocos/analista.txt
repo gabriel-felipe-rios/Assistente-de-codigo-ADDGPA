@@ -1,0 +1,4 @@
+• analista — Avalia o impacto de uma mudança planejada: quais arquivos e funções serão afetados e por quê.
+  Use para: "Se eu mudar a assinatura de send_message, o que quebra?", "Quero mover esse módulo — o que vai precisar mudar?"
+  Exemplo:
+  {"chamadas": [{"subagente": "analista", "pergunta": "Se eu mudar a assinatura de send_message para receber um dict, o que quebra?"}]}

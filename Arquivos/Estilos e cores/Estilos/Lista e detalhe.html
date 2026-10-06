@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Lista e detalhe -->
+<!-- Topbar com busca -> lista de itens à esquerda -> detalhe do item selecionado à direita -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Lista e detalhe</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:40px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;gap:10px;padding:0 12px;flex-shrink:0}
+.busca{flex:1;max-width:320px;height:26px;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:13px;display:flex;align-items:center;padding:0 11px;color:var(--texto-secundario);font-size:11.5px}
+.main{display:flex;flex:1;min-height:0}
+.lista{width:250px;background:var(--superficie);border-right:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;overflow:auto}
+.li{padding:9px 11px;border-bottom:1px solid var(--superficie-hover);display:flex;flex-direction:column;gap:2px}
+.li.on{background:var(--superficie-hover);border-left:2px solid var(--primaria)}
+.li .n{font-weight:600;font-size:11.5px}
+.li .p{color:var(--texto-secundario);font-size:11px}
+.det{flex:1;min-width:0;display:flex;flex-direction:column;padding:16px 18px;gap:10px;overflow:auto}
+.h1{font-size:17px;font-weight:700}
+.meta{display:flex;gap:14px;color:var(--texto-secundario);font-size:11px}
+.par{color:var(--texto-secundario);max-width:620px}
+.acoes{display:flex;gap:8px;margin-top:6px}
+</style></head><body>
+<div class="topbar"><span style="font-weight:700">Chamados</span><div class="busca">Buscar por título ou autor…</div></div>
+<div class="main">
+  <div class="lista">
+    <div class="rot" style="padding:8px 11px">Abertos · 4</div>
+    <div class="li on"><span class="n">Erro ao salvar pedido</span><span class="p">Marina · há 12 min</span></div>
+    <div class="li"><span class="n">Boleto não gerado</span><span class="p">Rafael · há 1 h</span></div>
+    <div class="li"><span class="n">Endereço duplicado</span><span class="p">Suporte · ontem</span></div>
+    <div class="li"><span class="n">Relatório vazio</span><span class="p">Ana · ontem</span></div>
+  </div>
+  <div class="det">
+    <div class="rot">Detalhe</div>
+    <div class="h1">Erro ao salvar pedido</div>
+    <div class="meta"><span>Aberto por Marina</span><span>Prioridade alta</span><span>#4821</span></div>
+    <div class="par">A lista à esquerda continua visível o tempo todo; só o painel da direita troca quando outro item é escolhido.</div>
+    <div class="par">O item selecionado fica marcado na lista, para não se perder de onde veio.</div>
+    <div class="acoes"><button class="bt">Responder</button><button class="bt pos">Resolver</button><button class="bt sec">Encaminhar</button></div>
+  </div>
+</div>
+</body></html>

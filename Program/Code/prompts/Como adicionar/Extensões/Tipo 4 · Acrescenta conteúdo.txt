@@ -1,0 +1,45 @@
+TIPO 4 · ACRESCENTA CONTEÚDO — entrega um conteúdo que o programa usa mas não
+tem: ícones, suporte a uma linguagem no Editor, um agente.
+Recursos deste tipo: Visual · Recursos do Editor · Agente · Ferramenta ·
+Trecho de prompt · Opções.
+
+- Pode não ter código nenhum — sem frontend/, sem backend/: só o manifesto e o
+  arquivo do conteúdo, apontado no item de "acrescenta".
+- A extensão nunca substitui o que o programa já tem: ela acrescenta uma opção
+  ao lado, e quem escolhe é o usuário. Desligar devolve o de antes na hora.
+- Visual › ícones: "recurso": "visual", "parte": "icones", "arquivo":
+  "mapa.json" — com "padrao", "extensoes" e "pastas" — e, ao lado dele, as
+  pastas arquivos/ e pastas/ com os SVGs.
+- Recursos do Editor: "recurso": "editor", com a "parte" e as "linguagens"
+  (["*"] = todas; os nomes do Editor: python, javascript, markup para HTML…).
+    cor         "pasta" com um prism-{linguagem}.js por linguagem, no formato
+                de components/ do Prism — nunca o prism-core.js
+    sugestoes   "arquivo" .js; roda enquanto a pessoa digita: 150 ms de teto,
+                nunca chame a ponte ali, e devolva poucas sugestões
+    dica        "arquivo" .js — o balão quando o mouse para sobre uma palavra
+    formatacao  "arquivo" .js — formata quando o usuário pede
+    trechos     "arquivo" .json — os trechos prontos do popup de sugestões
+- Agente: "recurso": "agente", "forma": "oficina", "arquivo" apontando um .md
+  com cabeçalho (name, description, tools, model) — o mesmo formato dos agentes
+  de Arquivos › Agentes. Ele aparece no "＋ Terminal" da Oficina, ao lado dos
+  da biblioteca.
+- Subagente: "forma": "subagente", com "nome", "descricao" e "pasta" — a pasta
+  com system-prompt.txt, prompt-correcao.txt e bloco.txt (o bloco cita o id).
+  O Chat e a Fila o chamam pelo id, no mesmo LM Studio e com os mesmos
+  limites dos outros subagentes; ele aparece no grupo "De extensões" das
+  sub-abas Subagentes. Opcionais: "ferramentas" (sem ela, as de leitura do
+  Analista), "envelope": true (o backend manda, junto da pergunta, o que ele
+  pode ler — ação "xt.envelope"), "le" (o que ele lê, para a página),
+  "selo_fonte", "cor" (violeta, indigo, rosa ou turquesa) e "antes" (ids
+  antigos que ele substitui).
+- Ferramenta: "recurso": "ferramenta", com "nome" (ex.: ler_notas),
+  "devolve" e "se_errar"; quem responde é o backend, na ação
+  "xt.ferramenta", e o programa corta a resposta no teto de leitura geral.
+  "subagentes_do_programa" empresta a ferramenta a um subagente do programa
+  (ex.: "fila-verificador") enquanto a extensão está ligada.
+- Trecho de prompt: "recurso": "prompt", com "alvo" (chat, fila,
+  chat.revisar, fila.seguranca, subagente.fila-verificador…) e "arquivo"
+  (.txt); sem "arquivo", o backend devolve o texto na ação "xt.prompt", com
+  a lista dos subagentes ligados.
+- Se ela lê uma pasta da raiz do projeto, fora da pasta de trabalho,
+  declare em "le_fora".

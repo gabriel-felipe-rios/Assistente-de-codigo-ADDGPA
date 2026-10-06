@@ -1,0 +1,156 @@
+/* ═══════════════════════════════ COMPONENTE: ÁRVORE DE PASTAS (arvore-pastas.js) ══
+   Estilo único das cinco árvores: Documentação, Mapa de I/O, Tree-sitter,
+   Relações e Decisões.
+
+   Três defeitos que as árvores antigas tinham e que este arquivo corrige:
+
+   1. `line-height` NÃO era declarado em lugar nenhum — nem nas linhas, nem no
+      base.css. A altura efetiva herdava o `normal` do navegador sobre 12px e
+      ficava dependendo da fonte do sistema e do emoji do ícone. Era a fonte do
+      "aperto" relatado.
+   2. O nome do arquivo tinha `text-overflow: ellipsis` mas não `min-width: 0`
+      nem `flex: 1` — num item flex isso deixa o ellipsis INERTE. Quem cortava
+      era o `overflow: hidden` do pai, seco, sem reticências, e ainda empurrava
+      o contador para fora da vista.
+   3. A indentação era feita de três jeitos incompatíveis (padding no
+      container, padding fixo na linha, padding acumulado por nível). Aqui é
+      uma regra só, aplicada na linha pelo JS. */
+
+.arvore-pastas {
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.arvp-linha {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 6px 3px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 12px;
+  /* Declarado de propósito: sem isto a altura da linha muda com a fonte do
+     sistema e com o emoji, e as linhas ficam apertadas de forma imprevisível. */
+  line-height: 1.5;
+}
+.arvp-linha:hover { background: rgba(var(--white-rgb),0.05); color: var(--text); }
+.arvp-ativo       { background: rgba(var(--blue-rgb),0.15); color: var(--text); }
+/* Linha que se arrasta para fora (opção `arrastavel`, a Estrutura de Projeto). */
+.arvp-linha[draggable="true"] { cursor: grab; }
+
+/* Pasta sob o ponteiro durante um arraste (Editor, Obra 7.1) — mover dentro
+   da árvore, não confundir com `.arvp-ativo` (seleção). */
+.arvp-linha--alvo-solto {
+  background: rgba(var(--blue-rgb),0.22);
+  outline: 1px dashed var(--blue);
+  outline-offset: -1px;
+}
+
+.arvp-seta  { flex-shrink: 0; width: 10px; font-size: 10px; opacity: 0.7; }
+.arvp-icone { flex-shrink: 0; font-size: 13px; }
+
+/* `flex: 1` + `min-width: 0` é o que faz o ellipsis funcionar de verdade. */
+.arvp-nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Renomear inline (Editor): substitui `.arvp-nome` no lugar, mesma linha. */
+.arvp-rename-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-dark);
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  padding: 1px 5px;
+  outline: none;
+}
+
+/* Pasta com arquivo aberto não salvo ali dentro (Editor, Obra 8) — mesmo
+   selo de contagem, cor âmbar em vez de cinza. */
+.arvp-contagem.arvp-contagem--suja {
+  background: rgba(var(--amber-rgb),0.18);
+  color: var(--amber);
+}
+
+.arvp-contagem, .arvp-selo {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: rgba(var(--white-rgb),0.07);
+  border-radius: 8px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.arvp-vazio {
+  padding: 12px 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Os três botões (⊞ expandir tudo, ⊟ retrair tudo, ↻ atualizar) — as cinco
+   telas passam a ter os três, não só a Documentação. */
+.arvp-barra {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+.arvp-barra-titulo {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Modificador: árvore em colunas ────────────────────────────────────────
+   Usado pelas duas telas de Resumo (aba Projeto), que mostram o projeto inteiro
+   de uma vez e ficavam absurdamente verticalizadas numa coluna só.
+
+   O conteúdo é repartido **igualmente entre 5 colunas** e a rolagem continua
+   sendo vertical, como em qualquer lista. Cabe cinco vezes mais na tela sem
+   mudar o gesto de navegar.
+
+   ⚠️ Rolagem VERTICAL, não horizontal. A versão anterior usava
+   `column-fill: auto` com altura fixa: cada coluna enchia até em baixo e a
+   seguinte nascia à direita, indefinidamente — dava quinze colunas e obrigava a
+   rolar para o lado para ver o resto. Para o conteúdo crescer para baixo, o
+   elemento das colunas precisa ter **altura automática**, e quem rola tem que
+   ser o pai (`.resumo-arvore-scroll`). É por isso que são dois elementos.
+
+   `column-count: 5` com `column-width: 200px` significa "cinco colunas, mas
+   nunca mais estreitas que 200px": numa janela pequena o navegador usa menos
+   colunas sozinho, em vez de espremer as cinco. E `column-fill` fica no padrão
+   (`balance`), que é justamente o que reparte o conteúdo em fatias iguais.
+
+   ⚠️ Nada de `break-inside: avoid`. A primeira tentativa travava a quebra nas
+   pastas para nenhuma aparecer partida entre colunas, e o efeito foi o oposto do
+   pretendido: como o projeto costuma ter UMA pasta de trabalho, com uma única
+   pasta dentro, a árvore inteira virava um bloco indivisível — ficava tudo na
+   primeira coluna e as outras apareciam vazias na tela. A quebra aqui é por
+   espaço, não por estrutura: uma pasta pode terminar numa coluna e seguir na
+   seguinte. */
+.arvore-pastas--colunas {
+  column-count: 5;
+  column-width: 200px;
+  column-gap: 28px;
+  column-rule: 1px solid rgba(var(--white-rgb),0.07);
+  /* `.arvore-pastas` declara `overflow-y: auto`, que aqui criaria um segundo
+     scroller dentro do que já existe. Quem rola é o pai. */
+  overflow: visible;
+}

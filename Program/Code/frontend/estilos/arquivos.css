@@ -1,0 +1,469 @@
+/* ══════════════════════════════════════════════════════ Aba Arquivos */
+.arq-subtabs-bar {
+  display: flex; gap: 2px; padding: 10px 20px 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06); flex-shrink: 0;
+}
+.arq-subtab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; padding: 6px 16px; cursor: pointer;
+  border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.arq-subtab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.arq-subtab-btn.active {
+  color: var(--purple); border-bottom: 2px solid var(--purple);
+  background: rgba(var(--purple-rgb),0.08);
+}
+.arq-subtab-content { display: none; flex: 1; overflow-y: auto; padding: 20px; }
+.arq-subtab-content.active { display: flex; flex-direction: column; gap: 10px; }
+
+.arq-item-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* Sub-abas internas: Do programa / Gerais */
+.arq-inner-tabs {
+  display: flex; gap: 4px; margin-bottom: 12px; width: fit-content;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 9px; padding: 4px;
+}
+.arq-inner-tab {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 12.5px; padding: 6px 14px; cursor: pointer; border-radius: 6px;
+  transition: color var(--t), background var(--t);
+}
+.arq-inner-tab:hover { color: var(--text); }
+.arq-inner-tab.active { background: var(--purple); color: #fff; font-weight: 600; }
+.arq-inner-cnt { font-size: 11px; opacity: 0.75; margin-left: 4px; }
+.arq-inner-seg { display: flex; flex-direction: column; gap: 10px; }
+.arq-inner-seg.hidden { display: none; }
+.arq-inner-empty {
+  color: var(--text-muted); font-size: 13px; padding: 20px; text-align: center;
+  background: var(--surface-dark); border: 1px dashed rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius);
+}
+
+.import-card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 12px 16px; display: flex; flex-direction: column;
+  border: 1px solid transparent; transition: border-color var(--t);
+}
+.import-card:hover { border-color: rgba(var(--white-rgb),0.1); }
+.import-row { display: flex; align-items: center; gap: 14px; }
+.import-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
+.import-caret { color: var(--text-muted); font-size: 11px; transition: transform var(--t); flex-shrink: 0; }
+.import-caret.open { transform: rotate(90deg); }
+
+/* Painel expandido do item */
+.import-expand { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(var(--white-rgb),0.08); }
+.import-expand.hidden { display: none; }
+.arq-expand-loading, .arq-expand-empty { font-size: 13px; color: var(--text-muted); padding: 4px 2px; }
+.arq-file-list { display: flex; flex-direction: column; gap: 4px; }
+.arq-file {
+  display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+  border-radius: 6px; cursor: pointer; font-size: 13px;
+  background: var(--surface-dark); border: 1px solid transparent; transition: border-color var(--t);
+}
+.arq-file:hover { border-color: rgba(var(--white-rgb),0.15); }
+.arq-file-name { color: var(--text); font-family: 'Consolas', monospace; font-size: 12.5px; }
+.arq-file-ic { flex-shrink: 0; }
+
+/* MCP: lista de ferramentas */
+.arq-mcp-fns-title { font-size: 12.5px; color: var(--text-muted); margin-bottom: 8px; }
+.arq-mcp-fns { display: flex; flex-direction: column; gap: 6px; }
+.arq-mcp-fn {
+  display: flex; align-items: center; gap: 10px; padding: 7px 11px;
+  border-radius: 6px; background: var(--surface-dark); border: 1px solid transparent;
+}
+.arq-fn-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.arq-fn-dot.det { background: var(--green); }
+.arq-fn-dot.hib { background: var(--amber); }
+.arq-fn-dot.ctx { background: var(--purple); }
+/* As duas famílias que entraram com as 10 ferramentas novas: Análise (o que
+   está torto no código) e Nativa com escopo (o Read/Grep/Glob do assistente,
+   mas filtrado pelo recorte do projeto). */
+.arq-fn-dot.ana { background: var(--teal); }
+.arq-fn-dot.nat { background: var(--blue); }
+.arq-fn-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.arq-fn-name { font-family: 'Consolas', monospace; font-size: 12.5px; font-weight: 600; color: var(--text); }
+.arq-fn-desc { font-size: 11.5px; color: var(--text-muted); }
+
+/* MCP de terceiro: os campos que o `mcp.json` dele declara.
+   ⚠️ Prefixo `arq-mcp-`, e não um `.check-linha` global: a marcação de caixinha
+   deste projeto nunca teve componente único (o `.limpar-item` dos modais e o
+   `.chat-context-checkbox` têm cada um o seu), e inventar um nome global aqui
+   criaria um componente que só uma tela usa e que a próxima teria de descobrir
+   sozinha. Quando existir um de verdade, estas duas regras somem. */
+.arq-mcp-varios { display: flex; flex-direction: column; gap: 2px; }
+.arq-mcp-check {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 13px; color: var(--text); cursor: pointer;
+  padding: 4px 6px; border-radius: 5px; transition: background var(--t);
+}
+.arq-mcp-check:hover { background: rgba(var(--white-rgb),0.05); }
+.arq-mcp-check input[type="checkbox"] {
+  accent-color: var(--purple); width: 15px; height: 15px; cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Viewer de arquivo inline (acordeão) */
+.arq-file-item { display: flex; flex-direction: column; }
+.arq-file-caret { color: var(--text-muted); font-size: 10px; transition: transform var(--t); flex-shrink: 0; }
+.arq-file-caret.open { transform: rotate(90deg); }
+.arq-file-content { margin: 4px 0 6px 22px; }
+.arq-file-content.hidden { display: none; }
+.arq-file-body {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 6px; padding: 12px 14px; max-height: 380px; overflow: auto;
+  font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.55;
+  color: var(--text); white-space: pre-wrap; word-break: break-word; margin: 0;
+}
+.arq-file-body.md-body { white-space: normal; font-family: inherit; font-size: 13.5px; line-height: 1.7; }
+.arq-file-body.md-body pre { white-space: pre-wrap; background: var(--surface); padding: 8px; border-radius: 6px; }
+.arq-file-body.md-body code { font-family: 'Consolas', monospace; font-size: 12px; }
+
+/* MCP: abas internas + tabela de explicação */
+.arq-mcp-tabs { display: flex; gap: 4px; margin-bottom: 12px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 9px; padding: 4px; width: fit-content; }
+.arq-mcp-tab { background: transparent; border: none; color: var(--text-muted); font-size: 12.5px;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+.arq-mcp-tab.active { background: var(--purple); color: #fff; font-weight: 600; }
+.arq-mcp-pane.hidden { display: none; }
+.arq-mcp-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 10px;
+  font-size: 12px; color: var(--text-muted); }
+.arq-mcp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.arq-mcp-legend-note b { color: var(--text); }
+.arq-mcp-table-wrap { overflow-x: auto; border: 1px solid rgba(var(--white-rgb),0.08); border-radius: 8px; }
+.arq-mcp-table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 12px; }
+.arq-mcp-table th { background: var(--surface-dark); text-align: left; padding: 9px 11px;
+  font-weight: 700; border-bottom: 1px solid rgba(var(--white-rgb),0.1); white-space: nowrap; }
+.arq-mcp-table td { padding: 8px 11px; border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  vertical-align: top; color: var(--text-muted); }
+.arq-mcp-table tr:last-child td { border-bottom: none; }
+.mcp-td-cmd { font-family: 'Consolas', monospace; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+/* Viewer de arquivo (modal-prompt) — markdown renderizado */
+.modal-prompt-content.md-body {
+  white-space: normal; font-family: inherit; font-size: 14px; line-height: 1.7;
+}
+.modal-prompt-content.md-body pre { white-space: pre-wrap; background: var(--surface); padding: 10px; border-radius: 6px; }
+.modal-prompt-content.md-body code { font-family: 'Consolas', monospace; font-size: 12.5px; }
+.import-icon { font-size: 18px; flex-shrink: 0; }
+.import-body { flex: 1; min-width: 0; }
+.import-name { font-size: 14px; font-weight: 600; }
+.import-desc {
+  font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 440px;
+}
+.import-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* O interruptor `.toggle-*` morava aqui. Subiu para `utils.css` quando a
+   sub-aba Visualizar pipeline passou a usar o mesmo componente — mesmo
+   raciocínio dos selos globais: componente com dois consumidores vira
+   compartilhado, senão as duas cópias divergem. */
+
+/* Preparar projeto (quick start)
+   O painel mora em Projeto › Preparar projeto, e não mais na aba Arquivos; as
+   regras ficaram aqui porque o prefixo `.arq-preparar-` é o nome delas em todo
+   lugar, e renomeá-lo custaria mais do que resolve. */
+.arq-preparar { max-width: 640px; }
+
+/* A barra de ação do topo: preset, botão e destino no MESMO cartão. O botão fica
+   colado no seletor — os dois são a mesma decisão — e o destino cai na linha de
+   baixo, porque é caminho longo e não cabe ao lado sem espremer o resto. Tudo
+   abaixo da barra é só informação do que vai acontecer. */
+.arq-preparar-barra { display: flex; align-items: center; gap: 10px; background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.05); border-radius: var(--radius);
+  padding: 12px 15px; margin-bottom: 16px; flex-wrap: wrap; }
+.arq-preparar-barra label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+.arq-preparar-select { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: var(--radius); color: var(--text); padding: 8px 12px; font-size: 14px;
+  font-family: inherit; }
+.arq-preparar code { background: var(--surface-dark); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.arq-preparar-destino { flex-basis: 100%; font-size: 12px; color: var(--text-muted);
+  padding-top: 10px; border-top: 1px solid rgba(var(--white-rgb),0.05); word-break: break-all; }
+.arq-preparar-destino-erro { color: var(--amber); }
+
+.arq-preparar-grupos { display: flex; flex-direction: column; gap: 10px; }
+.arq-preparar-grupo { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: var(--radius); padding: 12px 15px; }
+.arq-preparar-grupo-head { display: flex; align-items: center; gap: 8px; }
+.arq-preparar-grupo-icon { font-size: 14px; }
+.arq-preparar-grupo-nome { font-size: 14px; font-weight: 600; flex: 1; }
+.arq-preparar-grupo-cnt { font-size: 11px; color: var(--text-muted); background: var(--surface);
+  border-radius: 10px; padding: 2px 9px; }
+.arq-preparar-grupo-dest { font-size: 12px; color: var(--text-muted); margin: 5px 0 8px; }
+.arq-preparar-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.arq-preparar-lista li { font-size: 13px; padding-left: 16px; position: relative; }
+.arq-preparar-lista li::before { content: '›'; position: absolute; left: 4px; color: var(--blue); }
+.arq-preparar-item-vazio, .arq-preparar-item-skip { color: var(--text-muted); font-style: italic; }
+.arq-preparar-item-vazio::before, .arq-preparar-item-skip::before { color: var(--text-muted); }
+/* O que o Preparar conferiu no disco: verde já está no projeto, vermelho falta.
+   A cor vai no marcador E no texto — só o marcador some numa lista longa. */
+.arq-preparar-item-tem, .arq-preparar-item-tem::before { color: var(--green); }
+.arq-preparar-item-falta, .arq-preparar-item-falta::before { color: var(--red); }
+.arq-preparar-legenda { display: flex; gap: 16px; font-size: 12px; }
+.arq-preparar-legenda span::before { content: '●'; margin-right: 5px; }
+
+/* As duas marcas do cartão "Pastas a criar". Cores iguais às das sub-abas a que
+   cada marca manda a pasta: vermelho é Remover, roxo é Contexto sem leitura. */
+.arq-preparar-marca-remover { color: var(--red); }
+.arq-preparar-marca-contexto { color: var(--purple); }
+.arq-preparar-nota-inline { color: var(--text-muted); }
+
+.arq-preparar-aviso { margin: 14px 0 16px; padding: 11px 14px; font-size: 12.5px; line-height: 1.7;
+  background: rgba(var(--amber-rgb),0.08); border: 1px solid rgba(var(--amber-rgb),0.3);
+  border-radius: var(--radius); color: var(--text-muted); }
+
+/* ⚠️ `.arq-mcp-nota` foi REMOVIDA (2026-08-28). Era uma tarja azul no topo da
+   sub-aba MCPs explicando que o servidor é processo externo e que fechar aba
+   não o desliga. Saiu por ser aviso permanente que nunca muda — o mesmo motivo
+   que já tinha derrubado a tarja amarela do Preparar, logo abaixo. Quem quiser
+   o conteúdo, ele está no espelho de `server/servidor.md`. */
+/* Uma linha só, no fim: o que o Preparar NÃO faz e o que fazer depois. Era uma
+   tarja amarela mais um parágrafo — aviso permanente que nunca muda vira ruído. */
+.arq-preparar-rodape { font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-top: 14px; }
+.arq-preparar-result { margin-top: 16px; }
+.arq-preparar-done { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: var(--radius); padding: 12px 15px; font-size: 13px; display: flex; flex-direction: column; gap: 5px; }
+
+/* Tela global (biblioteca): criar / origem / excluir */
+/* A linha de topo de uma categoria da biblioteca: pílulas à esquerda, ações à
+   direita. Antes as ações moravam numa linha própria e deixavam uma faixa
+   inteira vazia ao lado delas. */
+.arq-topo {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+/* Dentro da linha de topo quem dá o espaçamento é a própria linha. */
+.arq-topo > .arq-inner-tabs { margin-bottom: 0; }
+
+.garq-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.arq-mini-btn {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1);
+  color: var(--text-muted); font-size: 12px; padding: 4px 9px;
+  border-radius: 6px; cursor: pointer; transition: color var(--t), border-color var(--t);
+}
+.arq-mini-btn:hover { color: var(--text); border-color: rgba(var(--white-rgb),0.2); }
+.arq-origem-btn { color: var(--purple); }
+.arq-del-btn:hover { color: var(--red); border-color: rgba(var(--red-rgb),0.4); }
+/* Os dois MCPs do programa (Assistente/Trabalhos): não são favoritáveis,
+   deletáveis nem configuráveis pela estrela — é fato do item, não escolha do
+   usuário. O selo só informa; `disabled` é o que impede o clique. */
+.arq-fixo-btn {
+  color: var(--amber); border-color: rgba(var(--amber-rgb),0.35); cursor: not-allowed;
+}
+.arq-fixo-btn:hover { color: var(--amber); border-color: rgba(var(--amber-rgb),0.35); }
+.scope-hint { color: var(--text-muted); font-size: 12px; }
+.arq-pick-count { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+
+.arq-empty {
+  background: var(--surface-dark); border: 1px dashed rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); padding: 32px 20px; text-align: center;
+  color: var(--text-muted); font-size: 13px; line-height: 1.6;
+}
+.arq-empty code { color: var(--purple); font-size: 12px; }
+
+/* ── Grupos da biblioteca: trilho de pastas + a lista ao lado ─────────────────
+   Só aparece quando a categoria TEM grupo (arquivos.js decide): sem pasta
+   nenhuma, um trilho com "Todos" e mais nada seria ruído puro, e a tela fica
+   igual ao que era antes de a biblioteca poder ter pastas.
+
+   O trilho é o mesmo componente de Launchers e Plugins (`trilho-de-pastas.js` +
+   `.trilho-pastas` em configuracoes.css); aqui ele só ganha a moldura, porque
+   mora DENTRO de uma sub-aba e não é a casca da tela. */
+/* As duas medidas do trilho, num lugar só — a largura da coluna e o vão entre
+   ela e o painel. */
+.arq-subtab-content, .garq-subtab-content {
+  --arq-trilho-largura: 200px;
+  --arq-trilho-gap: 14px;
+}
+.arq-com-trilho {
+  display: flex; align-items: flex-start; min-height: 0;
+  gap: var(--arq-trilho-gap);
+}
+.arq-com-trilho > .trilho-pastas {
+  width: var(--arq-trilho-largura); padding: 10px 8px; border-right: none;
+  border: 1px solid rgba(var(--white-rgb),0.06); border-radius: 8px;
+  position: sticky; top: 0; max-height: 70vh;
+}
+.arq-trilho-painel { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+
+@media (max-width: 900px) {
+  .arq-com-trilho { flex-direction: column; }
+  .arq-com-trilho > .trilho-pastas {
+    width: 100%; max-height: none; position: static;
+    flex-direction: row; flex-wrap: wrap;
+  }
+}
+
+/* ── Qual preset copia, e para onde ───────────────────────────────────────────
+   A barra fica ACIMA das sub-abas de propósito: o preset vale para as sete
+   categorias, e uma linha dentro de uma sub-aba pareceria falar só dela.
+   A linha `.arq-destino`, essa sim, é por categoria — é o destino daquela. */
+.arq-preset-barra { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 12px; margin-bottom: 12px;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.06);
+  border-radius: 8px; }
+.arq-preset-rotulo { font-size: 12px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .4px; }
+.arq-preset-select { background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 5px; color: var(--text); font-family: inherit; font-size: 13px; padding: 5px 8px; }
+.arq-preset-select:focus { outline: none; border-color: rgba(var(--blue-rgb),0.55); }
+/* Ver o 🔴 de `.arq-ag-editor select option`. */
+.arq-preset-select option, .arq-preparar-select option {
+  background: var(--surface-dark); color: var(--text); }
+.arq-preset-dica { font-size: 12px; color: var(--text-muted); }
+
+.arq-destino { font-size: 12.5px; color: var(--text-muted); padding: 2px 2px 8px; }
+.arq-destino code { background: rgba(var(--white-rgb),0.06); border-radius: 4px; padding: 1px 5px; }
+.arq-destino b { color: var(--text); }
+
+/* Entradas "ligado" sem item na biblioteca — mesma forma da `.arq-destino`, com
+   o botão de limpar à direita. Só aparece quando há órfão (arquivos.js). */
+.arq-orfaos {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--text-muted); padding: 2px 2px 8px;
+}
+
+/* A linha de ferramentas do cartão de AGENTE. Monoespaçada porque o conteúdo é
+   uma lista de nomes de ferramenta — ler "Read, Grep, Glob" como prosa custa
+   mais que ler como código. O âmbar do "herda todas" é aviso, e não enfeite: um
+   agente sem `tools` tem acesso total, e essa é a informação que mais importa
+   nesta tela. */
+.arq-ferramentas {
+  font-family: 'Consolas', monospace; font-size: 10.5px;
+  opacity: .8; margin-top: 3px;
+}
+.arq-ferramentas-todas { color: var(--yellow-soft); opacity: 1; }
+
+/* ══ O editor de agente (biblioteca global) ═══════════════════════════════
+   Reaproveita `.ag-campo` de `trabalhos.css` para rótulo+campo: todo o CSS do
+   programa entra por `@import` num `style.css` só, então a classe existe aqui.
+   O que é próprio deste editor é a grade de caixas e o aviso de herdar. */
+/* As ações da barra de Agentes — hoje só o "＋ Novo agente".
+
+   ⚠️ A LINHA EM SI É `.arq-topo`, a mesma de Estilos e cores. Chegou a existir
+   uma `.arq-ag-topo` idêntica, só para esta sub-aba: duas regras iguais com
+   nomes diferentes é como elas divergem na primeira vez que alguém mexe numa. */
+.arq-ag-acoes-topo { display: flex; align-items: center; gap: 8px; }
+.arq-ag-editor { padding: 4px 2px 2px; }
+.arq-ag-editor select,
+.arq-ag-editor input[type="text"],
+.arq-ag-editor textarea {
+  width: 100%; font: inherit; font-size: 12px;
+  padding: 6px 8px; border-radius: var(--radius);
+  color: var(--text); background: rgba(var(--black-rgb), .18);
+  border: 1px solid rgba(var(--white-rgb), .13);
+}
+/* 🔴 A LISTA ABERTA DO `<select>` NÃO HERDA O FUNDO DO CAMPO. Sem esta regra o
+   sistema desenha as opções com o fundo CLARO padrão dele, e o texto claro do
+   tema fica ilegível em cima — foi o que aconteceu com o campo **Modelo** deste
+   editor. Mesmo conserto de `.agente-select option` e `.chat-agent-select
+   option`; todo `<select>` novo do programa precisa dele. */
+.arq-ag-editor select option { background: var(--surface-dark); color: var(--text); }
+.arq-ag-editor textarea { resize: vertical; line-height: 1.5; }
+.arq-ag-editor select:disabled,
+.arq-ag-editor input:disabled { opacity: .6; cursor: not-allowed; }
+.arq-ag-dica { font-size: 10.5px; color: var(--text-muted); }
+
+.arq-ag-grupo { margin-bottom: 9px; }
+.arq-ag-grupo-t {
+  font-size: 10.5px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px;
+}
+.arq-ag-caixas { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* O cabecalho de cada grupo de ferramentas: o titulo com a contagem de um lado
+   e o par Marcar todas / Limpar do outro.
+
+   UM PAR POR GRUPO, e nao um par so: os dois grupos sao de naturezas
+   diferentes (as embutidas do assistente x as deste programa), e um par unico
+   obrigaria a desmarcar 14 caixas para limitar o agente as do MCP. */
+.arq-ag-grupo-h { display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; margin-bottom: 5px; }
+.arq-ag-grupo-acoes { display: flex; gap: 6px; }
+
+/* A contagem so ganha cor quando ha algo marcado: "0/14" e informacao neutra,
+   "3/14" e o que limita o agente. Mesmo criterio de `.cpr-bib-cnt`. */
+.arq-ag-cnt { font-size: 11px; font-variant-numeric: tabular-nums;
+  color: var(--text-muted); background: rgba(var(--white-rgb),0.05);
+  border-radius: 9px; padding: 1px 7px; margin-left: 6px; }
+.arq-ag-cnt.on { color: var(--teal); background: rgba(var(--teal-rgb),0.14); }
+.arq-ag-caixa {
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+  font-family: 'Consolas', monospace; font-size: 10.5px;
+  padding: 3px 8px; border-radius: var(--radius);
+  background: rgba(var(--black-rgb), .18);
+  border: 1px solid rgba(var(--white-rgb), .10);
+}
+.arq-ag-caixa:hover { border-color: rgba(var(--blue-rgb), .4); }
+.arq-ag-caixa input { margin: 0; }
+
+/* ⚠️ ÂMBAR É AVISO, NÃO ENFEITE: "nada marcado" quer dizer acesso TOTAL. */
+.arq-ag-herda { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.arq-ag-herda-on { color: var(--yellow-soft); }
+.arq-ag-aviso {
+  font-size: 11px; color: var(--yellow-soft); margin-bottom: 8px;
+  padding: 6px 9px; border-radius: var(--radius);
+  background: rgba(var(--amber-rgb), .10);
+  border: 1px solid rgba(var(--amber-rgb), .28);
+}
+
+.arq-ag-acoes { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.arq-ag-recado { font-size: 11px; color: var(--text-muted); }
+.arq-ag-recado-erro { color: var(--coral-light); }
+
+/* ══ Projeto › Preparar projeto: as duas sub-abas ═══════════════════
+   ⚠️ Família de classes própria, e não `.subtab-*`: o handler global daquelas
+   esconde TODO `.subtab-content` do documento, e a barra aninhada esconderia o
+   próprio painel que a contém. Mesmo motivo de `.analise-tab-*` e `.mapas-tab-*`. */
+/* Herda o desenho de `.arq-subtabs-bar` (a barra usa as duas classes) e só
+   ajusta o respiro. O botão repete o visual de `.arq-subtab-btn` — mesma
+   família de sub-aba, mesmo desenho; os Padrões de interface deste projeto
+   pedem consistência, e uma sub-aba com cara própria lê como outra coisa. */
+/* ⚠️ ESTILO PRÓPRIO E COMPLETO, sem empilhar `.arq-subtabs-bar`. Aquela traz
+   `padding: 10px 20px 0`, pensado para uma barra colada no topo de uma ABA — e
+   aqui a barra mora DENTRO de um painel que já tem o próprio respiro. Os dois
+   somavam, e sobrava uma faixa vazia entre os botões e o texto. */
+/* ⚠️ SEM MARGEM EMBAIXO: o `#subtab-preparar` já é coluna flex com `gap` de
+   20px. A margem de 14px somava com ele, e o texto da sub-aba nascia a 34px da
+   barra — o vão que o usuário apontou em 2026-09-22. */
+.prep-tabs-bar {
+  display: flex; gap: 2px; margin: 0; padding: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), .06);
+}
+.prep-tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; padding: 6px 16px; cursor: pointer;
+  border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.prep-tab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.prep-tab-btn.active {
+  color: var(--purple); border-bottom: 2px solid var(--purple);
+  background: rgba(var(--purple-rgb),0.08);
+}
+.prep-tab-content.hidden { display: none; }
+/* O parágrafo de abertura da sub-aba Assistente externo: sem a margem de cima
+   do rodapé (o `gap` do painel já dá o respiro), e com folga embaixo para não
+   encostar no cartão do seletor. */
+#prep-assistente-externo > .arq-preparar-rodape { margin: 0 0 10px; }
+
+.prep-destino-linha {
+  display: flex; align-items: baseline; gap: 9px;
+  padding: 7px 10px; border-radius: var(--radius);
+  border-bottom: 1px solid rgba(var(--white-rgb), .06);
+}
+.prep-destino-linha:last-child { border-bottom: 0; }
+.prep-destino-icone { flex-shrink: 0; }
+.prep-destino-nome {
+  flex-shrink: 0; min-width: 132px;
+  font-size: 12px; font-weight: 600; color: var(--text);
+}
+.prep-destino-frase { font-size: 11.5px; color: var(--text-muted); }
+.prep-destino-frase code {
+  font-family: 'Consolas', monospace; font-size: 10.5px;
+  background: rgba(var(--black-rgb), .18); border-radius: 3px; padding: 0 4px;
+}
+.arq-destino-onde {
+  opacity: .65; font-size: 10.5px; white-space: nowrap;
+}

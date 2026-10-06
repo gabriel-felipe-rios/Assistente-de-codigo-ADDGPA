@@ -1,0 +1,15 @@
+{
+  "nome": "Sombra dura",
+  "descricao": "Sombra deslocada e sólida, sem desfoque nenhum, com contorno grosso. Efeito de recorte colado.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "cartões",
+    "botões de destaque",
+    "caixas de aviso"
+  ],
+  "nao_use_em": [
+    "elementos sobrepostos entre si",
+    "listas densas — o deslocamento come o espaçamento"
+  ],
+  "css": "background: var(--superficie);\nborder: 2px solid var(--texto);\nborder-radius: 6px;\nbox-shadow: 5px 5px 0 var(--primaria);"
+}

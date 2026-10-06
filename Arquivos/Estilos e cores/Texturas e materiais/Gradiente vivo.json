@@ -1,0 +1,16 @@
+{
+  "nome": "Gradiente vivo",
+  "descricao": "Duas ou três cores de acento derretendo uma na outra. É o material mais barulhento do conjunto — use em um lugar só.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "faixa de destaque",
+    "cabeçalho de página de entrada",
+    "cartão em promoção"
+  ],
+  "nao_use_em": [
+    "mais de um elemento por tela",
+    "fundo de texto corrido",
+    "elementos repetidos em lista"
+  ],
+  "css": "background: linear-gradient(135deg, var(--primaria), var(--especial) 55%, var(--utilitaria));\ncolor: var(--fundo);"
+}

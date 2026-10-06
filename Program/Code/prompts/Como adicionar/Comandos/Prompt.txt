@@ -1,0 +1,37 @@
+Preciso de um COMANDO (slash-command) para a biblioteca do meu assistente de código.
+
+O QUE O COMANDO DEVE FAZER: [descreva aqui]
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do comando>/
+    Descrição.md        (obrigatório)
+    <nome-do-comando>.md
+
+REGRAS DO FORMATO
+
+1. O Descrição.md é o que o programa lê para montar o cartão na tela:
+
+     # <Nome do item>
+
+     <uma frase dizendo o que ele faz>
+
+   A PRIMEIRA linha que não começa com # é a descrição que aparece na tela, e ela
+   é cortada em 200 caracteres. Escreva uma frase só, direta, sem introdução do
+   tipo "Este documento descreve".
+
+2. O nome da pasta é o nome que aparece na tela. Pode ter maiúscula, acento e
+   espaço — é nome de exibição, não identificador.
+
+3. O .md do comando é copiado para .claude/commands/ do projeto ao ativar, e o
+   NOME DO ARQUIVO vira o nome do comando digitado. Por isso ele deve ser
+   minúsculo, sem acento e sem espaço, com hífen separando palavras — por
+   exemplo revisar-testes.md vira /revisar-testes.
+
+4. O corpo do .md é a instrução que o assistente recebe ao rodar o comando.
+   Escreva no imperativo, dirigido a ele, não ao leitor humano.
+
+ONDE VOU SALVAR
+  Arquivos/Comandos/<Nome do comando>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

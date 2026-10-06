@@ -1,0 +1,176 @@
+{
+  "project_screen_tabs": [
+    "ptab-projetos",
+    "ptab-arquivos",
+    "ptab-configs",
+    "ptab-plugins",
+    "ptab-atalhos-externos"
+  ],
+  "garq_subtabs": [
+    "garq-skills",
+    "garq-comandos",
+    "garq-mcps",
+    "garq-regras-instrucoes",
+    "garq-codigos",
+    "garq-instrucoes-base",
+    "garq-agentes",
+    "garq-estilos-e-cores",
+    "garq-como-adicionar"
+  ],
+  "config_categorias": [
+    "ordem",
+    "extensoes",
+    "modelo",
+    "rotinas",
+    "tempos",
+    "mcp",
+    "mcps",
+    "ferramentas",
+    "render",
+    "tema",
+    "editor",
+    "acesso-rapido",
+    "teclado",
+    "confirmacoes",
+    "preparar",
+    "arquivos",
+    "biblioteca",
+    "notificacoes",
+    "acervo",
+    "plugins",
+    "atalhos-externos",
+    "xtprog"
+  ],
+  "main_tabs": [
+    "tab-projeto",
+    "tab-arquivos",
+    "tab-agentes",
+    "tab-assistente",
+    "tab-trabalhos",
+    "tab-editor",
+    "tab-documentacao",
+    "tab-analise",
+    "tab-regras",
+    "tab-mapas",
+    "tab-terminal",
+    "tab-inspetor",
+    "tab-aparencia",
+    "tab-git",
+    "tab-hooks",
+    "tab-plugins",
+    "tab-atalhos-externos",
+    "xt-tela-ct-telas"
+  ],
+  "projeto_subtabs": [
+    "subtab-trabalho",
+    "subtab-preparar",
+    "subtab-remover",
+    "subtab-contexto",
+    "subtab-resumo-indexado",
+    "subtab-resumo-completo"
+  ],
+  "arquivos_subtabs": [
+    "arq-skills",
+    "arq-comandos",
+    "arq-mcps",
+    "arq-regras-instrucoes",
+    "arq-codigos",
+    "arq-instrucoes-base",
+    "arq-agentes"
+  ],
+  "agentes_subtabs": [
+    "asubtab-acionamentos",
+    "asubtab-rotinas",
+    "asubtab-visualizar",
+    "asubtab-pendencias",
+    "asubtab-erros",
+    "asubtab-historico",
+    "asubtab-referencia"
+  ],
+  "assistente_subtabs": [
+    "tab-chat",
+    "asubtab-fila",
+    "asubtab-designer"
+  ],
+  "chat_subtabs": [
+    "chat-view-panel",
+    "chat-payload-panel",
+    "chat-log-panel",
+    "chat-agentes-panel",
+    "chat-ferramentas-panel",
+    "chat-config-panel"
+  ],
+  "fila_subtabs": [
+    "ftab-fila",
+    "ftab-contexto",
+    "ftab-log",
+    "ftab-subagentes",
+    "ftab-ferramentas",
+    "ftab-config"
+  ],
+  "designer_subtabs": [
+    "dtab-designer",
+    "dtab-contexto",
+    "dtab-selecao",
+    "dtab-estilos",
+    "dtab-cores",
+    "dtab-tipografia",
+    "dtab-texturas",
+    "dtab-animacoes"
+  ],
+  "documentacao_subtabs": [
+    "indice-navegacao",
+    "pipeline",
+    "glossario",
+    "documentacao-tecnica",
+    "resumo-pastas",
+    "comentarios",
+    "bibliotecas"
+  ],
+  "analise_subtabs": [
+    "analise-mio",
+    "analise-relacoes",
+    "analise-estrutura",
+    "analise-ast",
+    "analise-lsp",
+    "analise-duplicados"
+  ],
+  "regras_subtabs": [],
+  "mapas_subtabs": [
+    "mapa-pipeline",
+    "mapa-matriz-io",
+    "mapa-matriz",
+    "mapa-hotspots",
+    "mapa-dispersao",
+    "mapa-proporcao",
+    "mapa-painel",
+    "mapa-treemap",
+    "mapa-sunburst",
+    "mapa-ligacoes"
+  ],
+  "inspetor_subtabs": [
+    "insp-gravacao",
+    "insp-capturar"
+  ],
+  "trabalhos_subtabs": [
+    "trsub-quadro",
+    "trsub-tempo",
+    "trsub-fluxo",
+    "trsub-oficina",
+    "trsub-metricas",
+    "trsub-config"
+  ],
+  "backups_subtabs": [
+    "bksub-versoes",
+    "bksub-mapa",
+    "bksub-config"
+  ],
+  "preparar_subtabs": [
+    "prep-assistente-externo",
+    "prep-inicio-rapido"
+  ],
+  "pipeline_subtabs": [
+    "vp-sub-niveis",
+    "vp-sub-leituras"
+  ]
+}

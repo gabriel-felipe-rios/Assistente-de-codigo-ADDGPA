@@ -1,0 +1,17 @@
+{
+  "cartoes": [
+    {
+      "titulo": "A ponte",
+      "dica": "O que o backend responde quando a tela pergunta.",
+      "campos": [
+        {
+          "chave": "saudacao",
+          "rotulo": "Saudação",
+          "tipo": "texto",
+          "padrao": "Olá",
+          "nota": "Aparece na categoria \"Extensão de teste — o gabarito\", do lado Extensões. O backend recebe o valor já resolvido em payload['preferencias'] — o padrão mora só aqui."
+        }
+      ]
+    }
+  ]
+}

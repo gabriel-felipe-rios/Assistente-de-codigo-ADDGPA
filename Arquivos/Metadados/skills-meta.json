@@ -1,0 +1,50 @@
+{
+  "Arquitetura modular": {
+    "origem": "programa"
+  },
+  "Padrões de interface": {
+    "origem": "programa"
+  },
+  "Terminologia e nomenclatura": {
+    "origem": "programa"
+  },
+  "Regras e instruções": {
+    "origem": "programa"
+  },
+  "Mapa do projeto": {
+    "origem": "geral"
+  },
+  "Arquitetura modular - Desktop": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - Extensão de navegador": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - MCP": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - Mobile": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - Plugin de programa": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - Plugin do Obsidian": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - Página web": {
+    "origem": "programa"
+  },
+  "Arquitetura modular - SaaS": {
+    "origem": "programa"
+  },
+  "Construir sistemas com LLMs": {
+    "origem": "programa"
+  },
+  "Saída das skills/Arquitetura modular/Arquitetura modular - Linha de comando": {
+    "origem": "programa"
+  },
+  "Front design": {
+    "origem": "programa"
+  }
+}

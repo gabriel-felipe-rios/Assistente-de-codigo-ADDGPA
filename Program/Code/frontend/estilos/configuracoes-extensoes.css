@@ -1,0 +1,257 @@
+/* ═══ CONFIGURAÇÕES → Arquivos que o programa lê ═══════════════════════════
+   As três vistas (Nunca ler · O que é código · Quem lê o quê), os grupos
+   expansíveis, os chips e a tabela de leitores. Ver
+   modulos/config-extensoes-template.js.
+
+   Até 23/09/2026 era "Extensões e pastas ignoradas", com quatro divisores numa
+   rolagem só e uma tabela de exceções de quatro colunas. Os divisores deram
+   lugar ao seletor de vista; a tabela de exceções virou linhas de Quem lê o quê. */
+
+/* Cada vista é uma coluna de cartões, com o mesmo espaço da seção. */
+.ext-vista { display: flex; flex-direction: column; gap: 18px; }
+.ext-vista.hidden { display: none; }
+
+.ext-selo-cab {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px; color: var(--text-muted);
+  background: rgba(var(--black-rgb),0.25); border: 1px solid rgba(var(--white-rgb),0.10);
+}
+
+/* ── Cartão de referência: o que cada número conta ── */
+.ext-tabela { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.ext-tabela th {
+  text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted); font-weight: 700; padding: 7px 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+}
+.ext-tabela td {
+  padding: 9px 10px; border-bottom: 1px solid rgba(var(--white-rgb),0.05);
+  vertical-align: top; color: var(--text-muted);
+}
+.ext-tabela tr:last-child td { border-bottom: 0; }
+.ext-tabela td b { color: var(--text); }
+.ext-tabela code {
+  background: rgba(var(--black-rgb),0.3); padding: 1px 5px; border-radius: 3px;
+  font-size: 11px; font-family: ui-monospace, Consolas, monospace;
+}
+.ext-selo {
+  display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.4px;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 10px; white-space: nowrap;
+}
+.ext-selo.tudo   { color: var(--amber); background: rgba(var(--amber-rgb),0.15); border: 1px solid rgba(var(--amber-rgb),0.35); }
+.ext-selo.filtra { color: var(--green); background: rgba(var(--green-rgb),0.13); border: 1px solid rgba(var(--green-rgb),0.32); }
+
+/* ── Grupos expansíveis em grade ──
+   O componente é o `.rc-config-group` e companhia (agentes-base-config.css),
+   que nasceu na antiga aba Configurar do Espelho (retirado em 2026-09). Aqui são dezessete grupos, e
+   em coluna eles ocupariam uma tela inteira de rolagem só para dizer "tudo
+   marcado" — por isso a grade, numa classe própria. */
+.config-ext-grupos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+  gap: 6px;
+  align-items: start;
+}
+/* A contagem de extensões do grupo, à direita do nome: com todos retraídos, é
+   ela que diz se vale a pena abrir. */
+.rc-grupo-cont {
+  font-size: 10.5px; color: var(--text-muted); font-family: Consolas, monospace;
+  margin-left: auto; padding-right: 2px;
+}
+
+/* ── Campo de acrescentar, variações e chips ── */
+.ext-linha-add { display: flex; gap: 8px; align-items: center; max-width: 560px; }
+.ext-input {
+  flex: 1; background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: var(--radius); color: var(--text); padding: 8px 12px;
+  font-size: 14px; font-family: inherit;
+}
+.ext-input::placeholder { color: var(--text-muted); opacity: 0.65; }
+.ext-input:focus { outline: none; border-color: var(--blue); }
+
+/* As variações ficam DEPOIS do botão Acrescentar, e não antes: elas modificam o
+   que o botão vai fazer, mas quem chega ao cartão está vindo digitar um nome —
+   pôr seis caixas entre o campo e o botão faria a ação principal parecer o
+   passo final de um formulário. */
+.ext-variacoes { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: -4px; }
+.ext-variacoes .rot, .ext-abas .rot {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
+  color: var(--text-muted); margin-right: 2px;
+}
+.ext-variacao {
+  display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);
+  cursor: pointer; background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: 20px; padding: 5px 11px; white-space: nowrap;
+  transition: color var(--t), border-color var(--t);
+}
+.ext-variacao:hover { color: var(--text); }
+.ext-variacao input:checked + span { color: var(--text); }
+.ext-variacao code {
+  background: rgba(var(--black-rgb),0.3); padding: 1px 5px; border-radius: 3px;
+  font-size: 11px; font-family: ui-monospace, Consolas, monospace;
+}
+.btn-variacao-tudo {
+  background: transparent; border: 1px solid rgba(var(--blue-rgb),0.35); color: var(--blue);
+  border-radius: 20px; padding: 5px 12px; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: background var(--t);
+}
+.btn-variacao-tudo:hover { background: rgba(var(--blue-rgb),0.14); }
+
+.ext-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ext-chip {
+  display: flex; align-items: center; gap: 7px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.07); border-radius: 20px;
+  padding: 6px 8px 6px 13px; font-size: 13px; white-space: nowrap;
+  font-family: ui-monospace, Consolas, monospace;
+}
+/* Tracejado = veio de fábrica. É o que separa "eu pus isto" de "já estava
+   aqui", e o que torna previsível o que o Restaurar padrão devolve. */
+.ext-chip.padrao { border-style: dashed; opacity: 0.82; }
+.ext-chip .x {
+  color: var(--text-muted); font-size: 13px; cursor: pointer; line-height: 1;
+  padding: 0 3px; border-radius: 3px; font-family: 'Segoe UI', sans-serif;
+}
+.ext-chip .x:hover { color: var(--text); background: rgba(var(--white-rgb),0.1); }
+
+/* ── A linha de pílulas "quais abas isto mexe" ──
+   Riscada = a aba NÃO muda. Responde "se eu desmarcar isto, o que acontece?"
+   sem o usuário ter de descobrir testando. */
+.ext-abas { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; }
+.ext-aba {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 20px; color: var(--text);
+  background: rgba(var(--blue-rgb),0.13); border: 1px solid rgba(var(--blue-rgb),0.3);
+  white-space: nowrap;
+}
+.ext-aba.off {
+  color: var(--text-muted); background: rgba(var(--black-rgb),0.22);
+  border-color: rgba(var(--white-rgb),0.07); text-decoration: line-through; opacity: 0.7;
+}
+
+/* ── O que é código: campos de acrescentar mais largos ──
+   A linha de "＋ Adicionar linguagem" tem dois campos (nome e 1ª extensão), e o
+   rótulo do botão é longo: no `max-width` de 560px o nome truncava. */
+.ext-linha-add--larga { max-width: 680px; }
+.ext-input--curta { flex: 0 0 170px; }
+/* O campo "＋ extensão" dentro de uma linguagem aberta, alinhado com as caixas. */
+.ext-linha-add--grupo { padding: 4px 10px 8px 30px; max-width: none; }
+.ext-input--pequena { font-size: 12px; padding: 5px 9px; min-width: 0; }
+
+/* ── Quem lê o quê: a tabela, só leitura (D38) ── */
+.ext-tabela--leitores td { vertical-align: top; }
+.ext-tabela--leitores .ext-selo { white-space: nowrap; }
+.leitor-nome { color: var(--text); font-weight: 600; }
+.leitor-onde { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Exceções: acrescentar × retirar (D39) ──
+   Verde em cima, vermelho embaixo, sempre nesta ordem e em blocos separados:
+   «tem que ter uma separação clara». Cor pelos tokens, nunca hex. */
+.exc-intro { margin: 0 2px; }
+.exc-intro .exc-cor-mais  { color: var(--green); }
+.exc-intro .exc-cor-menos { color: var(--red); }
+.exc-cartoes { display: flex; flex-direction: column; gap: 18px; }
+.exc-base { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; color: var(--text-muted); }
+.exc-base .rot { font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; margin-right: 2px; }
+.exc-base b { color: var(--text); }
+.exc-base .ext-chip { padding: 3px 10px; font-size: 12px; opacity: 0.7; }
+.exc-botoes { display: flex; gap: 8px; align-items: center; max-width: 620px; }
+.btn-exc {
+  border: 1px solid; border-radius: var(--radius); padding: 7px 14px; font-size: 13px;
+  font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap;
+  transition: background var(--t);
+}
+.btn-exc.mais  { color: var(--green); background: rgba(var(--green-rgb),0.12); border-color: rgba(var(--green-rgb),0.45); }
+.btn-exc.mais:hover  { background: rgba(var(--green-rgb),0.2); }
+.btn-exc.menos { color: var(--red); background: rgba(var(--red-rgb),0.12); border-color: rgba(var(--red-rgb),0.45); }
+.btn-exc.menos:hover { background: rgba(var(--red-rgb),0.2); }
+.exc-bloco { border-left: 3px solid; border-radius: 0 6px 6px 0; padding: 8px 12px; display: flex; flex-direction: column; gap: 7px; }
+.exc-bloco.mais  { border-color: var(--green); background: rgba(var(--green-rgb),0.06); }
+.exc-bloco.menos { border-color: var(--red); background: rgba(var(--red-rgb),0.06); }
+.exc-bloco .tit { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.exc-bloco.mais .tit  { color: var(--green); }
+.exc-bloco.menos .tit { color: var(--red); }
+.exc-bloco .vazio { font-size: 12px; color: var(--text-muted); font-style: italic; }
+.ext-chip.mais  { border-color: rgba(var(--green-rgb),0.5); color: var(--green); }
+.ext-chip.menos { border-color: rgba(var(--red-rgb),0.5); color: var(--red); }
+.ext-chip.menos .nome { text-decoration: line-through; }
+
+/* ── Unidade ao lado do rótulo ──
+   Cada campo da categoria "Ferramentas dos subagentes" carrega a unidade no
+   próprio rótulo, e não é decoração: um limite em KB e um em token protegem
+   coisas DIFERENTES (a máquina e a janela de contexto). Sem a unidade à vista,
+   os dois viram "um número" e a distinção se perde na primeira leitura. */
+.config-unidade {
+  font-weight: 400;
+  opacity: 0.65;
+}
+
+/* ── Nota que alerta ──
+   Mesma nota de sempre, em âmbar: o valor consultado não veio, ou a conta não
+   fecha. Cor de aviso, não de erro — nada quebrou, mas o número na tela não é
+   o que o usuário provavelmente espera.
+   ⚠️ `--amber`, e não `--amber-text`: o segundo é o texto para pôr SOBRE fundo
+   âmbar (escuro nos temas escuros, claro no Papel) — como cor de texto sobre o
+   fundo comum ele some. */
+.config-nota-alerta {
+  color: var(--amber);
+  opacity: 1;
+}
+
+/* ── Tabela informativa dentro de um cartão ──
+   O cartão "onde cada limite vale" é SÓ LEITURA. Rola sozinha na horizontal
+   para a coluna de rótulo não espremer as cinco colunas de ✓ em tela estreita. */
+.config-tabela-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.config-tabela {
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 420px;
+}
+.config-tabela th,
+.config-tabela td {
+  padding: 7px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.config-tabela th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.config-tabela td { color: var(--text); }
+/* Da segunda coluna em diante o conteúdo é ✓ ou —: centralizado, e o traço
+   apagado, para o olho achar as marcas sem ler célula por célula. */
+.config-tabela td:not(:first-child),
+.config-tabela th:not(:first-child) { text-align: center; }
+.config-tabela td:not(:first-child) { color: var(--text-muted); }
+.config-tabela tr:last-child td { border-bottom: none; }
+
+/* Campo de texto na aba Configurações — a URL do LM Studio é o único.
+   Mesmo visual do campo numérico ao lado; sem isto ele herdaria o input cru
+   do navegador e destoaria de todos os outros da tela. */
+.config-field-row input[type="text"] {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), 0.07);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color var(--t);
+}
+.config-field-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+/* Somente-leitura: a janela de contexto é consultada ao LM Studio, não
+   digitada. O campo continua visível (o número importa) mas anuncia que não
+   se mexe nele. */
+.config-field-row input[readonly],
+.config-field-row input:disabled {
+  opacity: 0.75;
+  cursor: default;
+  border-style: dashed;
+}

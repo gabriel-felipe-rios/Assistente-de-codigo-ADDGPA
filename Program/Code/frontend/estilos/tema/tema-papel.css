@@ -1,0 +1,143 @@
+/* ════════════════════════════════════════════════════════════ TEMA: PAPEL ══
+   O tema claro. Fundo de papel levemente quente, não branco puro: branco puro
+   numa tela inteira cansa, e o texto quase preto sobre ele vibra.
+
+   ── A inversão que faz o tema claro funcionar ──
+   `--white-rgb` vira **0,0,0**. Não é engano no nome: esse token é a cor do
+   VÉU — a camada translúcida que desenha borda, hover e separador sobre a
+   superfície, usada 325 vezes como `rgba(var(--white-rgb), α)` nos 33 arquivos
+   de estilo. Num tema escuro o véu é claro; aqui ele precisa ser escuro, ou
+   toda borda do programa desaparece. É a única linha deste arquivo que faz os
+   outros 33 arquivos continuarem valendo sem uma edição sequer.
+
+   ── As cores de ação escurecem ──
+   O `#2ECC71` do Ardósia é lindo sobre azul-ardósia e ilegível sobre papel.
+   Cada cor de ação desceu para a versão que passa em contraste sobre fundo
+   claro, mantendo a mesma família — verde continua verde.
+
+   ⚠️ A FAMÍLIA de cada agente e subagente é a mesma dos outros dois temas: o
+   Leitor continua amarelo, o Analista rosa, o Chat e a Fila dividem a laranja.
+   Amarelo sobre papel é o caso mais difícil, e por isso o `--yellow` daqui é
+   bem mais escuro que o dos temas escuros — é a mesma cor no papel dela, não a
+   mesma tinta. */
+
+:root {
+  /* ── Paleta base ────────────────────────────────────────────────────────── */
+  --bg:           #F2EFE9;
+  --surface:      #FBFAF7;
+  --surface-hover:#EBE7DE;
+  --surface-dark: #E0DBD0;
+  --text:         #1E2227;
+  --text-muted:   #5C646E;
+
+  /* ── As seis cores de ação, e seus -hover ────────────────────────────────
+     Escurecidas para ler sobre papel; `-hover` escurece mais, mantendo a
+     direção do gesto igual à dos temas escuros (hover = mais forte). */
+  --blue-rgb:         21,110,167;
+  --blue:             rgb(var(--blue-rgb));
+  --blue-hover:       #0F5583;
+  --green-rgb:        22,133,74;
+  --green:            rgb(var(--green-rgb));
+  --green-hover:      #0F6B3A;
+  --red-rgb:          231,76,60;
+  --red:              rgb(var(--red-rgb));
+  --red-hover-rgb:    169,45,34;
+  --red-hover:        rgb(var(--red-hover-rgb));
+  --purple-rgb:       118,60,145;
+  --purple:           rgb(var(--purple-rgb));
+  --purple-hover:     #5D2B74;
+  --teal-rgb:         13,126,109;
+  --teal:             rgb(var(--teal-rgb));
+  --teal-hover:       #096355;
+  --gray:             #6B7280;
+  --gray-hover:       #565C67;
+
+  /* ── O véu — A LINHA QUE INVERTE O TEMA ──────────────────────────────────
+     Ver o cabeçalho deste arquivo. Não trocar por 255,255,255 "para consertar
+     o nome": isso apaga a borda de todas as telas de uma vez. */
+  --white-rgb:  0,0,0;
+  --black-rgb:  0,0,0;
+
+  /* ── Fundos dos painéis do Designer (o chrome, não a paleta do usuário) ──
+     Continuam escuros mesmo no tema claro: são a moldura neutra atrás do
+     preview, e é ela que faz a paleta do usuário aparecer sem interferência
+     do que estiver em volta. Mesmo princípio do terminal embutido. */
+  --designer-thumb-bg:   #E0DBD0;  /* = --surface-dark do próprio tema */
+  --designer-preview-bg: #0d0d14;
+  --designer-panel-bg:   #1e1e2e;
+
+  /* ── Acentos ──────────────────────────────────────────────────────────── */
+  --amber-rgb:      176,102,8;
+  --amber:          rgb(var(--amber-rgb));
+  --amber-text:     #FFF6E8;  /* aqui o texto sobre âmbar é CLARO — o âmbar escureceu */
+  --yellow-rgb:     146,110,10;
+  --yellow:         rgb(var(--yellow-rgb));
+  --yellow-soft:    #8a6d12;
+  --mint:           #1c8a56;
+  --sky:            #3760bd;
+  --sky-light:      #2b6f9e;
+  --blue-light:     #1d6f9c;
+  --laranja-light:  #9a5a17;
+  --green-light:    #1c7a4c;
+  --violeta-light:  #6b4fc4;
+  --rosa-light:     #B0417E;
+  --coral:          #C43B3B;
+  --coral-light:    #A93636;
+  --coral-alt:      #b8442f;
+  --coral-strong:   #c23a3a;
+  --lilas-claro:    #7c4a9c;
+  --ciano-mapa-rgb: 0,124,150;
+  --ciano-mapa:     rgb(var(--ciano-mapa-rgb));
+  --cinza-rgb:          104,116,117;
+  --cinza:              rgb(var(--cinza-rgb));
+  --cinza-escuro-rgb:   88,98,99;
+  --cinza-escuro:       rgb(var(--cinza-escuro-rgb));
+  --cinza-azulado-rgb:  76,88,101;
+  --cinza-azulado:      rgb(var(--cinza-azulado-rgb));
+  --mapa-sem-fluxo: #97A3B0;
+
+  /* Cores sem gêmeo opaco — uso único cada. */
+  --green-alt-rgb:     46,120,50;
+  --esmeralda-rgb:     16,135,98;
+  --vermelho-puro-rgb: 200,0,0;
+  --vermelho-vivo-rgb: 205,40,40;
+  --mapa-fundo-rgb:    226,222,213;  /* claro: é o FUNDO do grafo, e o grafo agora é claro */
+
+  /* ── Identidade dos 5 agentes da Fila — mesma família, outro tom ───────── */
+  --indigo-rgb:          72,74,190;
+  --indigo:              rgb(var(--indigo-rgb));
+  --rosa:                #BE3A80;
+  --turquesa:            #0E9B8A;
+  --agente-orquestrador: #6B45C4;  /* violeta */
+  --agente-contexto:     var(--blue);
+  --agente-analise-rgb:  174,86,14;
+  --agente-analise:      rgb(var(--agente-analise-rgb)); /* laranja */
+  --agente-verificacao:  var(--green);
+  --agente-relatorio:    #B32573;  /* rosa-forte */
+  --agente-desconhecido: var(--cinza);
+
+  /* ── Identidade dos subagentes do Chat ─────────────────────────────────── */
+  --sub-buscador:      #2266B8;  /* azul-claro (aqui, azul médio) */
+  --sub-navegador:     var(--green);
+  --sub-leitor:        var(--yellow);
+  --sub-arquiteto:     var(--teal);
+  --sub-analista:      #B01048;  /* rosa */
+  --sub-semantico:     var(--purple);
+  --sub-sistema:       var(--coral);
+  /* As cores que um subagente de EXTENSÃO pode escolher (`"cor"` no item do
+     manifesto; `XT_SUBAGENTE_CORES`). O programa não conhece subagente de
+     extensão pelo nome — só esta paleta. */
+  --sub-cor-violeta:   #6B45C4;
+  --sub-cor-indigo:    var(--indigo);
+  --sub-cor-rosa:      var(--rosa);
+  --sub-cor-turquesa:  var(--turquesa);
+  /* Prompts fixos (antigos "modos"). A chave do token é a chave do prompt. */
+  --sub-estruturar:                  #0E7C93;  /* ciano */
+  --sub-estruturar-e-quebrar-tarefa: #7B3FB5;  /* lilás */
+  --sub-revisar:       var(--amber);
+  --sub-usuario:       var(--blue);
+  --sub-chat:          var(--agente-analise);
+  /* Chat e Fila dividem a laranja de propósito — ver tema-ardosia.css. */
+  --sub-fila:             var(--agente-analise);
+  --sub-fila-verificador: var(--mint);
+}

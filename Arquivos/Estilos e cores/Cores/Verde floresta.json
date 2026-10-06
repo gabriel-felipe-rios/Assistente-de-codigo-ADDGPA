@@ -1,0 +1,81 @@
+{
+  "nome": "Verde floresta",
+  "descricao": "Paleta natural com verdes profundos e musgo. Fundo escuro esverdeado, acentos em verde folha, limão e terracota.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#131A16",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#1D2A23",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#26372D",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#0C120F",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#E4EFE7",
+      "uso": "Todo texto principal — branco levemente esverdeado"
+    },
+    "texto_secundario": {
+      "hex": "#8FA898",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#3F9E5A",
+      "apelido": "verde",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#318047",
+      "apelido": "verde (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#8CC63F",
+      "apelido": "limão",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#72A62F",
+      "apelido": "limão (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#C4573C",
+      "apelido": "terracota",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#A3432C",
+      "apelido": "terracota (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#6B8E5A",
+      "apelido": "musgo",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#567447",
+      "apelido": "musgo (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#4FB3A0",
+      "apelido": "água",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#3C9484",
+      "apelido": "água (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

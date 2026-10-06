@@ -1,0 +1,6 @@
+• norm.terminologo — Sabe como as coisas se chamam neste projeto. Lê o vocabulário, as convenções e as exceções de nomenclatura.
+  Use SEMPRE antes de nomear qualquer variável, função, arquivo, componente, tipo, constante ou texto de interface novo.
+  Ele diz tanto o nome canônico de um conceito que já existe quanto a convenção para nomes novos — e, o que mais importa, o que NUNCA usar.
+  Não pergunte a ele onde o arquivo mora (é o norm.enderecador) nem como a tela deve ficar (é o norm.padronizador).
+  Exemplo:
+  {"chamadas": [{"subagente": "norm.terminologo", "pergunta": "como eu chamo a função que lê a lista de pendências?"}]}

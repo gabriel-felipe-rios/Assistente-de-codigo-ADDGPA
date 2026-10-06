@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "properties": {
+    "passos": {
+      "type": "array",
+      "description": "Uma entrada para CADA passo numerado sem «já descrito», sem pular nenhum e sem inventar.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": { "type": "integer" },
+          "frase": {
+            "type": "string",
+            "description": "O que acontece nesse ponto do fluxo, no máximo 15 palavras. Não repete nomes de arquivo."
+          }
+        },
+        "required": ["numero", "frase"],
+        "additionalProperties": false
+      }
+    },
+    "cadeias": {
+      "type": "array",
+      "description": "Uma entrada, com o número 1 — ou vazia, se o rótulo disser que o nome e o resumo já existem.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": { "type": "integer" },
+          "nome": {
+            "type": "string",
+            "description": "O que dispara a cadeia, no máximo 4 palavras."
+          },
+          "resumo": {
+            "type": "string",
+            "description": "O que a cadeia faz de ponta a ponta, em uma ou duas frases. Não repete nomes de arquivo."
+          }
+        },
+        "required": ["numero", "nome", "resumo"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["passos", "cadeias"],
+  "additionalProperties": false
+}

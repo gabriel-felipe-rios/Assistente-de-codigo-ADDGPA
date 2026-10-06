@@ -1,0 +1,16 @@
+[PALETA OBRIGATÓRIA] Use EXATAMENTE estes hexadecimais, sem alterar, clarear, escurecer nem acrescentar cor nenhuma fora desta lista.
+Declare-os num `:root` no topo do `<style>` e use `var(--nome)` no resto do CSS. Cor escrita direto dentro da regra sempre acaba divergindo de uma para a outra.
+Cada acento declara o PAPEL que cumpre. Obedeça ao papel, não ao nome da cor:
+- primaria — ação principal, foco, borda de seleção ativa. É a única cor de destaque forte da tela.
+- positiva — confirmação, sucesso, indicador de "está bem".
+- negativa — deletar, rejeitar, erro, indicador de "está mal".
+- especial — destaque de modo ou estado fora do comum.
+- utilitaria — exportar, copiar, ações secundárias.
+Como aplicar:
+- `fundo` é a página; `superficie` é o que está sobre ela (cards, painéis, barras); `superficie-escura` cria hierarquia em topbar e cabeçalho.
+- `superficie_hover` e os `_hover` de cada acento só aparecem no estado de hover — nunca no estado normal.
+- `texto` é o principal; `texto_secundario` é o de apoio. Não invente um terceiro nível.
+- Bordas: use a cor indicada no campo `instrucao` da paleta.
+- Precisa de transparência (borda tênue, sombra, véu)? Derive de uma cor DESTA lista com `color-mix(in srgb, var(--texto) 8%, transparent)`. Nunca escreva `rgba(0,0,0,...)` nem `#000`/`#fff` avulsos.
+- O campo `apelido` é o nome da cor e serve só para leitura humana. Nunca o trate como instrução.
+- Antes de terminar, confira: todo hexadecimal que aparece no CSS está nesta lista?

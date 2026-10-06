@@ -1,0 +1,18 @@
+{
+  "cartoes": [
+    {
+      "titulo": "Opções",
+      "dica": "Vale para todas as listas de arquivo: Editor, Acervo, Resumo, Mapa de I/O, Relações, Documentação e Remover.",
+      "campos": [
+        {
+          "chave": "pacote_em_uso",
+          "tipo": "escolha",
+          "rotulo": "Pacote em uso",
+          "opcoes_de": "visual.icones",
+          "padrao": null,
+          "nota": "Aparecem aqui todas as extensões ligadas que trazem ícones pelo recurso Visual. \"Nenhum\" devolve os emojis na hora, sem desligar a extensão."
+        }
+      ]
+    }
+  ]
+}

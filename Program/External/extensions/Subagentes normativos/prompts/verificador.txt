@@ -1,0 +1,10 @@
+3. ler_base
+   Lê um arquivo de uma das bases de decisão do projeto. É a ferramenta que lê as decisões do projeto: é com ela que você faz a conferência 3 (o relatório contraria alguma decisão já tomada?), e um "contraria_decisao" precisa de um ler_base seu.
+   Parâmetros:
+   - base (string): uma destas quatro, exatamente como escrito —
+     "Regras e instruções" · "Arquitetura modular" · "Padrões de interface" · "Terminologia e nomenclatura"
+   - caminho (string): o caminho do arquivo dentro dessa base, com subpasta e extensão
+   Exemplo:
+   {"ferramentas": [{"nome": "ler_base", "parametros": {"base": "Terminologia e nomenclatura", "caminho": "Vocabulário.md"}}]}
+
+   Se errar o caminho, o erro traz a lista dos arquivos que existem — use-a na rodada seguinte. Nunca invente caminho.

@@ -1,0 +1,139 @@
+/* ══════════════ Automação › Explicações (id interno `asubtab-referencia`) ══
+   Tela informativa, só leitura: o que cada rotina é, como ela fala com o
+   modelo, como funciona a costura e a regra do Detector.
+
+   ⚠️ Nenhum valor solto aqui — só token. Ver
+   `Saída das skills/Padrões de interface/Convenções/Tokens e CSS base.md`.
+   Texto principal em `--text`; `--text-muted` só onde o texto é de fato
+   secundário (a nota de uma célula). */
+
+.exp-layout { padding: 18px 26px 30px; max-width: 1280px; }
+.exp-cab h2 { font-size: 20px; margin-bottom: 6px; }
+.exp-cab p, .exp-p {
+  margin-bottom: 12px; font-size: 13.5px; line-height: 1.6;
+  color: var(--text); max-width: 900px;
+}
+.exp-mudo { opacity: 0.8; font-size: 12.5px; }
+.exp-secao { margin-top: 26px; }
+.exp-secao h3 {
+  margin-bottom: 12px; font-size: 12px; letter-spacing: 1.3px;
+  text-transform: uppercase; font-weight: 800; color: var(--text);
+}
+.exp-p code, .exp-passo code {
+  background: rgba(var(--white-rgb),0.08); padding: 1px 5px; border-radius: 4px; font-size: 12px;
+}
+
+/* ── Como cada rotina roda ──────────────────────────────────────────────── */
+.exp-modos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.exp-modo {
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+  padding: 12px 14px; border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(var(--white-rgb),0.055), rgba(var(--white-rgb),0.02));
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  font-size: 12.5px; line-height: 1.5; color: var(--text);
+}
+
+/* A etiqueta do tipo: a mesma nas duas tabelas, uma cor por jeito de rodar. */
+.exp-tipo {
+  display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 9px; white-space: nowrap;
+}
+.exp-tipo-sem-ia           { background: rgba(var(--cinza-rgb),0.22); color: var(--text); }
+.exp-tipo-embedding-local  { background: rgba(var(--teal-rgb),0.22);  color: var(--teal); }
+.exp-tipo-direto           { background: rgba(var(--blue-rgb),0.25);  color: var(--sky-light); }
+.exp-tipo-partes-costura   { background: rgba(var(--amber-rgb),0.20); color: var(--amber); }
+.exp-nota { display: block; font-size: 11px; color: var(--text-muted); margin: 3px 0 6px; line-height: 1.4; }
+
+/* ── O que cada rotina faz ──────────────────────────────────────────────── */
+.exp-tabela-wrap { overflow-x: auto; }
+.exp-tab { width: 100%; border-collapse: collapse; font-size: 12.5px; color: var(--text); }
+.exp-tab th {
+  text-align: left; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  padding: 8px 10px; border-bottom: 1px solid rgba(var(--white-rgb),0.15);
+}
+.exp-tab td {
+  padding: 9px 10px; border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  vertical-align: top; line-height: 1.45;
+}
+.exp-tab .exp-col-rotina { font-weight: 600; white-space: nowrap; }
+/* A linha de grupo: o título de ① a ⑤ numa linha própria, em destaque. */
+.exp-tab tr.exp-grupo td {
+  padding-top: 16px; font-size: 10.5px; letter-spacing: 1.2px; text-transform: uppercase;
+  font-weight: 800; border-bottom: 1px solid rgba(var(--white-rgb),0.15);
+}
+
+/* ── Como funciona a costura: passos em linha, com seta ─────────────────── */
+.exp-fluxo { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; margin: 6px 0 12px; }
+.exp-passo {
+  flex: 1 1 150px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  padding: 12px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.09);
+  font-size: 12.5px; line-height: 1.45; color: var(--text);
+}
+/* O número em bolinha. */
+.exp-passo-num {
+  min-width: 24px; height: 24px; padding: 0 6px; border-radius: 12px;
+  display: inline-grid; place-items: center;
+  font-size: 12px; font-weight: 800; background: rgba(var(--white-rgb),0.10);
+}
+.exp-passo-costura { border-color: rgba(var(--amber-rgb),0.6); background: rgba(var(--amber-rgb),0.08); }
+.exp-passo-costura .exp-passo-num { background: rgba(var(--amber-rgb),0.25); }
+.exp-passo-fim { border-color: rgba(var(--green-rgb),0.6); background: rgba(var(--green-rgb),0.08); }
+.exp-passo-fim .exp-passo-num { background: rgba(var(--green-rgb),0.25); }
+.exp-seta { align-self: center; font-size: 18px; opacity: 0.6; }
+
+/* ── Que modificação manda atualizar o quê ──────────────────────────────── */
+.ref-legenda { margin-top: 10px; }
+
+/* ── A legenda ────────────────────────────────────────────────────────────
+   Regra registrada em Componentes/Selo.md: "selo sem legenda é decoração".
+   Aqui a cor de cada marca É a informação, então a legenda não é opcional. */
+.ref-legenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 16px;
+  font-size: 12px;
+}
+
+/* ── A tabela ─────────────────────────────────────────────────────────────
+   Rola dentro do próprio wrapper: com sete colunas ela não cabe em janela
+   estreita, e deixar a página inteira rolar na horizontal é pior. */
+.ref-tabela-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: 8px;
+}
+.ref-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.ref-tabela th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  white-space: nowrap;
+}
+.ref-tabela td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+}
+.ref-tabela tr:last-child td { border-bottom: none; }
+.ref-tabela tr:hover td { background: rgba(var(--white-rgb),0.02); }
+
+.ref-col-rotina { text-align: center !important; }
+.ref-col-classe { font-weight: 600; color: var(--text); }
+.ref-col-regua  { color: var(--text-muted); white-space: nowrap; }
+.ref-marca      { text-align: center; font-weight: 700; }
+
+/* As quatro respostas. A cor carrega a informação — ver a legenda acima. */
+.ref-sim         { color: var(--green); }
+.ref-nao         { color: var(--text-muted); opacity: 0.5; }
+.ref-regua-marca { color: var(--amber); }
+.ref-copia       { color: var(--teal); font-size: 11px; font-weight: 600; }

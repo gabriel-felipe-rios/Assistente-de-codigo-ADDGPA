@@ -1,0 +1,68 @@
+{
+  "type": "object",
+  "properties": {
+    "sintese": {
+      "type": "string",
+      "description": "O que o arquivo é e por quê, 2 a 3 frases, sem markdown."
+    },
+    "atribuicoes": {
+      "type": "array",
+      "description": "As responsabilidades do arquivo, uma por item, em frase curta.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "autenticacao",
+        "banco-de-dados",
+        "interface",
+        "configuracao",
+        "utilitarios",
+        "rotas",
+        "pagamento",
+        "armazenamento",
+        "comunicacao",
+        "outro"
+      ]
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "servico",
+        "controlador",
+        "utilitario",
+        "configuracao",
+        "modelo",
+        "interface",
+        "rota",
+        "inicializador",
+        "outro"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "De três a cinco palavras-chave.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "termos": {
+      "type": "array",
+      "description": "Termos próprios deste projeto que aparecem no arquivo; vazio é normal.",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "sintese",
+    "atribuicoes",
+    "categoria",
+    "tipo",
+    "tags",
+    "termos"
+  ],
+  "additionalProperties": false
+}

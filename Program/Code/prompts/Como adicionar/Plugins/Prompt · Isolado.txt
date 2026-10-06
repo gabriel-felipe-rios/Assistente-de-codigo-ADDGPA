@@ -1,0 +1,65 @@
+Preciso de um PLUGIN ISOLADO para o meu assistente de código.
+
+O QUE O PLUGIN DEVE MOSTRAR: [descreva aqui — o que ele mostra, e de onde vem o que ele mostra]
+
+Um plugin ISOLADO não troca dado nenhum com o backend do programa — só exibe
+algo pronto.
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do plugin>/
+    plugin.json
+    frontend/
+      index.js
+
+REGRAS QUE VALEM PARA TODO PLUGIN
+
+1. Na raiz da pasta fica o plugin.json — é ele que faz a pasta ser um plugin;
+   sem ele, a pasta é só uma categoria. Campos: "tipo" (obrigatório — "isolado"),
+   "nome" (o título na lista de Configurações › Plugins; sem ele, vale o nome da
+   pasta), "versao" (só rótulo), "descricao" (uma frase, mostrada na lista).
+   "frontend", "backend" e "boot" são opcionais: sem eles valem
+   frontend/index.js, backend/plugin.py e plugin_boot.py — use os padrões.
+   UTF-8, e "automático" com acento.
+
+2. Uma pasta é um plugin inteiro. O que ele gera vai em files/ e o que o
+   usuário escolhe vai em config/, as duas DENTRO da pasta dele (nascem pelo
+   seu próprio código, com os.makedirs(..., exist_ok=True)). Nada fora dela.
+
+3. Um plugin SÓ LÊ. Ele nunca edita nem apaga arquivo do programa, arquivo do
+   projeto do usuário ou pasta de outro plugin. Se o que eu pedi exige mudar uma
+   tela que já existe no programa, me avise: aquilo é uma EXTENSÃO, não um
+   plugin.
+
+4. O plugin ganha uma sub-aba só dele, dentro da aba Plugins. O
+   frontend/index.js é um script clássico (sem import, sem export) e define
+   window.montarPlugin = function (container, contexto) { … } de forma
+   SÍNCRONA — o corpo pode esperar, a definição não. contexto.projeto vem com o
+   nome do projeto ("Dentro do projeto") ou null ("Tela principal"): trate os
+   dois casos.
+
+5. Ninguém avisa que o painel morreu: não existe desmontarPlugin. Limpe-se na
+   entrada — guarde um destroy() no próprio container e chame-o no começo do
+   montarPlugin — e todo setInterval confere container.isConnected antes de
+   trabalhar.
+
+6. Não há isolamento de CSS: o <style> injetado nunca sai e vale para o
+   programa inteiro. Guarde-o por id (para não empilhar), e use um prefixo curto
+   e só seu em toda classe, id e global do window. Cor só pelos tokens do
+   programa (var(--surface), var(--text), var(--blue)…), nunca hexadecimal: o
+   programa tem cinco temas, um deles claro.
+
+7. Caminho nunca escrito à mão. O diretório de trabalho do processo é o do
+   programa, não o seu: no Python, monte tudo a partir de __file__; nunca conte
+   um número fixo de "..".
+
+REGRAS DO TIPO ISOLADO
+
+8. Não escreva plugin_boot.py (o programa não o roda num plugin "isolado"), e
+   não chame o backend do programa: tudo o que a sub-aba mostra está no próprio
+   frontend/index.js.
+
+ONDE VOU SALVAR
+  Program/External/plugins/<Nome do plugin>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome e o caminho de cada um.

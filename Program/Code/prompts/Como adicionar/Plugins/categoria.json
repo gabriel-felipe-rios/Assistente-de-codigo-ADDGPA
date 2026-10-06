@@ -1,0 +1,47 @@
+{
+  "ordem": 9,
+  "nome": "Plugins",
+  "icone": "▣",
+  "destino": "Program/External/plugins/",
+  "contrato": "Contrato/Como criar plugins.md",
+  "tabela": {
+    "colunas": [
+      "Tipo",
+      "O que faz"
+    ],
+    "linhas": [
+      {
+        "nome": "Automático",
+        "texto": "tem `plugin_boot.py` e coleta por conta própria, sem clique",
+        "prompt": "Prompt · Automático.txt"
+      },
+      {
+        "nome": "Manual",
+        "texto": "só age quando você clica em algo dentro da aba dele",
+        "prompt": "Prompt · Manual.txt"
+      },
+      {
+        "nome": "Isolado",
+        "texto": "não troca dado com o programa — só exibe algo pronto",
+        "prompt": "Prompt · Isolado.txt"
+      }
+    ]
+  },
+  "botao": null,
+  "nota": "Cada prompt pede à IA um plugin daquele tipo, já no formato que o programa lê. Quando estiver pronto, ponha a pasta em `Program/External/plugins/`.",
+  "apoio": {
+    "titulo": "Material de apoio",
+    "linhas": [
+      {
+        "nome": "A API do programa",
+        "texto": "como o plugin conversa com o programa e o que ele pode ler",
+        "arquivo": "Material de apoio/A API do programa.md"
+      },
+      {
+        "nome": "Como usar o Plugin base",
+        "texto": "os dados prontos que o Plugin base coleta — cole junto do prompt quando o seu plugin for usá-los",
+        "arquivo": "Material de apoio/Como usar o Plugin base.md"
+      }
+    ]
+  }
+}

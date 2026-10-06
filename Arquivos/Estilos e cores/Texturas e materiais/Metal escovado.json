@@ -1,0 +1,15 @@
+{
+  "nome": "Metal escovado",
+  "descricao": "Estrias finas e paralelas com um brilho que corre na diagonal. Superfície fria, de instrumento.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "barras de ferramentas",
+    "trilhos laterais",
+    "rodapés de status"
+  ],
+  "nao_use_em": [
+    "áreas de texto longo",
+    "fundo de formulário"
+  ],
+  "css": "background:\n  repeating-linear-gradient(180deg,\n    color-mix(in srgb, var(--texto) 4%, transparent) 0 1px,\n    transparent 1px 3px),\n  linear-gradient(115deg, var(--superficie-hover), var(--superficie) 45%, var(--superficie-escura));"
+}

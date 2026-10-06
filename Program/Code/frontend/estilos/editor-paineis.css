@@ -1,0 +1,124 @@
+/* ═══ EDITOR → os dois painéis, as abas e a barra do arquivo ═══════════════
+   ⚠️ QUAL PAINEL RECEBE O PRÓXIMO ARQUIVO É ESTADO VISÍVEL, e não uma regra
+   escondida: sem a marca, abrir um arquivo joga-o num dos dois por motivo que
+   o usuário não consegue prever, e ele fecha o painel errado.              */
+/* ── Área dos dois painéis ── */
+.ed-area { flex: 1; display: flex; overflow: hidden; min-width: 0; }
+.ed-painel {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; min-width: 0; position: relative;
+}
+/* ⚠️ Com a tela dividida, o painel B deixa de ser flexível e passa a ter
+   largura própria — `flex: 1` faz o navegador ignorar qualquer `width` que a
+   divisória escreva, e o arraste vira um gesto sem efeito nenhum. O A continua
+   `flex: 1` e come o resto. */
+.ed-area:not(.ed-area--simples) #ed-painel-b { flex: 0 0 auto; width: 50%; }
+/* ── Qual painel recebe o próximo arquivo ──
+   O ativo CLAREIA, e clareia só a MOLDURA — a barra de abas e a barra de
+   botões. Duas coisas a não repetir:
+
+   · Já foi uma barra azul de 2px no topo, e o usuário mandou tirar: ela lê
+     como aviso, não como estado.
+   · ⚠️ E não pode ser o fundo do CÓDIGO. O fundo do código é o que dá contraste
+     às cores do Prism; clarear um lado faria o MESMO trecho de código parecer
+     ter cores diferentes de um painel para o outro. O VS Code também mexe só no
+     cromo, e é por isso.
+
+   Com um painel só não há o que distinguir, e a marca some. */
+.ed-area:not(.ed-area--simples) .ed-painel.ed-ativo .ed-files-bar,
+.ed-area:not(.ed-area--simples) .ed-painel.ed-ativo .ed-toolbar {
+  background: rgba(var(--white-rgb), 0.06);
+}
+.ed-area:not(.ed-area--simples) .ed-painel.ed-ativo {
+  box-shadow: inset 0 0 0 1px rgba(var(--white-rgb), 0.13);
+}
+
+/* ── Abas dos arquivos abertos ──
+   ⚠️ ALTURA FIXA, e a barra existe mesmo vazia. Ela já foi condicional (`hidden`
+   com menos de 2 arquivos) e o efeito era o pior possível: abrir o segundo
+   arquivo fazia a faixa nascer e empurrar o código inteiro para baixo — a tela
+   parecia mudar de tema no meio do trabalho.
+
+   ⚠️ `height` FIXA, não `min-height`: com o mínimo, a barra vazia media 32px e
+   a barra com uma aba media 33, porque quem mandava na altura era o
+   preenchimento da aba. A altura tem que descer da barra para a aba, e não
+   subir — por isso `align-items: stretch` aqui e preenchimento só horizontal
+   em `.ed-file-tab`. */
+.ed-files-bar {
+  display: flex; gap: 2px; flex-shrink: 0; padding: 0 6px;
+  height: 33px; align-items: stretch;
+  background: var(--surface-dark);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+  overflow-x: auto;
+}
+.ed-file-tab {
+  display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+  padding: 0 8px 0 12px; font-size: 12.5px;
+  color: var(--text-muted); cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color var(--t), background var(--t);
+}
+.ed-file-tab:hover { color: var(--text); }
+.ed-file-tab.active {
+  color: var(--text); background: rgba(var(--blue-rgb), 0.10); border-bottom-color: var(--blue);
+}
+.ed-file-x {
+  width: 15px; height: 15px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; font-size: 12px; color: var(--text-muted); flex-shrink: 0;
+}
+.ed-file-x:hover { background: rgba(var(--white-rgb), 0.15); color: var(--text); }
+/* Ponto âmbar = tem mudança não salva. Ocupa o lugar do × até o mouse chegar,
+   como no VS Code: o × é o gesto raro, o aviso é o que precisa estar sempre à
+   vista. */
+.ed-sujo { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
+
+/* Pin da aba (Obra 9) — só entra no DOM quando a aba ESTÁ fixada; o usuário
+   testou a versão sempre-visível-mas-fraca e achou que não precisava aparecer
+   nada até fixar de verdade. Fixar/desfixar é pelo menu de contexto da aba
+   (botão direito); clicar no pin já visível também desfixa, de atalho. */
+.ed-pin { font-size: 11px; opacity: 0.9; transform: rotate(35deg); flex-shrink: 0; cursor: pointer; }
+
+/* ── Migalhas de pão (Obra 9) ── */
+.ed-breadcrumb {
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+  padding: 5px 14px; font-size: 11.5px; color: var(--text-muted);
+  background: rgba(var(--white-rgb), 0.02);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.05);
+  overflow-x: auto; white-space: nowrap;
+}
+.ed-breadcrumb b { color: var(--text); font-weight: 600; }
+.ed-breadcrumb .sep { opacity: 0.5; }
+.ed-breadcrumb-seg { cursor: pointer; border-radius: 4px; padding: 1px 3px; }
+.ed-breadcrumb-seg:hover { color: var(--text); background: rgba(var(--white-rgb), 0.08); }
+
+/* ── Barra do arquivo aberto ── */
+.ed-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 7px 12px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+}
+.ed-caminho { font-size: 12px; color: var(--text-muted); min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed-caminho b { color: var(--text); font-weight: 600; font-size: 13.5px; }
+.ed-acoes { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ed-acoes .btn-icon { margin-left: 0; width: 30px; height: 30px; font-size: 14px; }
+.ed-acoes .btn-icon:disabled { opacity: 0.35; cursor: default; }
+.ed-acoes .btn-icon:disabled:hover {
+  color: var(--text-muted); border-color: rgba(var(--white-rgb), 0.15); background: transparent;
+}
+
+/* ── Faixa de aviso (arquivo grande, somente leitura, conflito) ── */
+.ed-faixa {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  padding: 7px 12px; font-size: 12px;
+  background: rgba(var(--amber-rgb), 0.14);
+  border-bottom: 1px solid rgba(var(--amber-rgb), 0.32);
+  color: var(--text);
+}
+.ed-faixa--erro {
+  background: rgba(var(--red-rgb), 0.14);
+  border-bottom-color: rgba(var(--red-rgb), 0.35);
+}
+.ed-faixa-texto { flex: 1; min-width: 0; }
+.ed-faixa .btn { padding: 4px 12px; font-size: 12px; }
+

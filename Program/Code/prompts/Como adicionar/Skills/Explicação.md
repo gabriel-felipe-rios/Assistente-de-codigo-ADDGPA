@@ -1,0 +1,1 @@
+Um documento que ensina o assistente externo a fazer um **tipo de trabalho**. Cada skill é uma **pasta**; ativar num projeto copia a pasta inteira, com o **principal** renomeado para `SKILL.md`. O principal leva a **descrição** no cabeçalho — é por ela que o assistente decide quando usar.

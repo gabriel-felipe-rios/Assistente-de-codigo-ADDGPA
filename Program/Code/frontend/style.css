@@ -1,0 +1,121 @@
+/* Tokens que não mudam com o tema (raio, transição, terminal embutido).
+   Vem ANTES da estrutura e do tema: assim um tema pode sobrescrever qualquer
+   coisa daqui se um dia precisar, e não o contrário. */
+@import 'estilos/tema/tokens-fixos.css';
+/* A estrutura, já SEM o :root — os 99 tokens que moravam aqui foram para
+   estilos/tema/. O arquivo de tema em si NÃO entra por @import: @import é fixo
+   e não troca em execução, e o tema precisa trocar. Ele entra por um <link>
+   próprio em index.html, cujo href o JavaScript reescreve. */
+@import 'estilos/tema/base.css';
+@import 'estilos/projetos.css';
+@import 'estilos/projetos-kanban.css';
+@import 'estilos/navegacao.css';
+@import 'estilos/arvore-pastas.css';
+@import 'estilos/busca-arvore.css';
+@import 'estilos/workspace.css';
+@import 'estilos/chat.css';
+@import 'estilos/chat-log.css';
+@import 'estilos/chat-mensagem-acoes.css';
+@import 'estilos/chat-paineis.css';
+@import 'estilos/terminal.css';
+@import 'estilos/arquivos.css';
+@import 'estilos/estilos-e-cores.css';
+@import 'estilos/arquivos-como-adicionar.css';
+@import 'estilos/modais.css';
+@import 'estilos/treesitter.css';
+@import 'estilos/lsp.css';
+@import 'estilos/simbolos.css';
+@import 'estilos/agentes-base.css';
+@import 'estilos/agentes-base-cache.css';
+@import 'estilos/agentes-base-preview.css';
+@import 'estilos/agentes-base-config.css';
+@import 'estilos/agentes-automacao.css';
+@import 'estilos/agentes-automacao-visualizar.css';
+@import 'estilos/agentes-execucao.css';
+@import 'estilos/mapas-pipeline.css';
+@import 'estilos/mapas-pipeline-leituras.css';
+@import 'estilos/mapas-pipeline-niveis.css';
+@import 'estilos/agentes-colaboracao-designer.css';
+@import 'estilos/agentes-colaboracao-designer-preview.css';
+@import 'estilos/agentes-colaboracao-designer-rodadas.css';
+@import 'estilos/agentes-colaboracao-designer-abas.css';
+@import 'estilos/projeto-caminhos.css';
+@import 'estilos/utils.css';
+@import 'estilos/configuracoes.css';
+@import 'estilos/configuracoes-extensoes.css';
+@import 'estilos/configuracoes-busca.css';
+@import 'estilos/configuracoes-preparar.css';
+@import 'estilos/configuracoes-plugins.css';
+/* Extensões do programa: o nível de cima do trilho, a lista da categoria
+   e o destaque. Arquivo próprio pelo mesmo motivo do de cima. */
+@import 'estilos/extensoes-do-programa.css';
+@import 'estilos/configuracoes-arquivos.css';
+/* Configurações › Arquivos (chave `biblioteca`): o cartão de opção. */
+@import 'estilos/configuracoes-biblioteca.css';
+/* Arquivo próprio, e não mais um bloco no de cima: `configuracoes.css` já
+   passa das 500 linhas do teto da AMF. */
+@import 'estilos/configuracoes-notificacoes.css';
+/* Depois do de Notificações, de quem esta categoria reusa a grade 3x3: em CSS a
+   ordem é a regra de desempate, e o que vem depois é quem ajusta. */
+@import 'estilos/configuracoes-acesso-rapido.css';
+/* Depois do de cima, e não antes: a grade `.tecla-*` saiu de lá para cá, e em
+   CSS a ordem é a regra de desempate. */
+@import 'estilos/configuracoes-teclado.css';
+@import 'estilos/mapas.css';
+@import 'estilos/mapas-ligacoes.css';
+@import 'estilos/mapas-matriz-io.css';
+@import 'estilos/documentacao.css';
+@import 'estilos/mapaio.css';
+@import 'estilos/regras.css';
+@import 'estilos/subagentes.css';
+@import 'estilos/relacoes.css';
+@import 'estilos/duplicados.css';
+@import 'estilos/agentes-erros-pendencias.css';
+@import 'estilos/agentes-referencia.css';
+@import 'estilos/agentes-historico.css';
+@import 'estilos/placeholder-abas.css';
+@import 'estilos/inspetor.css';
+@import 'estilos/aparencia.css';
+@import 'estilos/backups.css';
+@import 'estilos/trabalhos.css';
+@import 'estilos/trabalhos-oficina.css';
+@import 'estilos/trabalhos-oficina-nos.css';
+@import 'estilos/trabalhos-fluxo.css';
+@import 'estilos/trabalhos-medidas.css';
+@import 'estilos/trabalhos-agentes.css';
+@import 'estilos/trabalhos-oficina-edicao.css';
+@import 'estilos/trabalhos-agentes-acoes.css';
+@import 'estilos/trabalhos-oficina-anotacoes.css';
+@import 'estilos/backups-mapa.css';
+@import 'estilos/backups-mapa-amostras.css';
+@import 'estilos/backups-mapa-arvore.css';
+@import 'estilos/backups-mapa-ligacoes.css';
+@import 'estilos/backups-mapa-pipeline.css';
+
+/* Aba Editor. Quatro arquivos, e a divisão não é gosto: `editor-superficie.css`
+   guarda SÓ as métricas que o <textarea> e o <pre> não podem ter diferentes —
+   um arquivo dedicado é a documentação dessa invariante. `editor-cores.css` é o
+   mapa `.token.*` → `var()` que substitui os temas prontos do Prism (que trazem
+   hex cravado, e a convenção do projeto é cor em token). `divisoria.css` é
+   componente compartilhado, não da aba. */
+@import 'estilos/divisoria.css';
+@import 'estilos/menu-contexto.css';
+/* M5 · o popup de autocomplete herda as medidas do menu de contexto — as
+   duas caixas flutuam no cursor e precisam parecer a mesma família. */
+@import 'estilos/editor-autocomplete.css';
+@import 'estilos/editor-dica.css';
+@import 'estilos/editor.css';
+@import 'estilos/editor-paineis.css';
+@import 'estilos/editor-busca.css';
+/* A barra de Acesso rápido saiu de dentro de `editor-busca.css`, e o `@import`
+   dela entra AQUI, na posição em que o bloco estava — não no fim do arquivo.
+   Em CSS a ordem é a regra de desempate, e reordenar é trocar qual regra vence.
+   A barra não é mais da aba Editor; a vizinhança aqui é herança de onde ela
+   nasceu, e é justamente isso que a ordem preserva. */
+@import 'estilos/acesso-rapido.css';
+@import 'estilos/editor-status.css';
+@import 'estilos/editor-historico.css';
+@import 'estilos/editor-superficie.css';
+@import 'estilos/editor-cores.css';
+@import 'estilos/editor-visualizador.css';
+@import 'estilos/editor-arrasto.css';

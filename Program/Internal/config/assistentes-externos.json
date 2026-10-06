@@ -1,0 +1,180 @@
+{
+  "assistentes_externos": [
+    {
+      "nome": "Claude Code",
+      "comando": "claude",
+      "argumentos": [],
+      "flag_nome": "--name",
+      "flag_prompt": "--append-system-prompt",
+      "comando_cota": "",
+      "categorias": {
+        "skills": {
+          "destino": ".claude/skills/",
+          "arquivo_de_entrada": "SKILL.md",
+          "formato": "pasta"
+        },
+        "comandos": {
+          "destino": ".claude/commands/",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        },
+        "mcps": {
+          "destino": ".mcp.json",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "instrucoes-base": {
+          "destino": "",
+          "arquivo_de_entrada": "CLAUDE.md",
+          "formato": "solto"
+        },
+        "agentes": {
+          "destino": ".claude/agents/",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        }
+      }
+    },
+    {
+      "nome": "Cursor",
+      "comando": "",
+      "argumentos": [],
+      "flag_nome": "",
+      "flag_prompt": "--append-system-prompt",
+      "comando_cota": "",
+      "categorias": {
+        "skills": {
+          "destino": ".cursor/skills/",
+          "arquivo_de_entrada": "SKILL.md",
+          "formato": "pasta"
+        },
+        "comandos": {
+          "destino": ".cursor/commands/",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        },
+        "mcps": {
+          "destino": ".cursor/mcp.json",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "instrucoes-base": {
+          "destino": "",
+          "arquivo_de_entrada": "AGENTS.md",
+          "formato": "solto"
+        },
+        "agentes": {
+          "destino": ".cursor/agents/",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        }
+      }
+    },
+    {
+      "nome": "Codex / Antigravity",
+      "comando": "",
+      "argumentos": [],
+      "flag_nome": "",
+      "flag_prompt": "--append-system-prompt",
+      "comando_cota": "",
+      "categorias": {
+        "skills": {
+          "destino": ".agents/skills/",
+          "arquivo_de_entrada": "SKILL.md",
+          "formato": "pasta"
+        },
+        "comandos": {
+          "destino": ".agents/workflows/",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        },
+        "mcps": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "instrucoes-base": {
+          "destino": "",
+          "arquivo_de_entrada": "AGENTS.md",
+          "formato": "solto"
+        },
+        "agentes": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        }
+      }
+    },
+    {
+      "nome": "OpenCode",
+      "comando": "opencode",
+      "argumentos": [],
+      "flag_nome": "",
+      "flag_prompt": "--system-prompt",
+      "comando_cota": "",
+      "categorias": {
+        "skills": {
+          "destino": ".opencode/skills/",
+          "arquivo_de_entrada": "SKILL.md",
+          "formato": "pasta"
+        },
+        "comandos": {
+          "destino": ".opencode/commands/",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "mcps": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "instrucoes-base": {
+          "destino": "",
+          "arquivo_de_entrada": "AGENTS.md",
+          "formato": "solto"
+        },
+        "agentes": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        }
+      }
+    },
+    {
+      "nome": "Gemini CLI",
+      "comando": "",
+      "argumentos": [],
+      "flag_nome": "",
+      "flag_prompt": "--append-system-prompt",
+      "comando_cota": "",
+      "categorias": {
+        "skills": {
+          "destino": ".gemini/skills/",
+          "arquivo_de_entrada": "SKILL.md",
+          "formato": "pasta"
+        },
+        "comandos": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        },
+        "mcps": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "pasta"
+        },
+        "instrucoes-base": {
+          "destino": "",
+          "arquivo_de_entrada": "AGENTS.md",
+          "formato": "solto"
+        },
+        "agentes": {
+          "destino": "",
+          "arquivo_de_entrada": "",
+          "formato": "solto"
+        }
+      }
+    }
+  ],
+  "assistente_externo_padrao": "Claude Code"
+}

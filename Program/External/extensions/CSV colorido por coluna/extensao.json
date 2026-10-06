@@ -1,0 +1,12 @@
+{
+  "nome": "CSV colorido por coluna",
+  "versao": "2",
+  "descricao": "Abriu um .csv ou .tsv no Editor: cada coluna ganha uma cor, e a parede de vírgulas vira uma tabela que se lê de relance.",
+  "prefixo": "csv",
+  "tipos": ["2"],
+  "acrescenta": [
+    { "recurso": "marca", "id": "csv.colunas", "lugar": "editor.decorador",
+      "arquivo": "frontend/encaixes/decorador.js" }
+  ],
+  "escreve_fora": []
+}

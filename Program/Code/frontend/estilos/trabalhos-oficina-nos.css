@@ -1,0 +1,216 @@
+/* ═══ TRABALHOS → Oficina: os nós ══════════════════════════════════════════
+   O cartão de cada nó, o nó de TERMINAL DO SISTEMA (com o xterm dentro) e o
+   nó de NOTA.
+
+   ⚠️ A ALTURA DO TERMINAL É DEFINIDA, E ISSO NÃO É ESTÉTICA — É O QUE IMPEDE
+   UM LAÇO. Sem altura, o xterm mede o host, o host cresce com o conteúdo, e a
+   medição seguinte devolve outro número: o terminal fica redimensionando a si
+   mesmo para sempre. O host é `position: absolute` justamente para sair do
+   fluxo e quebrar esse laço de vez.
+
+   ⚠️ A LARGURA VEM DE 80 COLUNAS DA FONTE REAL, e não de um número escolhido
+   a olho.                                                                  */
+/* ── Os nós ── */
+.ofi-no { position: absolute; user-select: none; }
+.ofi-no.selecionado { outline: 1px dashed var(--blue); outline-offset: 3px; }
+
+.ofi-terminal {
+  width: 380px; background: var(--surface); border: 1px solid var(--gray);
+  border-radius: var(--radius); display: flex; flex-direction: column;
+  box-shadow: 0 6px 20px rgba(var(--black-rgb), .35);
+}
+.ofi-term-cab {
+  display: flex; align-items: center; gap: 6px; padding: 7px 9px;
+  border-bottom: 1px solid rgba(var(--white-rgb), .08); cursor: grab;
+}
+.ofi-term-nome { font-size: 12px; font-weight: 600; }
+.ofi-avatar {
+  width: 17px; height: 17px; border-radius: 50%; display: inline-flex;
+  align-items: center; justify-content: center;
+  font-size: 9.5px; font-weight: 700; color: var(--surface-dark); flex-shrink: 0;
+}
+.ofi-bolinha { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.ofi-cadeado { font-size: 10px; opacity: .7; cursor: help; }
+
+.ofi-term-log {
+  height: 210px; overflow-y: auto; padding: 8px 10px;
+  font-family: 'Consolas', monospace; font-size: 11.5px; line-height: 1.55;
+  background: var(--surface-dark); white-space: pre-wrap; word-break: break-word;
+}
+.ofi-log-l { min-height: 1em; }
+.ofi-log-err { color: var(--coral-light); }
+.ofi-log-ent { color: var(--mint); }
+.ofi-log-vazio { color: var(--text-muted); opacity: .6; font-style: italic; }
+
+.ofi-term-pe {
+  display: flex; gap: 5px; padding: 6px 7px;
+  border-top: 1px solid rgba(var(--white-rgb), .08);
+}
+.ofi-term-entrada {
+  flex: 1; min-width: 0; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), .1); border-radius: 5px;
+  color: var(--text); padding: 4px 7px; font-family: inherit; font-size: 11px; outline: none;
+}
+.ofi-term-entrada:focus { border-color: var(--blue); }
+
+/* ── O nó de TERMINAL DO SISTEMA ── */
+/* ⚠️ A TELA PRETA VAI ATÉ A BORDA DO CARTÃO, e o campo de digitar mora DENTRO
+   dela — não numa barra separada embaixo. Um terminal em que se fala por uma
+   caixa ao lado não é um terminal; é um formulário com um log em cima. Foi o
+   relato que criou este tipo de nó. */
+/* Coluna flex para a tela preta CRESCER com o cartão: redimensionando o nó pela
+   pega, quem tem de ganhar a altura nova é o log, não uma faixa de fundo vazia
+   embaixo dele. O `min-height: 0` no filho é o que permite ele encolher — sem
+   ele o flex nunca deixa um item ficar menor que o conteúdo, e a rolagem do log
+   nunca aparece. */
+/* ⚠️ A ALTURA É DEFINIDA, E ISSO NÃO É ESTÉTICA — É O QUE IMPEDE UM LAÇO.
+   O nó não tinha altura: ela vinha do conteúdo, o conteúdo era o terminal, e o
+   programa MEDIA essa altura para decidir quantas linhas o terminal teria. Cada
+   redesenho (um clique bastava) media a altura que o próprio terminal acabara
+   de criar, pedia mais linhas, e o cartão crescia de novo — infinitamente para
+   baixo, até travar o programa.
+   Quem tirar esta altura reabre o laço. */
+/* ⚠️ A LARGURA VEM DE 80 COLUNAS DA FONTE REAL, e não de um número escolhido.
+   Os 380px davam ~44 colunas, e abaixo de 80 todo programa de terminal quebra a
+   linha no lugar errado. Quem calcula é `trShPublicarLarguraPadrao`
+   (`trabalhos-shell.js`), que mede a célula, soma a calha da rolagem e a
+   moldura, e publica aqui. Os 380px ficam como reserva para o caso de a sonda
+   não rodar — melhor estreito que sem largura nenhuma. */
+.ofi-shell {
+  width: var(--ofi-shell-w, 380px); height: 300px;
+  border-radius: var(--radius); cursor: grab;
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), .12);
+  box-shadow: 0 6px 20px rgba(var(--black-rgb), .4);
+  overflow: hidden;
+}
+.ofi-shell .ofi-term-cab { flex-shrink: 0; }
+/* Os dois botões do cabeçalho andam juntos, encostados à direita. Com
+   `margin-left: auto` em cada um deles, o primeiro empurrava o segundo e eles
+   apareciam separados. */
+.ofi-sh-botoes { display: flex; gap: 2px; margin-left: auto; flex-shrink: 0; }
+/* A luz é APAGADA por padrão: o nó nasce fechado, e o shell só acende na
+   primeira linha digitada — exigir um botão "abrir" antes seria um passo que
+   nenhum terminal do mundo pede. */
+.ofi-sh-luz { background: var(--text-muted); opacity: .4; }
+.ofi-sh-luz.ofi-sh-on { background: var(--green); opacity: 1; }
+.ofi-sh-x {
+  flex-shrink: 0; cursor: pointer; padding: 0 4px;
+  background: transparent; border: 0; color: var(--text-muted); font-size: 11px;
+}
+.ofi-sh-x:hover { color: var(--coral-light); }
+
+/* `position: relative` + `overflow: hidden` fazem desta caixa a MOLDURA de
+   tamanho fixo dentro da qual o terminal vive. Ela recebe o que sobra da altura
+   do cartão, e nada do que estiver dentro dela pode aumentá-la. */
+.ofi-sh-tela {
+  position: relative; flex: 1; min-height: 0; min-width: 0; overflow: hidden;
+  cursor: text;
+  background: var(--surface-dark);
+  border-top: 1px solid rgba(var(--white-rgb), .08);
+}
+/* ⚠️ O HOST É ABSOLUTO, E É ISSO QUE QUEBRA O LAÇO DE VEZ. Fora do fluxo, o
+   terminal NÃO TEM COMO influenciar o tamanho do cartão — a seta aponta só num
+   sentido: o cartão manda no terminal, nunca o contrário. O respiro que era
+   `padding` da moldura virou o `inset` daqui, senão ele entraria na conta duas
+   vezes.
+   O host nunca é recriado pelo redesenho do canvas: a camada de nós é refeita
+   por `innerHTML` e este elemento é ADOTADO de volta (ver `ofiLigarShells`). */
+.ofi-sh-xterm { position: absolute; inset: 6px 4px 4px 8px; }
+
+/* ⚠️ `.ofi-no { user-select: none }` PRECISA SER DESFEITO AQUI, senao nao da
+   para selecionar o texto da saida com o mouse — a mesma licao que o log antigo
+   ja tinha aprendido. */
+.ofi-sh-xterm, .ofi-sh-xterm * { user-select: text; }
+
+/* O xterm pinta o proprio fundo; o do host so apareceria na sobra de um pixel
+   ao redor, e uma faixa de cor diferente ali le como defeito. */
+.ofi-sh-xterm .xterm-viewport { background-color: transparent !important; }
+/* ⚠️ A CALHA NATIVA SAI DE CENA. `.xterm-viewport` é `overflow-y: scroll` (e
+   não `auto`), então o motor reserva a barra SEMPRE — inclusive num terminal
+   recém-aberto, sem histórico nenhum para rolar. Ela comia as últimas colunas
+   de cada linha, e o xterm 6 já traz um rolador próprio, desenhado por cima e
+   sem ocupar largura de layout. Rolar continua funcionando: esconder a barra
+   não desliga a rolagem.
+
+   `trShDimensionar` desconta a calha mesmo assim, e os dois não brigam: com
+   esta regra a conta dá zero, e sem ela o JS ainda acerta o número de colunas. */
+.ofi-sh-xterm .xterm-viewport::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ⚠️ COLUNA FLEX, E ISSO É O QUE FAZ O EDITOR CABER. Sem isto o corpo tinha
+   altura de conteúdo, o `height: 100%` do `<textarea>` resolvia para `auto`, e
+   ele caía no `min-height: 60px` — uma caixinha de três linhas dentro de uma
+   nota grande, rolada até o fim porque o cursor vai para o fim. O sintoma era
+   "dois cliques na nota e o texto some": ele não sumia, estava acima da fresta.
+   O `background` daqui é só a reserva — quem pinta é o `style` do elemento, com
+   o pastel da cor escolhida (ver `ofiPastel`). */
+.ofi-nota {
+  width: 240px; padding: 10px 12px; border-radius: 4px; cursor: grab;
+  display: flex; flex-direction: column;
+  background: var(--yellow-soft); color: #22262e;
+  border-left: 3px solid var(--amber);
+  box-shadow: 0 5px 16px rgba(var(--black-rgb), .35);
+}
+.ofi-nota-cab { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.ofi-nota-t { font-size: 11.5px; font-weight: 700; flex: 1; min-width: 0; }
+
+/* ⚠️ O CORPO MOSTRA MARKDOWN RENDERIZADO, e por isso NÃO tem `white-space:
+   pre-wrap`: o `marked` já entrega parágrafos e listas em HTML, e o pre-wrap
+   por cima disso duplicaria toda quebra de linha. O texto cru só aparece no
+   `<textarea>` da edição, logo abaixo. */
+.ofi-nota-c { font-size: 11px; line-height: 1.55; }
+.ofi-nota-c > :first-child { margin-top: 0; }
+.ofi-nota-c > :last-child { margin-bottom: 0; }
+.ofi-nota-c p { margin: 0 0 6px; }
+.ofi-nota-c h1, .ofi-nota-c h2, .ofi-nota-c h3 { font-size: 12.5px; font-weight: 700; margin: 8px 0 4px; }
+.ofi-nota-c ul, .ofi-nota-c ol { margin: 0 0 6px; padding-left: 17px; }
+.ofi-nota-c li { margin-bottom: 2px; }
+.ofi-nota-c code {
+  font-family: 'Consolas', monospace; font-size: 10.5px;
+  background: rgba(var(--black-rgb), .1); border-radius: 3px; padding: 0 3px;
+}
+.ofi-nota-c pre {
+  background: rgba(var(--black-rgb), .1); border-radius: 4px;
+  padding: 5px 7px; margin: 0 0 6px; overflow-x: auto;
+}
+.ofi-nota-c a { color: inherit; text-decoration: underline; }
+.ofi-nota-c blockquote {
+  margin: 0 0 6px; padding-left: 8px; opacity: .8;
+  border-left: 2px solid rgba(var(--black-rgb), .25);
+}
+.ofi-nota-vazia { opacity: .45; font-style: italic; }
+
+/* O texto CRU, no duplo clique. Herda a fonte e a cor da nota para a troca não
+   parecer que abriu outra coisa por cima — é o mesmo papel, virado do avesso. */
+.ofi-nota-editor {
+  width: 100%; height: 100%; min-height: 60px; resize: none;
+  background: transparent; border: 0; outline: none; padding: 0;
+  color: inherit; font: inherit; line-height: 1.55;
+}
+
+/* ⚠️ O RECORTE MUDOU DE ELEMENTO, e não é detalhe: a bolinha de cor mora em
+   `left: -14px`, FORA da caixa, e o `overflow: hidden` que estava aqui a
+   apagava por inteiro — o nó de texto era o único sem como trocar de cor pelo
+   caminho curto. Recortar o TEXTO em vez do nó mantém a promessa (texto longo
+   não vaza da caixa escolhida) e devolve a bolinha.
+   A cor não está mais aqui: quem pinta é o `style` do elemento, e o padrão é
+   branco (ver `OFI_COR_PADRAO`). */
+.ofi-texto {
+  font-size: 13px; font-weight: 600;
+  cursor: grab; padding: 4px 6px; letter-spacing: .02em;
+  min-width: 60px; overflow: visible;
+}
+.ofi-texto .ofi-editavel { display: block; white-space: pre-wrap; overflow: hidden; }
+.ofi-texto { position: absolute; }
+/* Nota e texto com tamanho escolhido pelo usuário precisam rolar o que não
+   couber — cortar sem rolagem esconderia texto sem dizer que escondeu. */
+.ofi-nota-c { flex: 1 1 auto; overflow-y: auto; }
+
+/* ⚠️ UMA NOTA VAZIA PRECISA TER ONDE CLICAR. Ela nasce com o texto em branco, e
+   um `<div>` vazio tem ZERO pixel de altura: o duplo clique não tinha alvo, e o
+   sintoma era "a nota não deixa editar". O `min-height` dá a área, e o
+   `::before` diz o que fazer com ela — some assim que houver texto. */
+.ofi-nota-c { min-height: 2.6em; }
+.ofi-nota-c:empty::before {
+  content: attr(data-vazio); opacity: .45; font-style: italic;
+}

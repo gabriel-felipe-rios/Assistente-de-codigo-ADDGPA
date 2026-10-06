@@ -1,0 +1,81 @@
+{
+  "nome": "Solarizado escuro",
+  "descricao": "Paleta escura clássica de baixo brilho, com fundo azul-petróleo e acentos calibrados para longas sessões de código. Segue os valores canônicos do Solarized Dark.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#002B36",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#073642",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#0D4A5A",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#001F27",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#93A1A1",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#657B83",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#268BD2",
+      "apelido": "azul",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#3BA3E8",
+      "apelido": "azul (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#859900",
+      "apelido": "verde",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#A3BB1A",
+      "apelido": "verde (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#DC322F",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#EE4B48",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#6C71C4",
+      "apelido": "violeta",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#868AD6",
+      "apelido": "violeta (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#2AA198",
+      "apelido": "ciano",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#3FB9B0",
+      "apelido": "ciano (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

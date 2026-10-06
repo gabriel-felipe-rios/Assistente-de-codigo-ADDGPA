@@ -1,0 +1,6 @@
+{
+  "nome": "Linha do tempo",
+  "versao": "1",
+  "descricao": "O que foi criado, editado, apagado e movido em cada dia de um projeto, a partir do histórico que o Plugin base grava.",
+  "tipo": "manual"
+}

@@ -1,0 +1,39 @@
+Preciso de uma TIPOGRAFIA para a biblioteca de aparência do meu assistente de código.
+
+QUE CARÁTER: [descreva aqui — ex.: técnica e densa, ou editorial e arejada]
+
+Entregue UM arquivo .json com esta forma exata:
+
+  {
+    "nome": "<Nome da tipografia>",
+    "descricao": "<uma frase dizendo o caráter dela>",
+    "instrucao": "Aplique só família, peso, proporção da escala e entrelinha. O tamanho-base do corpo e a densidade do espaçamento vêm do ESTILO, não daqui.",
+    "tipografia": {
+      "familias":   { "titulo": "", "texto": "", "mono": "" },
+      "pesos":      { "titulo": 600, "texto": 400, "enfase": 600 },
+      "escala":     { "proporcao": 1.2, "observacao": "" },
+      "entrelinha": { "titulo": 1.25, "texto": 1.45, "compacto": 1.3 }
+    }
+  }
+
+REGRAS DO FORMATO
+
+1. Não decida TAMANHO DE CORPO aqui, e não decida espaçamento. Isso vem do
+   ESTILO. Daqui sai só família, peso, a PROPORÇÃO da escala e a entrelinha —
+   por isso o campo se chama "proporcao" e não "tamanhos".
+
+2. Em "familias", escreva a pilha inteira com fallback, como iria no CSS:
+   por exemplo "Inter, system-ui, -apple-system, sans-serif". As três chaves são
+   obrigatórias; se não houver fonte mono própria, repita uma pilha mono padrão.
+
+3. Use fontes que existam sem instalação, ou diga em "observacao" de onde vem a
+   fonte e como carregá-la.
+
+4. O campo "descricao" é o que aparece no cartão da tela. Uma frase.
+
+5. A tag NÃO vai dentro do arquivo. Ela mora só no tags.json, na raiz de
+   Arquivos/Estilos e cores/, e eu atribuo pela própria tela depois. Não crie
+   campo "tags" no JSON nem meta no HTML.
+
+ONDE VOU SALVAR
+  Arquivos/Estilos e cores/Tipografia/<Nome da tipografia>.json

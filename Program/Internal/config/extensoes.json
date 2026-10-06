@@ -1,0 +1,47 @@
+{
+  "Extensão de teste": {
+    "ligado": true
+  },
+  "Ícones de arquivo": {
+    "ligado": true
+  },
+  "Cor do código": {
+    "ligado": true
+  },
+  "Tingir a janela": {
+    "ligado": true
+  },
+  "Completar enquanto digita": {
+    "ligado": true
+  },
+  "CSV colorido por coluna": {
+    "ligado": true
+  },
+  "Erro na própria linha": {
+    "ligado": true
+  },
+  "Servidor local com recarga": {
+    "ligado": true
+  },
+  "Rodar o que está selecionado": {
+    "ligado": true
+  },
+  "Quem quebra se eu renomear": {
+    "ligado": true
+  },
+  "Prévia de imagem": {
+    "ligado": true
+  },
+  "Glossário no código": {
+    "ligado": true
+  },
+  "Formatar ao salvar": {
+    "ligado": true
+  },
+  "Canvas das telas": {
+    "ligado": true
+  },
+  "Subagentes normativos": {
+    "ligado": true
+  }
+}

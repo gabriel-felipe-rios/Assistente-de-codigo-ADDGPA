@@ -1,0 +1,6 @@
+{
+  "nome": "Exportar visualizações",
+  "versao": "2",
+  "descricao": "Exporta o resumo do projeto, a documentação e os mapas num HTML interativo, para mandar a quem não tem o programa.",
+  "tipo": "manual"
+}

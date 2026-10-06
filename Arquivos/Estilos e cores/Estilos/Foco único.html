@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Foco único -->
+<!-- Quase nada na tela: uma pergunta por vez, centralizada, com progresso discreto -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Foco único</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px}
+.prog{position:fixed;top:0;left:0;right:0;height:2px;background:var(--superficie-hover)}
+.prog i{display:block;height:100%;width:40%;background:var(--primaria)}
+.sair{position:fixed;top:14px;right:18px;color:var(--texto-secundario);font-size:11px}
+.bloco{width:100%;max-width:430px;display:flex;flex-direction:column;gap:16px}
+.h1{font-size:23px;font-weight:700;line-height:1.3}
+.ajuda{color:var(--texto-secundario);font-size:12.5px}
+.campo{height:42px;background:transparent;border:0;border-bottom:2px solid var(--primaria);display:flex;align-items:center;font-size:16px;color:var(--texto-secundario)}
+.acao{display:flex;align-items:center;gap:12px;margin-top:4px}
+.dica{color:var(--texto-secundario);font-size:10.5px}
+.passo{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:var(--texto-secundario);font-size:10.5px}
+</style></head><body>
+<div class="prog"><i></i></div>
+<div class="sair">Sair</div>
+<div class="bloco">
+  <div class="rot">Pergunta 2 de 5</div>
+  <div class="h1">Qual é o nome da sua empresa?</div>
+  <div class="ajuda">Aparece nos documentos que você emitir. Dá para mudar depois.</div>
+  <div class="campo">Estúdio Norte</div>
+  <div class="acao"><button class="bt">Continuar</button><span class="dica">ou aperte Enter</span></div>
+</div>
+<div class="passo">Nada mais compete por atenção nesta tela.</div>
+</body></html>

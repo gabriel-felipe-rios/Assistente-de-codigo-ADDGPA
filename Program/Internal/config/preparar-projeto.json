@@ -1,0 +1,1034 @@
+{
+  "inicios_rapidos": [
+    {
+      "nome": "Claude code - Desktop",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Desktop",
+          "Front design"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Files",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Dependencies",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Internal",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Linha de comando",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Linha de comando"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Dependencies",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Mobile",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Mobile",
+          "Front design"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Página web",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Página web",
+          "Front design"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - SaaS",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - SaaS"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Dependencies",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/migrations",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Extensão Chrome",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Extensão de navegador"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Plugin do Obsidian",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Plugin do Obsidian"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - Plugin de programa",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - Plugin de programa"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Distribution",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Assets",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Dependencies",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    },
+    {
+      "nome": "Claude code - MCP",
+      "assistente": "Claude Code",
+      "itens": {
+        "skills": [
+          "Saída das skills/Padrões de interface",
+          "Saída das skills/Regras e instruções",
+          "Saída das skills/Terminologia e nomenclatura",
+          "Saída das skills/Arquitetura modular/Arquitetura modular - MCP"
+        ],
+        "comandos": [
+          "Saída dos comandos/Discutir ideia",
+          "Saída dos comandos/Funcionamento do programa",
+          "Saída dos comandos/Preview nova interface",
+          "Saída dos comandos/Projeto sugestão",
+          "Saída dos comandos/Explicar conceito visualmente",
+          "Saída dos comandos/Protótipo"
+        ],
+        "mcps": [
+          "Assistente"
+        ],
+        "regras-instrucoes": [],
+        "instrucoes-base": [
+          "Instrução base padrão"
+        ],
+        "agentes": []
+      },
+      "pastas_raiz": [
+        {
+          "caminho": "Files",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Arquitetura modular",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Padrões de interface",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Terminologia e nomenclatura",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída das skills/Regras e instruções",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Discussões",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Saída dos comandos/Melhorias a se fazer",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Workshop",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/External",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Dependencies",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        },
+        {
+          "caminho": "Program/Internal",
+          "remover": false,
+          "contexto": false,
+          "descricao": ""
+        }
+      ],
+      "pasta_trabalho": "Program/Code",
+      "pastas_trabalho": []
+    }
+  ],
+  "inicio_rapido_padrao": "Claude Code"
+}

@@ -1,0 +1,101 @@
+/* ═══ EDITOR → buscar no arquivo, no projeto, e o minimapa ═════════════════
+   ⚠️ SÃO DUAS BUSCAS DIFERENTES, e não uma com escopo. Ctrl+F anda dentro do
+   arquivo aberto, sem ir ao disco; Ctrl+Shift+F pergunta ao backend pelo
+   projeto inteiro. Unificá-las faria a primeira ficar lenta.
+
+   ⚠️ A TERCEIRA SAIU DAQUI. A abertura rápida (Ctrl+P) morava neste arquivo;
+   ela deixou de ser da aba Editor e virou a barra de Acesso rápido, em
+   `estilos/acesso-rapido.css` — cujo `@import` fica logo depois do deste
+   arquivo, na posição em que o bloco estava. O nome `editor-busca.css`
+   continua correto para as duas que ficaram.                               */
+/* ── Buscar (e substituir) dentro do código (Ctrl+F) ──
+   Flutua por cima do código, e não numa faixa acima dele: no fluxo, abrir a
+   busca empurraria o texto para baixo e a linha que se estava lendo mudaria
+   de lugar no exato momento em que se quer achá-la.
+
+   ⚠️ `right` USA A VARIÁVEL `--ed-minimapa-largura`, que `mostrarMinimapa`
+   (editor-superficie.js) escreve em `.ed-corpo` — 90px quando o minimapa está
+   ligado, 0px quando não. Sem isto o painel flutuava sobre a faixa fixa do
+   minimapa (à direita), cobrindo parte dela — medido e reportado pelo usuário
+   em 31/08/2026. Duas linhas: a de busca, e a de substituir (expansível). */
+.ed-find {
+  position: absolute; top: 8px;
+  right: calc(20px + var(--ed-minimapa-largura, 0px));
+  z-index: 30;
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius);
+  padding: 6px 8px;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.45);
+}
+.ed-find-linha { display: flex; align-items: center; gap: 6px; }
+.ed-find-linha--substituir.hidden { display: none; }
+.ed-find-expandir {
+  flex-shrink: 0; width: 16px; height: 22px; display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; color: var(--text-muted); font-size: 9px; cursor: pointer;
+}
+.ed-find-expandir:hover { color: var(--text); }
+.ed-find-espaco { flex-shrink: 0; width: 16px; }
+.ed-find input {
+  flex: 1; min-width: 160px; padding: 4px 8px; font-size: 12px; font-family: inherit;
+  background: var(--surface-dark); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), 0.12); border-radius: 6px; outline: none;
+}
+.ed-find input:focus { border-color: var(--blue); }
+.ed-find-toggle {
+  flex-shrink: 0; width: 26px; height: 22px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+}
+.ed-find-toggle:hover { color: var(--text); }
+.ed-find-toggle.active { color: var(--blue); border-color: var(--blue); background: rgba(var(--blue-rgb), 0.14); }
+.ed-find-contador {
+  flex-shrink: 0; font-size: 11px; color: var(--text-muted); min-width: 56px; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.ed-find-btn {
+  flex-shrink: 0; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; font-size: 12px; font-family: inherit; cursor: pointer;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+}
+.ed-find-btn:hover { color: var(--text); background: rgba(var(--white-rgb), 0.10); }
+.ed-find-linha--substituir .btn { flex-shrink: 0; }
+
+/* ── Minimapa (Obra 10) ──
+   `.ed-minimapa-inner` também carrega a classe `.ed-pre-inner` (mesma fonte/
+   entrelinha/tabulação do código real — editor-superficie.css) e recebe um
+   CLONE do `<pre>` já colorido, encolhido por `transform: scale()` via JS
+   (`atualizarMinimapa`, em editor-superficie.js). Fica FORA de `.ed-pilha` —
+   não participa da métrica travada do trio textarea/pre/régua. */
+.ed-minimapa {
+  flex-shrink: 0;
+  /* Largura combinada com a variável `--ed-minimapa-largura` que
+     `mostrarMinimapa` (editor-superficie.js) escreve em `.ed-corpo` — é o que
+     deixa `.ed-find` (abaixo) recuar exatamente o tanto certo pra nunca
+     desenhar por cima do minimapa. Mudar este número exige mudar o valor
+     escrito lá também; ver o comentário perto de `_edMmLargura`. */
+  width: 90px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(var(--white-rgb), 0.02);
+  border-left: 1px solid rgba(var(--white-rgb), 0.06);
+  cursor: pointer;
+}
+.ed-minimapa-inner {
+  position: absolute;
+  top: 0; left: 0;
+  width: max-content;
+  transform-origin: top left;
+  pointer-events: none;
+}
+.ed-minimapa-viewport {
+  position: absolute;
+  left: 0; right: 0;
+  background: rgba(var(--white-rgb), 0.10);
+  border: 1px solid rgba(var(--white-rgb), 0.20);
+  border-radius: 2px;
+  pointer-events: none;
+}

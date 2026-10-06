@@ -1,0 +1,35 @@
+Preciso de uma SKILL para a biblioteca do meu assistente de código.
+
+ASSUNTO DA SKILL: [descreva aqui o que ela deve fazer]
+
+Esta skill tem UM ARQUIVO SÓ: tudo o que ela ensina cabe no principal.
+
+Entregue uma PASTA com esta forma:
+
+  <Nome da skill>/
+    <nome-da-skill>.md   (o PRINCIPAL: mesmo nome da pasta, em minúsculas, sem
+                          acento, hífen no lugar de espaço — é ele que vira
+                          SKILL.md na cópia)
+
+REGRAS DO FORMATO
+
+1. O principal tem cabeçalho YAML com "name:" (o mesmo slug do nome da pasta) e
+   "description:" (o que a skill faz e QUANDO usar — é por esse campo que o
+   assistente decide sozinho se a aciona).
+
+2. O nome da pasta é o nome que aparece na tela. Pode ter maiúscula, acento e
+   espaço — é nome de exibição, não identificador.
+
+3. A pasta tem só o principal. Se o assunto pedir arquivos de apoio, me avise:
+   aquilo é uma skill de principal e apoio, e o formato é outro.
+
+4. Ao ativar a skill num projeto, a pasta inteira é copiada para a pasta de
+   skills do assistente (no Claude Code, .claude/skills/<slug>/): o principal
+   vira SKILL.md.
+
+5. Não escreva nada fora da pasta.
+
+ONDE VOU SALVAR
+  Arquivos/Skills/<Nome da skill>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

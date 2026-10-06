@@ -1,0 +1,249 @@
+/* ═══ BACKUPS → Mapa: as amostras, o eixo e a paleta das situações ═════════
+   As amostras da Matriz e do Pipeline, a regra do eixo (antes à esquerda,
+   agora à direita) e a paleta única das oito situações.
+
+   ⚠️ UMA PALETA SÓ PARA OS OITO DESENHOS. Cada desenho com a própria cor de
+   "mudou" faria a mesma situação ter oito aparências, e o usuário aprenderia
+   oito legendas em vez de uma.
+
+   ⚠️ A ORDEM DOS @import EM `style.css` É A CASCATA, e ela reproduz a ordem em
+   que os blocos estavam no arquivo único. Reordenar é trocar qual regra vence. */
+/* ── Amostras da Matriz ── */
+/* A célula vazia é a maior parte da grade e não tinha nome. A amostra é o que
+   ela é: um quadradinho com a borda da tabela e nada dentro. */
+.bm-legenda-cor.lg-vazia {
+  background: none; border: 1px solid rgba(var(--white-rgb), .18);
+}
+/* A cruz — o único azul da Matriz, e o único que não fala de mudança. */
+.bm-legenda-cor.lg-cruz {
+  background: rgba(var(--blue-rgb), .18);
+  outline: 1px solid rgba(var(--blue-rgb), .55); outline-offset: -1px;
+  border-radius: 0;
+}
+
+/* ── Amostras do Pipeline ── */
+/* "Mudou de ordem" é uma barra âmbar à esquerda da linha, e a amostra é ela. */
+.bm-legenda-cor.lg-ordem {
+  background: none; border-radius: 0;
+  width: 4px; height: 13px; box-shadow: inset 4px 0 0 var(--amber);
+}
+/* A cor da cadeia não é UMA cor — são nove. A amostra é a tarja à esquerda do
+   cartão, num degradê de três delas: mostrar uma só faria procurar aquela. */
+.bm-legenda-cor.lg-cadeia {
+  border-radius: 0; width: 16px; height: 13px;
+  background: linear-gradient(90deg,
+    var(--teal) 0 33%, var(--blue) 33% 66%, var(--purple) 66% 100%);
+}
+/* O nó que é uma pasta, no layout Pastas: caixa com traço mais forte. */
+.bm-legenda-cor.lg-pasta-no {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), .45);
+}
+.bm-legenda-dica { margin-left: auto; opacity: .8; }
+/* O que a ÁREA de cada bloco quer dizer. Sem esta frase o alternador
+   "Linhas / Em disco" muda o desenho inteiro sem dizer o que mudou. */
+.bm-legenda-frase { color: var(--text); opacity: .85; }
+.bm-legenda-frase b { color: var(--teal); font-weight: 600; }
+
+/* O painel do canto em linha, não em coluna: são poucos botões curtos, e uma
+   coluna alta no canto tapa justamente a parte de baixo do desenho. */
+.bm-painel { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 14px; }
+.bm-painel .mapas-ctrl-row { display: flex; align-items: center; gap: 8px; }
+/* `.mapas-ctrl-label` tem `width: 84px` e `white-space: nowrap`, sem overflow:
+   calibrado para o painel EM COLUNA da aba Mapas. O de Backups é em LINHA, e
+   "Área de cada bloco" invadia o botão ao lado. Só dentro de `.bm-painel`. */
+.bm-painel .mapas-ctrl-label { width: auto; }
+
+/* O controle de escala. Ele existe porque o zoom só era descobrível por uma
+   frase na legenda — e porque cada leitura amplia de um jeito (d3 no SVG,
+   `transform` no HTML, `translate+scale` na Matriz). Os três botões falam com
+   o motor da leitura em cena, e o número diz onde se está. */
+.bm-zoom { display: inline-flex; align-items: center; gap: 3px; }
+.bm-zoom button {
+  width: 24px; height: 24px; line-height: 1;
+  background: var(--surface-dark); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), .1); border-radius: 6px;
+  cursor: pointer; font-size: 13px;
+}
+.bm-zoom button:hover { background: var(--surface-hover); }
+.bm-zoom-val {
+  min-width: 46px; text-align: center; font-size: 11.5px;
+  color: var(--text-muted); font-variant-numeric: tabular-nums;
+}
+
+/* A trilha de cadeias do Pipeline: as mesmas classes `.vp-trilha-*` do
+   Visualizar pipeline, só com a altura amarrada ao palco daqui. */
+.bm-trilha { min-height: 0; margin-right: 14px; }
+.bm-trilha .vp-trilha-item.so-um-lado { opacity: .6; border-style: dashed; }
+.bm-trilha-so { font-size: 9.5px; color: var(--amber); display: block; margin-top: 3px; }
+
+.bm-select {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), .1);
+  color: var(--text); font-size: 12px;
+  border-radius: 6px; padding: 5px 8px; max-width: 230px;
+}
+.bm-seta { color: var(--text-muted); font-size: 13px; }
+
+/* ── A regra do eixo, em CSS: antes à esquerda, agora à direita ── */
+.bm-par {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  flex: 1; min-height: 0;      /* estica; nada de altura fixa */
+}
+.bm-lado { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.bm-lado-h {
+  font-size: 12.5px; font-weight: 600; color: var(--text);
+  padding-bottom: 6px; display: flex; align-items: baseline; gap: 8px;
+  flex-shrink: 0;
+}
+.bm-lado-marca {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  color: var(--text-muted);
+}
+/* O viewport com `overflow:hidden` é o que faz o transform do zoom ficar
+   DENTRO do painel. Aplicado no conjunto, arrastar um lado jogaria o vizinho
+   para fora da tela. As leituras em HTML rolam por dentro (`--rola`). */
+.bm-viewport {
+  flex: 1; min-height: 0; overflow: hidden;
+  border: 1px solid rgba(var(--white-rgb), .07);
+  border-radius: var(--radius);
+  background: rgba(var(--black-rgb), .18);
+  container-type: inline-size;
+}
+.bm-viewport--rola { overflow: auto; padding: 10px 12px; }
+/* `transform-origin` e a correção de largura: sem ela, o conteúdo escalado
+   ultrapassa a caixa e o viewport não sabe que precisa rolar mais — a caixa do
+   elemento não cresce com o transform. É a mesma armadilha documentada em
+   `vpAplicarZoom`. */
+.bm-zoomavel { transform-origin: 0 0; }
+
+.bm-svg { width: 100%; height: 100%; display: block; cursor: grab; }
+.bm-svg.arrastando { cursor: grabbing; }
+.bm-svg-vazio { fill: var(--text-muted); font-size: 12px; }
+
+/* O wrapper dos quadrantes é filho da `.bm-area` (flex column) e precisa
+   esticar, senão o desenho volta a ocupar uma faixa curta no topo com o resto
+   da tela vazio — que foi a queixa. */
+.bm-quadrantes { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.bm-quadrante { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.bm-quadrante-h { font-size: 12.5px; font-weight: 600; margin-bottom: 6px; flex-shrink: 0; }
+/* Quatro quadrantes: as duas metades dividem a altura, e cada uma rola por
+   dentro se precisar. */
+.bm-quadrantes--dois .bm-quadrante { min-height: 320px; }
+
+/* ── As situações, uma paleta só para os oito desenhos ──
+   ⚠️ Eram quatro; são SEIS. `movido` e `renomeado` entraram porque um arquivo
+   que mudou de lugar sem mudar por dentro aparecia como um vermelho mais um
+   verde — dois arquivos, na leitura do olho, para um fato só.
+   ⚠️ Nenhum hex novo: os dois usam tokens que os três temas já afinam. */
+.bm-criado    { --bm-cor: var(--green-rgb); }
+.bm-alterado  { --bm-cor: var(--amber-rgb); }
+.bm-removido  { --bm-cor: var(--red-rgb); }
+.bm-movido    { --bm-cor: var(--purple-rgb); }
+.bm-renomeado { --bm-cor: var(--ciano-mapa-rgb); }
+.bm-igual     { --bm-cor: var(--cinza-rgb); }
+/* ⚠️ A PASTA É APAGADA, e era azul vivo. Duas razões, e a segunda é a que manda:
+   o azul saturado encostava no ciano de `renomeado` no Sunburst, onde as duas
+   convivem; e pasta NÃO É UMA SITUAÇÃO do arquivo — é estrutura, andaime. Dar a
+   ela a mesma força de cor das cinco mudanças fazia o andaime competir com o que
+   se veio ver. Cinza-azulado e o cinza de `sem alteração` são os dois "fundo",
+   que é exatamente o que os dois são. */
+.bm-pasta     { --bm-cor: var(--cinza-azulado-rgb); }
+
+/* O que se pode ABRIR. Só arquivo com mudança: clicar num bloco cinza não
+   apresenta nada, e um cursor de mão prometendo o contrário seria mentira. */
+.bm-bloco[data-caminho]:not(.bm-igual),
+.bm-fatia[data-caminho]:not(.bm-igual) { cursor: pointer; }
+
+/* ⚠️ `vector-effect: non-scaling-stroke` — a borda fica com 1 px NA TELA em
+   qualquer nível de zoom. Sem ele o traço cresce junto com o desenho: ampliar
+   para ver uma fatia fina faz justamente a borda engolir a fatia, e por mais
+   que se amplie continua "mais borda do que miolo". A regra é copiada da
+   `.sunburst-arc` da aba Mapas, onde ela já estava e já estava explicada.
+   O traço é da COR DO FUNDO, e não preto translúcido: ele é um separador entre
+   blocos vizinhos, não um contorno. Preto por cima de um bloco de 4 px come o
+   pouco de cor que ele tinha — foi a queixa "parece que só a borda é pintada". */
+.bm-bloco rect, .bm-fatia {
+  fill: rgba(var(--bm-cor, var(--cinza-rgb)), .82);
+  stroke: var(--bg); stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+.bm-bloco:hover rect, .bm-fatia:hover { fill: rgba(var(--bm-cor, var(--cinza-rgb)), 1); }
+/* O bloco que junta os pequenos demais para ter nome. Hachura clara porque ele
+   não é um arquivo: é uma porta. */
+.bm-bloco.agregado rect {
+  fill: rgba(var(--white-rgb), .07);
+  stroke: rgba(var(--white-rgb), .3); stroke-dasharray: 4 3;
+}
+.bm-bloco.agregado { cursor: pointer; }
+.bm-bloco.agregado:hover rect { fill: rgba(var(--white-rgb), .13); }
+.bm-bloco.agregado .bm-tm-rot { fill: var(--text-muted); font-style: italic; }
+
+/* A migalha do bloco aberto. */
+.bm-migalha {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  font-size: 12px; color: var(--text-muted); padding-bottom: 10px;
+}
+.bm-voltar {
+  background: rgba(var(--white-rgb), .08); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), .12); border-radius: 6px;
+  padding: 2px 10px; cursor: pointer; font-size: 13px;
+}
+.bm-voltar:hover { background: rgba(var(--white-rgb), .15); }
+
+/* Moldura tracejada guardando o lugar de quem só existe do outro lado. Sem
+   ela, os dois desenhos se reorganizam inteiros e o olho perde a referência. */
+.bm-ausente rect, .bm-ausente.bm-fatia {
+  fill: none;
+  stroke: rgba(var(--white-rgb), .22);
+  stroke-dasharray: 3 3;
+}
+.bm-ausente .bm-tm-rot, .bm-ausente .bm-no-rot { opacity: .45; }
+/* Binário e arquivo limitado pelo teto: hachura, para não parecer que o
+   tamanho dele é aquele. */
+.bm-bloco.limitado rect, .bm-fatia.limitado { stroke: var(--amber); stroke-dasharray: 5 2; }
+
+.bm-mais  { color: var(--green-light); font-variant-numeric: tabular-nums; font-size: 12px; }
+.bm-menos { color: var(--coral);       font-variant-numeric: tabular-nums; font-size: 12px; }
+
+/* ── Rótulos: nunca cortados com reticências ──────────────────────────────
+   Nome pela metade ocupa espaço, chama atenção e não informa. Some o rótulo
+   inteiro, e só. Rótulo de pasta quebra linha em vez de sumir. */
+.bm-rot {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;   /* nunca `ellipsis` */
+}
+.bm-rot-oculto { display: none; }
+.bm-arv-nome.bm-rot { white-space: normal; word-break: break-word; }
+
+@container (max-width: 260px) {
+  .bm-tm-rot, .bm-no-rot, .bm-seq-via, .bm-casa-via { display: none; }
+}
+@container (max-width: 160px) {
+  .bm-casa-arq, .bm-seq-nome { display: none; }
+}
+
+/* ── O rótulo CONTRA-ESCALADO ──────────────────────────────────────────────
+   `--bm-k` é a escala do zoom, publicada pelo `bmLigarZoom` na camada que
+   recebe o transform. Dividir a fonte por ela mantém o texto do MESMO tamanho
+   na tela enquanto o bloco cresce — e é só isso que faz ampliar revelar nome.
+   Sem a divisão, texto e caixa crescem na mesma proporção: o rótulo que não
+   cabia na escala 1 não cabe em escala nenhuma, e o zoom não serve para nada.
+   O piso de 11 px continua valendo: quem afina é o bloco crescendo. */
+/* ⚠️ O RÓTULO DO TREEMAP É UM `<text>` DE SVG, e não um `<div>` dentro de
+   `<foreignObject>`. Cada `foreignObject` abre um documento HTML dentro do
+   SVG; com centenas de blocos em dois painéis são milhares deles, e o motor
+   refazia o layout de todos a cada quadro do gesto — era o travamento.
+
+   Quem decide se ele cabe é `bmTreemapRotulos`, por conta aritmética, sem
+   perguntar nada ao navegador. Por isso ele **não** leva a classe `.bm-rot`:
+   a poda por medição não passa por aqui. */
+.bm-tm-rot {
+  fill: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  pointer-events: none;
+}
+/* A rede do recorte para quem ainda usa `foreignObject` — as Ligações, onde os
+   nós são poucas dezenas e o custo não aparece. */
+.bm-no foreignObject { overflow: hidden; }
+

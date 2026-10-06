@@ -1,0 +1,134 @@
+/* ═══════════════════════════════════════════════════════════ TEMA: DRÁCULA ══
+   O mais escuro dos quatro, e o único que puxa para o roxo — a paleta segue a
+   Dracula (dracula-theme, domínio público), com `--bg: #282A36` e o roxo
+   `#BD93F9` como acento de destaque.
+
+   ── O que muda em relação ao Carvão ──
+   1. O fundo (#282A36) é ligeiramente mais claro que o do Carvão (#17191C),
+      mas com um tom roxo-acinzentado em vez de neutro puro.
+   2. O `--purple` deixa de ser só mais uma das seis cores de ação e vira a cor
+      que a paleta inteira gira em torno: o Orquestrador, o violeta dos
+      subagentes de extensão e boa parte dos acentos claros herdam esse roxo.
+   3. O `--blue` também é puxado para o roxo (em vez de um azul puro), porque
+      a Dracula não tem azul saturado na paleta oficial — usar um azul comum
+      aqui destoaria do resto.
+
+   ⚠️ A FAMÍLIA de cada agente e subagente é a mesma dos outros três temas: o
+   Leitor continua amarelo, o Analista rosa, o Chat e a Fila dividem a mesma
+   laranja. Muda o tom, nunca o papel. */
+
+:root {
+  /* ── Paleta base ────────────────────────────────────────────────────────── */
+  --bg:           #282A36;
+  --surface:      #343746;
+  --surface-hover:#3E4157;
+  --surface-dark: #1E1F29;
+  --text:         #F8F8F2;
+  --text-muted:   #B4B4C7;
+
+  /* ── As seis cores de ação, e seus -hover ────────────────────────────────
+     `--blue` e `--purple` puxados para o roxo da Dracula, de propósito. */
+  --blue-rgb:         138,145,250;
+  --blue:             rgb(var(--blue-rgb));
+  --blue-hover:       #6272A4;
+  --green-rgb:        80,250,123;
+  --green:            rgb(var(--green-rgb));
+  --green-hover:      #3ECC64;
+  --red-rgb:          255,85,85;
+  --red:              rgb(var(--red-rgb));
+  --red-hover-rgb:    230,69,69;
+  --red-hover:        rgb(var(--red-hover-rgb));
+  --purple-rgb:       189,147,249;
+  --purple:           rgb(var(--purple-rgb));
+  --purple-hover:     #A67EE0;
+  --teal-rgb:         139,233,253;
+  --teal:             rgb(var(--teal-rgb));
+  --teal-hover:       #6BC8DB;
+  --gray:             #44475A;
+  --gray-hover:       #565A72;
+
+  /* ── O véu ────────────────────────────────────────────────────────────────
+     Fundo escuro ⇒ véu claro, como no Ardósia e no Carvão. */
+  --white-rgb:  255,255,255;
+  --black-rgb:  0,0,0;
+
+  /* ── Fundos dos painéis do Designer (o chrome, não a paleta do usuário) ── */
+  --designer-thumb-bg:   #1E1F29;  /* = --surface-dark do próprio tema */
+  --designer-preview-bg: #16161F;
+  --designer-panel-bg:   #23232F;
+
+  /* ── Acentos ──────────────────────────────────────────────────────────── */
+  --amber-rgb:      255,184,108;
+  --amber:          rgb(var(--amber-rgb));
+  --amber-text:     #2B1A05;
+  --yellow-rgb:     241,250,140;
+  --yellow:         rgb(var(--yellow-rgb));
+  --yellow-soft:    #F6FBB8;
+  --mint:           #8AFFC1;
+  --sky:            #9AA5FF;
+  --sky-light:      #C2C8FF;
+  --blue-light:     #A3B3FF;
+  --laranja-light:  #FFD9A8;
+  --green-light:    #B3FFD1;
+  --violeta-light:  #E0C9FF;
+  --rosa-light:     #FFB8E3;
+  --coral:          #FF6E6E;
+  --coral-light:    #FFADAD;
+  --coral-alt:      #FF8A8A;
+  --coral-strong:   #FF5050;
+  --lilas-claro:    #D9BFFF;
+  --ciano-mapa-rgb: 139,233,253;
+  --ciano-mapa:     rgb(var(--ciano-mapa-rgb));
+  --cinza-rgb:          148,155,181;
+  --cinza:              rgb(var(--cinza-rgb));
+  --cinza-escuro-rgb:   120,127,153;
+  --cinza-escuro:       rgb(var(--cinza-escuro-rgb));
+  --cinza-azulado-rgb:  108,116,148;
+  --cinza-azulado:      rgb(var(--cinza-azulado-rgb));
+  --mapa-sem-fluxo: #3A3D52;
+
+  /* Cores sem gêmeo opaco — uso único cada. */
+  --green-alt-rgb:     92,220,120;
+  --esmeralda-rgb:     80,230,180;
+  --vermelho-puro-rgb: 255,40,40;
+  --vermelho-vivo-rgb: 255,85,85;
+  --mapa-fundo-rgb:    20,20,32;
+
+  /* ── Identidade dos 5 agentes da Fila — mesma família, outro tom ───────── */
+  --indigo-rgb:          148,130,255;
+  --indigo:              rgb(var(--indigo-rgb));
+  --rosa:                #FF92D0;
+  --turquesa:            #7FF0DE;
+  --agente-orquestrador: #BD93F9;  /* violeta — o próprio roxo da Dracula */
+  --agente-contexto:     var(--blue);
+  --agente-analise-rgb:  255,184,108;
+  --agente-analise:      rgb(var(--agente-analise-rgb)); /* laranja */
+  --agente-verificacao:  var(--green);
+  --agente-relatorio:    #FF6FB8;  /* rosa-forte */
+  --agente-desconhecido: var(--cinza);
+
+  /* ── Identidade dos subagentes do Chat ─────────────────────────────────── */
+  --sub-buscador:      #8FA3FF;  /* azul-claro */
+  --sub-navegador:     var(--green);
+  --sub-leitor:        var(--yellow);
+  --sub-arquiteto:     var(--teal);
+  --sub-analista:      #FF5DA6;  /* rosa */
+  --sub-semantico:     var(--purple);
+  --sub-sistema:       var(--coral);
+  /* As cores que um subagente de EXTENSÃO pode escolher (`"cor"` no item do
+     manifesto; `XT_SUBAGENTE_CORES`). O programa não conhece subagente de
+     extensão pelo nome — só esta paleta. */
+  --sub-cor-violeta:   #BD93F9;
+  --sub-cor-indigo:    var(--indigo);
+  --sub-cor-rosa:      var(--rosa);
+  --sub-cor-turquesa:  var(--turquesa);
+  /* Prompts fixos (antigos "modos"). A chave do token é a chave do prompt. */
+  --sub-estruturar:                  #7FE0F5;  /* ciano */
+  --sub-estruturar-e-quebrar-tarefa: #D6AFFF;  /* lilás */
+  --sub-revisar:       var(--amber);
+  --sub-usuario:       var(--blue);
+  --sub-chat:          var(--agente-analise);
+  /* Chat e Fila dividem a laranja de propósito — ver tema-ardosia.css. */
+  --sub-fila:             var(--agente-analise);
+  --sub-fila-verificador: var(--mint);
+}

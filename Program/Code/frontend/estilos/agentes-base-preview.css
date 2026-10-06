@@ -1,0 +1,97 @@
+/* ═══ AGENTES → o preview dos arquivos de um agente ════════════════════════
+   A lista do que a rotina gerou, com o que cada arquivo tem de errado.
+
+   ⚠️ O MOTIVO DO PROBLEMA FICA EM `--text-muted`, e o botão de abrir fica
+   sempre visível. Ícone escondido atrás do hover só serve para quem já sabe
+   que ele existe — mesma lição das ações por item da área Agentes.         */
+/* ── Agente: preview de arquivos ── */
+.agente-preview {
+  background: var(--surface-dark);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.agente-preview-toggle {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  background: none; border: none; padding: 8px 12px;
+  cursor: pointer; color: var(--text-muted); font-size: 12px; text-align: left;
+  transition: color var(--t);
+}
+.agente-preview-toggle:hover { color: var(--text); }
+.agente-preview-arrow { font-size: 10px; flex-shrink: 0; }
+.agente-preview-body {
+  border-top: 1px solid rgba(var(--white-rgb),0.06);
+  padding: 6px 0 8px;
+}
+.agente-preview-filter {
+  display: flex; align-items: center; gap: 6px;
+  padding: 2px 12px 8px; font-size: 11px; color: var(--text-muted); cursor: pointer;
+}
+.agente-preview-tree {
+  max-height: 220px; overflow-y: auto; padding: 0 6px 0 4px;
+}
+.preview-folder { margin-bottom: 2px; }
+.preview-folder-name {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  padding: 2px 8px; letter-spacing: 0.3px;
+}
+.preview-subdir { margin-top: 1px; }
+.preview-subdir-name { font-size: 11px; color: var(--text-muted); padding: 1px 0; }
+.preview-tree-level { }
+.preview-file {
+  font-size: 11px; font-family: 'Consolas', monospace;
+  padding: 1px 8px; border-radius: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: color 0.2s, background 0.2s;
+}
+.preview-file-pending    { color: rgba(var(--white-rgb),0.45); }
+.preview-file-unprocessed { color: rgba(var(--white-rgb),0.9); }
+.preview-file-running { color: var(--blue); background: rgba(var(--blue-rgb),0.12); }
+.preview-file-done    { color: var(--green); }
+.preview-file-ignored { color: rgba(var(--white-rgb),0.2); font-style: italic; }
+
+.preview-file-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 11px;
+  font-family: 'Consolas', monospace;
+  padding: 1px 8px;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+.preview-file-row .pf-tokens,
+.preview-file-row .pf-lines {
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--white-rgb),0.28);
+  text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.preview-file-row .pf-tokens { width: 44px; }
+.preview-file-row .pf-lines  { width: 36px; margin-right: 8px; }
+.preview-file-row .pf-name   { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.preview-file-header {
+  color: rgba(var(--white-rgb),0.3) !important;
+  font-size: 10px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+  pointer-events: none;
+}
+.preview-file-header .pf-tokens,
+.preview-file-header .pf-lines,
+.preview-file-header .pf-name { color: rgba(var(--white-rgb),0.3) !important; }
+
+.agente-input-sm { flex: 0 0 56px !important; width: 56px; text-align: center; }
+.agente-parallel-hint { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+
+/* ── "Lê N extensões" — Documentação Técnica ──
+   A lista da rotina é uma só, global, e se muda em Configurações ›
+   Arquivos que o programa lê › Quem lê o quê. Esta linha só a mostra. */
+.rotina-le { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); background: rgba(var(--black-rgb),0.18); border-radius: 6px; padding: 8px 12px; }
+.rotina-le b { color: var(--text); }

@@ -1,0 +1,12 @@
+{
+  "fluxo": "classificar_documento",
+  "entrada": "Program/Code/backend/detector.py:27",
+  "descricao": "Um prompt classifica o contrato que acabou de chegar.",
+  "pontos": {
+    "arquivo_novo": "Acorda quando um contrato novo chega na pasta de entrada.",
+    "classificar": "Pergunta ao modelo de que tipo é o contrato.",
+    "confianca_minima": "Só deixa seguir se a confiança do modelo for pelo menos 0,70.",
+    "gravar_classificacao": "Guarda a classificação em arquivo e avisa o próximo fluxo."
+  },
+  "correcoes": {}
+}

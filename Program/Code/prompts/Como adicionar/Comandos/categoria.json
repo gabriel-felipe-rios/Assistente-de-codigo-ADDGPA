@@ -1,0 +1,13 @@
+{
+  "ordem": 2,
+  "nome": "Comandos",
+  "icone": "⌨️",
+  "destino": "Arquivos/Comandos/",
+  "tabela": null,
+  "botao": {
+    "rotulo": "📋 Copiar prompt de comando",
+    "prompt": "Prompt.txt"
+  },
+  "nota": "Quando estiver pronto, ponha em `Arquivos/Comandos/`.",
+  "apoio": null
+}

@@ -1,0 +1,377 @@
+/* ══════════════════════════════════════════════════════ ABA: AGENTES — BASE (genérico) ══ */
+/* ── Este arquivo era 550 linhas, e virou três ──────────────────────────────
+   Pelo teto de 500 da AMF, na ordem em que os blocos estavam:
+
+     agentes-base.css           o card de agente e a primeira barra
+     agentes-base-cache.css     a segunda barra: o que veio do cache
+     agentes-base-preview.css   o preview dos arquivos gerados               */
+
+
+.agentes-layout {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.agente-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.agente-card-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 20px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+.agente-card-toggle:hover { background: rgba(var(--white-rgb),0.03); }
+
+.agente-chevron {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+.agente-chevron.open { transform: rotate(90deg); }
+
+.agente-card-body {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.agente-card-header { display: flex; flex-direction: column; gap: 8px; }
+
+/* Sub-abas do card */
+.agente-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.1);
+  margin-bottom: 4px;
+}
+.agente-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.agente-tab:hover { color: var(--text); }
+.agente-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+.agente-tab-content { display: flex; flex-direction: column; gap: 14px; }
+
+/* Viewer de arquivos gerados */
+.agente-viewer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.agente-viewer-empty { font-size: 13px; color: var(--text-muted); }
+.agente-viewer-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: 'Consolas', monospace;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+}
+.agente-viewer-item:hover { background: rgba(var(--white-rgb),0.07); }
+.agente-viewer-item.active { background: rgba(var(--blue-rgb),0.15); color: var(--blue); }
+
+.agente-viewer-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: 'Consolas', monospace;
+}
+
+.agente-viewer-table thead {
+  position: sticky;
+  top: 0;
+  background: var(--surface-dark);
+  border-bottom: 1px solid rgba(var(--white-rgb),0.1);
+}
+
+.agente-viewer-table th {
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.agente-viewer-table th:nth-child(1) { width: 60px; text-align: right; }
+.agente-viewer-table th:nth-child(2) { width: 60px; text-align: right; }
+.agente-viewer-table th:nth-child(3) { flex: 1; }
+
+.agente-viewer-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+  color: var(--text);
+}
+
+.agente-viewer-table td:nth-child(1),
+.agente-viewer-table td:nth-child(2) {
+  text-align: right;
+  color: rgba(var(--white-rgb),0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.agente-viewer-table tbody tr {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.agente-viewer-table tbody tr:hover {
+  background: rgba(var(--white-rgb),0.05);
+}
+
+.agente-viewer-table tbody tr.active {
+  background: rgba(var(--blue-rgb),0.15);
+}
+
+.agente-viewer-table tbody tr.active td {
+  color: var(--blue);
+}
+
+.agente-viewer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--surface-dark);
+  border-radius: 6px;
+  overflow: hidden;
+  max-height: 60vh;
+  min-height: 200px;
+}
+.agente-viewer-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  font-size: 12px;
+  font-family: 'Consolas', monospace;
+  color: var(--text-muted);
+}
+.agente-viewer-close {
+  background: none; border: none; color: var(--text-muted);
+  font-size: 13px; cursor: pointer; padding: 0 4px;
+}
+.agente-viewer-close:hover { color: var(--text); }
+.agente-viewer-pre {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 12px;
+  font-size: 11px;
+  font-family: 'Consolas', monospace;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.agente-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agente-icon { font-size: 18px; }
+.agente-name { font-size: 15px; font-weight: 700; }
+
+.agente-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 2px 9px; border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+.agente-badge-idle    { background: rgba(var(--white-rgb),0.1); color: var(--text-muted); }
+.agente-badge-running { background: rgba(var(--blue-rgb),0.25); color: var(--blue); }
+.agente-badge-done    { background: rgba(var(--green-rgb),0.2);  color: var(--green); }
+.agente-badge-error   { background: rgba(var(--red-rgb),0.2);   color: var(--red); }
+/* Terminou, mas nem tudo saiu. Não é verde (não gerou tudo) nem vermelho
+   (não falhou): o trabalho está lá, e falta um pedaço. */
+.agente-badge-parcial { background: rgba(var(--amber-rgb),0.2); color: var(--amber); }
+/* Não rodou porque o Detector não pediu. ⚠️ Não é âmbar de propósito: âmbar diz
+   "faltou alguma coisa", e aqui não faltou — o ciclo olhou, viu que não havia o
+   que fazer, e poupou uma chamada de LLM. É o desfecho NORMAL de um ciclo sobre
+   um projeto em dia, e pintá-lo de aviso faria o certo parecer errado.
+   ⚠️ Não confundir com `pulada`, que usa o âmbar do `-parcial`: lá ficou
+   trabalho para a próxima volta, aqui não ficou nada. */
+.agente-badge-dispensado { background: rgba(var(--teal-rgb),0.18); color: var(--teal); }
+/* Está na fila do ciclo e ainda não chegou a vez. Roxo, e não âmbar: âmbar já
+   é "terminou faltando pedaço", e as duas leituras não podem dividir a cor —
+   uma fala do futuro, a outra do passado. */
+.agente-badge-esperando { background: rgba(var(--purple-rgb),0.22); color: var(--purple); }
+/* Esperando OUTRA ABA DE PROJETO soltar a janela do LM Studio. Índigo — o
+   segundo tom de roxo — e não o mesmo roxo do `esperando`: as duas são esperas,
+   mas quem espera a fila do próprio ciclo vai rodar sozinho em segundos, e quem
+   espera outro projeto pode ficar aí meia hora. Espremer as duas na mesma cor
+   era o que fazia "nada está acontecendo" parecer defeito. */
+.agente-badge-bloqueado { background: rgba(var(--indigo-rgb),0.22); color: var(--indigo); }
+
+.agente-summary {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.agente-dep-chain {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  white-space: nowrap;
+  padding-right: 20px; /* espaço para o chevron */
+}
+
+.agente-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+/* O link «Detalhes em Explicações.» no fim da frase de cada card — a frase vem
+   de `explicacoes-dados.js`, e o clique abre a sub-aba (ver `execucao/rotinas.js`). */
+.agente-desc-link { color: var(--blue); text-decoration: none; white-space: nowrap; }
+.agente-desc-link:hover { text-decoration: underline; }
+.agente-desc code {
+  background: rgba(var(--white-rgb),0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.agente-config { display: flex; flex-direction: column; gap: 10px; }
+
+.agente-config-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agente-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 80px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.agente-select, .agente-input {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 6px 10px;
+  flex: 1;
+  outline: none;
+  transition: border-color var(--t);
+}
+.agente-select:focus, .agente-input:focus { border-color: var(--blue); }
+.agente-select option { background: var(--surface-dark); }
+
+.agente-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn-auto-toggle {
+  background: rgba(var(--white-rgb),0.1);
+  border: 1px solid rgba(var(--white-rgb),0.15);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-auto-toggle:hover {
+  background: rgba(var(--white-rgb),0.15);
+  color: var(--text);
+}
+
+.btn-auto-toggle.active {
+  background: rgba(var(--green-rgb),0.2);
+  border-color: rgba(var(--green-rgb),0.4);
+  color: var(--green);
+}
+
+.btn-auto-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-auto-toggle:disabled:hover {
+  background: rgba(var(--white-rgb),0.1);
+  color: var(--text-muted);
+}
+
+.agente-progress-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: var(--surface-dark);
+  border-radius: 6px;
+}
+
+.agente-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.agente-progress-label { font-size: 13px; color: var(--text-muted); }
+.agente-progress-count { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.agente-progress-bar-track {
+  height: 6px;
+  background: rgba(var(--white-rgb),0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.agente-progress-bar-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+

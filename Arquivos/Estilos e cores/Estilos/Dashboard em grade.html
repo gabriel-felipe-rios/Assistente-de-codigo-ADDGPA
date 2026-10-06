@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Dashboard em grade -->
+<!-- Topbar -> linha de métricas -> grade de cards de tamanhos variados -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Dashboard em grade</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:38px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0}
+.marca{font-weight:700;font-size:12.5px}
+.metricas{display:flex;gap:10px;padding:12px 14px 0;flex-shrink:0}
+.met{flex:1;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:8px;padding:9px 11px}
+.met .k{color:var(--texto-secundario);font-size:10.5px}
+.met .v{font-size:19px;font-weight:700;margin-top:2px}
+.met .d{font-size:10.5px;margin-top:1px}
+.up{color:var(--positiva)} .down{color:var(--negativa)}
+.grade{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:104px;gap:10px;padding:12px 14px 14px}
+.card{background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:8px;padding:9px 11px;display:flex;flex-direction:column;gap:5px}
+.card .t{font-weight:600;font-size:11.5px}
+.card .s{color:var(--texto-secundario);font-size:11px}
+.g4{grid-column:span 4} .g2{grid-column:span 2} .g3{grid-column:span 3} .r2{grid-row:span 2}
+.barras{flex:1;display:flex;align-items:flex-end;gap:5px}
+.barras i{flex:1;background:var(--primaria);border-radius:2px 2px 0 0}
+</style></head><body>
+<div class="topbar"><span class="marca">Painel de vendas</span><button class="bt sec">Período: agosto</button></div>
+<div class="metricas">
+  <div class="met"><div class="k">Receita</div><div class="v">R$ 128 mil</div><div class="d up">+12% vs julho</div></div>
+  <div class="met"><div class="k">Pedidos</div><div class="v">1 842</div><div class="d up">+4%</div></div>
+  <div class="met"><div class="k">Cancelamentos</div><div class="v">37</div><div class="d down">+9%</div></div>
+  <div class="met"><div class="k">Ticket médio</div><div class="v">R$ 69</div><div class="d">estável</div></div>
+</div>
+<div class="grade">
+  <div class="card g4 r2"><div class="t">Receita por semana</div><div class="s">Últimas 8 semanas</div>
+    <div class="barras"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:75%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:70%"></i><i style="height:95%"></i></div></div>
+  <div class="card g2"><div class="t">Canais</div><div class="s">Loja 62% · App 28% · Parceiros 10%</div></div>
+  <div class="card g2"><div class="t">Região líder</div><div class="s">Sudeste, com 54% do total</div></div>
+  <div class="card g3"><div class="t">Produtos mais vendidos</div><div class="s">Cadeira Ergo · Mesa Compact · Luminária Arco</div></div>
+  <div class="card g3"><div class="t">Fila de suporte</div><div class="s">14 chamados abertos, 3 atrasados</div></div>
+</div>
+</body></html>

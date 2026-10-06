@@ -1,0 +1,18 @@
+{
+  "nome": "Quem quebra se eu renomear",
+  "versao": "2",
+  "descricao": "Marca no Editor o nome de cada definição deste arquivo que outros arquivos usam, e avisa ao salvar quando um deles sumiu.",
+  "prefixo": "ren",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "marca", "id": "ren.definicoes", "lugar": "editor.decorador",
+      "arquivo": "frontend/encaixes/decorador.js" },
+    { "recurso": "comando", "id": "ren.menu-da-aba", "lugares": ["editor.aba.menu"],
+      "arquivo": "frontend/encaixes/aba.js" },
+    { "recurso": "comando", "id": "ren.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js" },
+    { "recurso": "reacao", "id": "ren.ao-salvar", "evento": "editor.vai_salvar",
+      "pode_barrar": false, "arquivo": "frontend/eventos/vai-salvar.js" }
+  ],
+  "escreve_fora": []
+}

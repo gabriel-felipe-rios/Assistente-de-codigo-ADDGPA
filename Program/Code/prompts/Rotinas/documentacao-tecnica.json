@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "properties": {
+    "sintese": {
+      "type": "string",
+      "description": "O que o arquivo é e por quê, 2 a 3 frases, sem markdown."
+    },
+    "atribuicoes": {
+      "type": "array",
+      "description": "As responsabilidades do arquivo, uma por item, em frase curta.",
+      "items": { "type": "string" }
+    },
+    "categoria": {
+      "type": "string",
+      "enum": ["autenticacao", "banco-de-dados", "interface", "configuracao",
+               "utilitarios", "rotas", "pagamento", "armazenamento",
+               "comunicacao", "outro"]
+    },
+    "tipo": {
+      "type": "string",
+      "enum": ["servico", "controlador", "utilitario", "configuracao", "modelo",
+               "interface", "rota", "inicializador", "outro"]
+    },
+    "tags": {
+      "type": "array",
+      "description": "De três a cinco palavras-chave.",
+      "items": { "type": "string" }
+    },
+    "termos": {
+      "type": "array",
+      "description": "Os nomes que o projeto dá às suas coisas (telas, processos, conceitos), nunca identificadores do código nem palavras comuns do português; vazio é normal.",
+      "items": { "type": "string" }
+    },
+    "frases": {
+      "type": "array",
+      "description": "Uma entrada para CADA número da lista de símbolos, sem pular nenhum e sem inventar número que não está na lista.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "description": "O número do símbolo, exatamente como veio na lista."
+          },
+          "frase": {
+            "type": "string",
+            "description": "Descrição do símbolo, no máximo 12 palavras. Não repete o nome do símbolo."
+          }
+        },
+        "required": ["numero", "frase"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["sintese", "atribuicoes", "categoria", "tipo", "tags", "termos", "frases"],
+  "additionalProperties": false
+}

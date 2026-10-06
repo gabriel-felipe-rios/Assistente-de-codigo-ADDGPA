@@ -1,0 +1,5 @@
+• semantico — Acha por SIGNIFICADO, não por texto literal. Devolve candidatos com o porquê de cada um.
+  Use quando você não sabe o nome exato, só sabe descrever o comportamento: "onde é que se decide se a resposta é uma chamada de ferramenta?", "quem cuida de salvar a conversa no disco?"
+  Se você já sabe o nome exato do símbolo, use o buscador — é mais direto e mais barato.
+  Exemplo:
+  {"chamadas": [{"subagente": "semantico", "pergunta": "onde o programa decide se a resposta do modelo é uma chamada de ferramenta ou o texto final?"}]}

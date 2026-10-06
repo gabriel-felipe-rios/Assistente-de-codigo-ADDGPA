@@ -1,0 +1,11 @@
+{
+  "intervalo_minutos": 15,
+  "categorias": {
+    "arquivos_e_linhas": true,
+    "lista_de_arquivos": true,
+    "mudancas_por_dia": true,
+    "tempo_rotinas": true,
+    "tempo_fila": true,
+    "tempo_chat": true
+  }
+}

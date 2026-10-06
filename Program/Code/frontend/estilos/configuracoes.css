@@ -1,0 +1,321 @@
+/* ══════════════════════════════════════════════ ABA: CONFIGURAÇÕES ══
+   Era uma página só, rolando de cima a baixo, com as quatro áreas separadas
+   apenas por um <hr> e um título em caixa alta — a partir da segunda rolagem
+   ninguém mais sabia o que ainda existia embaixo.
+
+   Virou: trilho de categorias à esquerda, painel rolável à direita e barra de
+   ações fixa no rodapé. Cada categoria mostra só o seu conteúdo, e cada grupo
+   de campos ganha superfície própria (`.config-cartao`) em vez de flutuar
+   direto sobre o fundo da tela.
+
+   As categorias são registradas em `modulos/config-categorias.js`; nenhuma
+   configuração foi criada ou removida na mudança. */
+
+/* ── Este arquivo era 941 linhas, e virou seis ──────────────────────────────
+   Pelo teto de 500 da AMF. A ORDEM DOS @import em `style.css` reproduz a
+   ordem em que os blocos estavam aqui — em CSS a ordem É a regra de
+   desempate, e nenhum bloco mudou de posição relativa:
+
+     configuracoes.css             o trilho, o painel, os campos, os temas
+     configuracoes-extensoes.css   extensões e pastas ignoradas
+     configuracoes-busca.css       a busca de configuração
+     configuracoes-preparar.css    Preparar projeto
+     configuracoes-plugins.css     Plugins e Launchers
+     configuracoes-arquivos.css    a grade de destino por categoria
+     configuracoes-biblioteca.css  Configurações › Arquivos: o cartão de opção */
+
+.config-shell { flex: 1; display: flex; overflow: hidden; }
+
+/* ── Trilho de categorias ────────────────────────────────────────────────
+   Vertical, e não uma barra de sub-abas horizontal, porque a lista cresce a
+   cada área nova de configuração: na horizontal ela quebraria em duas linhas
+   já na quinta categoria. */
+.config-trilho {
+  width: 220px; flex-shrink: 0;
+  background: var(--surface-dark);
+  border-right: 1px solid rgba(var(--white-rgb),0.06);
+  padding: 18px 10px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.config-trilho-titulo {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  color: var(--text-muted); padding: 0 10px 10px;
+}
+.config-trilho-btn {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  background: transparent; border: 1px solid transparent; border-radius: 6px;
+  color: var(--text-muted); font-family: inherit; font-size: 13.5px; font-weight: 500;
+  padding: 9px 11px; cursor: pointer; text-align: left;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+.config-trilho-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.config-trilho-btn.active {
+  color: var(--blue);
+  background: rgba(var(--blue-rgb),0.12);
+  border-color: rgba(var(--blue-rgb),0.35);
+}
+.config-trilho-icone { font-size: 14px; width: 16px; text-align: center; flex-shrink: 0; }
+
+/* ── Trilho de pastas — variante do Trilho de categorias, com aninhamento ──
+   Ver Padrões de interface/Componentes/Trilho de categorias.md. Mesmo visual
+   do trilho de categorias (largura, fundo, estado ativo) — a diferença é a
+   profundidade (`--nivel`, uma variável CSS por linha, nunca calculada por
+   classe: uma regra só serve qualquer profundidade) e o galho da subpasta.
+   Usada nas telas Launchers e Plugins (tela principal e dentro do projeto)
+   para navegar pelas pastas/subpastas de External/launchers/ e
+   External/plugins/. */
+.trilho-pastas {
+  width: 220px; flex-shrink: 0;
+  background: var(--surface-dark);
+  border-right: 1px solid rgba(var(--white-rgb),0.06);
+  padding: 18px 10px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.trilho-pastas-item {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  background: transparent; border: 1px solid transparent; border-radius: 6px;
+  color: var(--text-muted); font-family: inherit; font-size: 13.5px; font-weight: 500;
+  padding: 9px 11px 9px calc(11px + var(--nivel, 0) * 14px);
+  cursor: pointer; text-align: left;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+.trilho-pastas-item:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.trilho-pastas-item.ativa {
+  color: var(--blue);
+  background: rgba(var(--blue-rgb),0.12);
+  border-color: rgba(var(--blue-rgb),0.35);
+}
+.trilho-pastas-galho { color: var(--text-muted); flex-shrink: 0; }
+.trilho-pastas-separador { height: 1px; background: rgba(var(--white-rgb),0.08); margin: 6px 4px; }
+
+/* O corpo da aba: trilho à esquerda + conteúdo rolável à direita — mesma
+   cadeia de rolagem do resto do programa (casca `min-height:0`, um filho
+   só com `overflow:auto`; ver Padrões de interface/Convenções.md). */
+.trilho-pastas-corpo { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+.trilho-pastas-conteudo { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Painel de conteúdo ── */
+.config-painel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.config-rolagem { flex: 1; overflow-y: auto; padding: 26px 30px 20px; min-height: 0; }
+
+/* Recolhida pela classe global `.hidden` (utils.css) — por isso o display
+   padrão é o de aberta. */
+.config-secao { display: flex; flex-direction: column; gap: 18px; }
+.config-secao-cabecalho { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.config-secao-cabecalho h2 { font-size: 20px; font-weight: 700; }
+.config-secao-cabecalho span { font-size: 12.5px; color: var(--text-muted); }
+
+/* ── Cartão: um grupo de campos ── */
+.config-cartao {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid rgba(var(--white-rgb),0.05);
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;
+}
+.config-cartao-cabecalho { display: flex; flex-direction: column; gap: 4px; }
+.config-cartao-titulo {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.config-cartao-dica {
+  font-size: 12.5px; color: var(--text-muted); line-height: 1.6; max-width: 640px;
+}
+
+/* ── Cabeçalho de servidor, dentro de uma seção com mais de um (Servidores MCP
+   do programa: Assistente/Trabalhos) ── */
+.srv-cab { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.srv-nome { font-size: 15px; font-weight: 700; }
+.srv-chave {
+  font-size: 11.5px; color: var(--text-muted); background: rgba(var(--black-rgb),0.3);
+  padding: 2px 8px; border-radius: 10px; font-family: ui-monospace, Consolas, monospace;
+}
+.srv-linha { flex: 1; height: 1px; background: rgba(var(--white-rgb),0.1); }
+
+/* Os sete campos numéricos eram uma coluna única de 420px de largura no meio
+   de uma tela inteira vazia à direita. `auto-fit` mantém duas ou três colunas
+   na janela grande e volta sozinho para uma só na janela estreita. */
+.config-grade {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 14px 22px;
+}
+
+/* ── Ordem das abas: pílulas arrastáveis ── */
+.taborder-row {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0;
+}
+.taborder-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface-dark); border-radius: 20px;
+  padding: 7px 14px; cursor: grab; border: 1px solid rgba(var(--white-rgb),0.06);
+  user-select: none; font-size: 14px; font-weight: 500; white-space: nowrap;
+  transition: background var(--t), border-color var(--t);
+}
+.taborder-pill:hover { background: var(--surface-hover); border-color: rgba(var(--blue-rgb),0.3); }
+.taborder-pill.dragging { opacity: 0.4; border-color: var(--blue); cursor: grabbing; }
+.taborder-handle { color: var(--text-muted); font-size: 14px; }
+.taborder-expand-btn {
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 11px; padding: 0 2px; line-height: 1; border-radius: 3px; font-family: inherit;
+  transition: color var(--t), background var(--t);
+}
+.taborder-expand-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.1); }
+.taborder-expand-btn.open { color: var(--blue); }
+.taborder-subtab-area {
+  margin-top: 2px; padding: 10px 14px; background: rgba(var(--black-rgb),0.22);
+  border-radius: var(--radius); border-left: 2px solid var(--blue);
+}
+.taborder-subtab-label {
+  font-size: 11px; color: var(--text-muted); margin-bottom: 8px;
+}
+
+/* ── Campos ── */
+.config-field-row {
+  display: flex; flex-direction: column; gap: 6px; max-width: 420px; min-width: 0;
+}
+/* Dentro da grade quem manda na largura é a coluna, não o campo. */
+.config-grade .config-field-row { max-width: none; }
+.config-field-row label {
+  font-size: 13px; color: var(--text-muted);
+}
+.config-field-row input[type="number"] {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: var(--radius);
+  color: var(--text); padding: 8px 12px; font-size: 14px; font-family: inherit;
+  transition: border-color var(--t);
+}
+.config-field-row input[type="number"]:focus {
+  outline: none; border-color: var(--blue);
+}
+
+/* Faixa de erro de uma categoria de Configurações: o que impediu de ler ou de
+   gravar, dito NA TELA e não só numa notificação, que some em 2,5 s e não pode
+   ser relida. Mesma medida e mesma cor de `.modal-error` (modais.css), para o
+   programa não ter dois jeitos de desenhar a mesma coisa. */
+.config-erro {
+  font-size: 12.5px; color: var(--red); background: rgba(var(--red-rgb),0.12);
+  border-radius: var(--radius); padding: 8px 12px; margin-bottom: 10px;
+}
+
+/* Nota de UM campo: a lista de agentes de cada debounce morava dentro do
+   próprio rótulo, o que dava rótulo de duas linhas. Desceu para cá. */
+.config-nota {
+  font-size: 11.5px; color: var(--text-muted); line-height: 1.5; opacity: 0.9;
+}
+/* A seta entre dois blocos numerados de um cartão («↓ não coube? vira
+   partes…»): diz o que leva de um bloco ao outro, mais apagada que a nota
+   de um campo. Os cartões de Partes e costura seguem o fluxo o que lê →
+   quanto cabe → como divide → máximo aceito (D27, D28). */
+.config-nota-passagem { margin: 10px 0 4px; opacity: 0.75; }
+.config-cartao-dica code, .config-nota code {
+  background: rgba(var(--black-rgb),0.3); padding: 1px 5px; border-radius: 3px; font-size: 11.5px;
+}
+
+/* ── Slider de configuração ──
+   Mesmo visual do slider dos Mapas (mapas.css), para o programa não ter dois
+   jeitos de desenhar a mesma coisa. */
+.config-slider-row { display: flex; align-items: center; gap: 10px; }
+.config-slider-row input[type="range"] {
+  flex: 1; height: 3px;
+  accent-color: var(--teal);
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  background: rgba(var(--white-rgb),0.12); border-radius: 2px; outline: none;
+}
+.config-slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--teal); cursor: pointer;
+  box-shadow: 0 0 4px rgba(var(--ciano-mapa-rgb),0.5);
+}
+.config-slider-val {
+  font-size: 12px; color: var(--text); width: 44px; text-align: right;
+  flex-shrink: 0; font-variant-numeric: tabular-nums;
+}
+
+/* ── Caixa de seleção de configuração ── */
+.config-check {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text); padding: 3px 0; cursor: pointer;
+}
+.config-check input { accent-color: var(--blue); flex-shrink: 0; }
+.config-check-nota { color: var(--text-muted); font-size: 11.5px; }
+
+/* ── Prévia do orçamento de tokens ── */
+.limites-preview {
+  padding: 14px 16px; max-width: 460px;
+  background: rgba(var(--black-rgb),0.2); border-radius: var(--radius);
+}
+.limites-preview-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 8px;
+}
+.limites-preview-body {
+  font-family: ui-monospace, Consolas, monospace; font-size: 12.5px;
+  line-height: 1.9; color: var(--text-muted);
+}
+.limites-preview-total {
+  display: block; color: var(--green); font-weight: 700;
+  border-top: 1px solid rgba(var(--white-rgb),0.1); margin-top: 7px; padding-top: 7px;
+}
+.limites-preview-aviso {
+  font-family: 'Segoe UI', sans-serif; font-size: 11.5px; color: var(--yellow-soft);
+  margin-top: 8px; font-style: italic;
+}
+
+/* ── Barra de ações ────────────────────────────────────────────────────────
+   Os botões de salvar eram quatro pares espalhados pela rolagem, cada um no
+   fim da sua seção. Viraram uma barra única no rodapé, sempre visível, que
+   mostra apenas o par da categoria aberta. */
+.config-barra-acoes {
+  flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+  padding: 12px 30px; min-height: 60px;
+  background: var(--surface-dark);
+  border-top: 1px solid rgba(var(--white-rgb),0.06);
+}
+.config-acoes { display: flex; gap: 10px; margin-left: auto; }
+
+/* ── Categoria "Temas" ─────────────────────────────────────────────────────
+   Um cartão por tema, selecionável. O <input type="radio"> real é escondido e
+   o <label> inteiro vira a área de clique — assim a amostra de cores também
+   seleciona, e o teclado continua funcionando (o radio ainda é o que recebe
+   foco e responde às setas).
+
+   ⚠️ As cores DENTRO de `.config-tema-amostra` vêm por `style="background:…"`
+   do template, e não de token: cada amostra mostra as cores de um tema que não
+   está aplicado, e o `:root` só conhece o tema atual. Exceção registrada em
+   `Saída das skills/Padrões de interface/Exceções.md`. */
+.config-tema-lista { display: flex; flex-direction: column; gap: 10px; }
+
+.config-tema-cartao {
+  display: flex; align-items: center; gap: 14px; cursor: pointer;
+  background: rgba(var(--white-rgb),0.03);
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: var(--radius); padding: 12px 14px;
+  transition: background var(--t), border-color var(--t);
+}
+.config-tema-cartao:hover { background: rgba(var(--white-rgb),0.06); }
+
+/* O radio some da vista, não da navegação: `appearance:none` com tamanho zero
+   o tiraria da ordem de foco em alguns motores. */
+.config-tema-cartao input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+
+/* Selecionado: o mesmo azul do item ativo do trilho e das abas — quem já sabe
+   ler "azul = onde estou" no resto do programa lê aqui também. */
+.config-tema-cartao:has(input:checked) {
+  border-color: rgba(var(--blue-rgb),0.55);
+  background: rgba(var(--blue-rgb),0.12);
+}
+.config-tema-cartao:has(input:focus-visible) { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.config-tema-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.config-tema-nome { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.config-tema-cartao:has(input:checked) .config-tema-nome { color: var(--blue); }
+.config-tema-dica { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+.config-tema-amostra {
+  display: flex; flex-shrink: 0; border-radius: 6px; overflow: hidden;
+  border: 1px solid rgba(var(--white-rgb),0.12);
+}
+.config-tema-amostra span { width: 26px; height: 26px; display: block; }
+
+
+/* Cartão cuja caixa-mestra está desmarcada: fica visível, mas não se mexe */
+.config-apagado { opacity: .45; pointer-events: none; }

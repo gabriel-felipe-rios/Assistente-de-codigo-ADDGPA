@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Chat com contexto -->
+<!-- Lista de sessões à esquerda -> conversa ao centro com campo de envio -> painel do contexto em uso à direita -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Chat com contexto</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex}
+.sessoes{width:196px;background:var(--superficie);border-right:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;padding:10px 8px;gap:3px}
+.ses{padding:6px 9px;border-radius:5px;color:var(--texto-secundario);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ses.on{background:var(--superficie-hover);color:var(--texto)}
+.conversa{flex:1;min-width:0;display:flex;flex-direction:column}
+.msgs{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:78%;border-radius:10px;padding:8px 11px;line-height:1.5}
+.msg.eu{align-self:flex-end;background:var(--primaria);color:var(--fundo)}
+.msg.ia{align-self:flex-start;background:var(--superficie);border:1px solid var(--superficie-hover)}
+.msg pre{margin-top:6px;background:var(--superficie-escura);border-radius:6px;padding:7px 8px;font-family:ui-monospace,Consolas,monospace;font-size:10.5px;color:var(--texto-secundario);white-space:pre-wrap}
+.envio{border-top:1px solid var(--superficie-hover);background:var(--superficie);padding:9px 12px;display:flex;gap:8px;align-items:center;flex-shrink:0}
+.entrada{flex:1;height:32px;background:var(--superficie-escura);border:1px solid var(--superficie-hover);border-radius:8px;display:flex;align-items:center;padding:0 10px;color:var(--texto-secundario)}
+.ctx{width:206px;background:var(--superficie);border-left:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;padding:11px 10px;gap:7px;overflow:auto}
+.arq{display:flex;align-items:center;justify-content:space-between;background:var(--superficie-hover);border-radius:6px;padding:6px 8px;font-size:11px}
+.arq .x{color:var(--negativa)}
+.barra{height:6px;background:var(--superficie-hover);border-radius:3px;overflow:hidden;display:flex}
+.barra i{display:block;height:100%}
+</style></head><body>
+<div class="sessoes">
+  <div class="rot" style="padding:2px 9px 5px">Sessões</div>
+  <div class="ses on">Refatorar o cálculo do frete</div>
+  <div class="ses">Escrever testes do parser</div>
+  <div class="ses">Revisar migração do banco</div>
+  <div class="ses">Ideias para a tela de login</div>
+</div>
+<div class="conversa">
+  <div class="msgs">
+    <div class="msg eu">Por que o frete zera quando o CEP começa com 9?</div>
+    <div class="msg ia">Porque a faixa é comparada como texto, então "9…" cai fora do intervalo numérico.
+      <pre>if cep &gt;= "01000" and cep &lt;= "89999":
+    aplicar_faixa()</pre>
+    </div>
+    <div class="msg eu">Dá para arrumar sem mexer no banco?</div>
+    <div class="msg ia">Dá — basta converter para inteiro antes de comparar. Nenhum dado gravado muda.</div>
+  </div>
+  <div class="envio"><div class="entrada">Escreva sua mensagem…</div><button class="bt">Enviar</button></div>
+</div>
+<div class="ctx">
+  <div class="rot">Contexto em uso</div>
+  <div class="barra"><i style="width:38%;background:var(--primaria)"></i><i style="width:19%;background:var(--especial)"></i><i style="width:11%;background:var(--utilitaria)"></i></div>
+  <div style="color:var(--texto-secundario);font-size:10.5px">8 400 de 12 000 tokens</div>
+  <div class="rot" style="margin-top:4px">Arquivos anexados</div>
+  <div class="arq"><span>frete.py</span><span class="x">×</span></div>
+  <div class="arq"><span>faixas_cep.json</span><span class="x">×</span></div>
+  <div class="arq"><span>testes_frete.py</span><span class="x">×</span></div>
+  <button class="bt sec">+ Anexar</button>
+</div>
+</body></html>

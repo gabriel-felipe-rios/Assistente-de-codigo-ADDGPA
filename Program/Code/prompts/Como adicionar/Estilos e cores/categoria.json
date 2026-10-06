@@ -1,0 +1,47 @@
+{
+  "ordem": 8,
+  "nome": "Estilos e cores",
+  "icone": "🎨",
+  "destino": "Arquivos/Estilos e cores/",
+  "tabela": {
+    "colunas": [
+      "Tipo",
+      "O que é"
+    ],
+    "linhas": [
+      {
+        "nome": "Estilos",
+        "pasta": "Estilos/ · .html",
+        "texto": "o jeito da tela: abas horizontais, painel dividido, quadro kanban…",
+        "prompt": "Prompt · Estilos.txt"
+      },
+      {
+        "nome": "Cores",
+        "pasta": "Cores/ · .json",
+        "texto": "uma paleta completa",
+        "prompt": "Prompt · Cores.txt"
+      },
+      {
+        "nome": "Tipografia",
+        "pasta": "Tipografia/ · .json",
+        "texto": "as fontes, os tamanhos e o peso de cada nível",
+        "prompt": "Prompt · Tipografia.txt"
+      },
+      {
+        "nome": "Texturas e materiais",
+        "pasta": "Texturas e materiais/ · .json",
+        "texto": "vidro fosco, papel, neon, sombra…",
+        "prompt": "Prompt · Texturas e materiais.txt"
+      },
+      {
+        "nome": "Animações",
+        "pasta": "Animações/ · pasta",
+        "texto": "o movimento de abrir painel, trocar de aba, arrastar, notificar…",
+        "prompt": "Prompt · Animações.txt"
+      }
+    ]
+  },
+  "botao": null,
+  "nota": "Quando estiver pronto, ponha na subpasta do tipo, dentro de `Arquivos/Estilos e cores/`.",
+  "apoio": null
+}

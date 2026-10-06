@@ -1,0 +1,102 @@
+/* ═══ EDITOR → o Histórico local, e o que o Assistente diz sobre um arquivo ═
+   ⚠️ O HISTÓRICO LOCAL NÃO É BACKUP. Ele guarda versões do arquivo enquanto o
+   Editor está aberto; quem guarda de verdade é a aba Backups. Trocar um pelo
+   outro na cabeça de quem lê a tela é o defeito que estes rótulos evitam.   */
+/* ── Painel do Histórico local ── */
+.ed-hist { position: absolute; inset: 0; z-index: 20; background: var(--bg);
+  display: flex; flex-direction: column; overflow: hidden; }
+.ed-hist-ajuda {
+  flex-shrink: 0; padding: 10px 14px; font-size: 11.5px; line-height: 1.55;
+  color: var(--text-muted);
+  background: rgba(var(--white-rgb), 0.04);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.ed-hist-ajuda b { color: var(--text); font-weight: 600; }
+/* `flex-basis` finito, e não `flex:1`: com o diff (abaixo) também flexível,
+   a lista tomaria metade da tela à toa — ela só precisa mostrar as datas. */
+.ed-hist-lista { flex: 0 1 200px; overflow: auto; padding: 4px 0; }
+.ed-hist-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 12px; cursor: pointer; font-size: 12px; color: var(--text-muted);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.04);
+}
+.ed-hist-item:hover { background: rgba(var(--white-rgb), 0.05); color: var(--text); }
+.ed-hist-item.active { background: rgba(var(--blue-rgb), 0.14); color: var(--text); }
+.ed-hist-quando { flex: 1; min-width: 0; }
+.ed-hist-bytes { font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+/* Diff visual (Obra 14) — abaixo da lista, ligado ao clicar num item. Só o
+   entorno de cada mudança entra na tela (ver `_edHistMontarDiffHtml`), com
+   "⋯" nos trechos iguais pulados. */
+.ed-hist-diff {
+  flex: 1; min-height: 0; overflow: auto; padding: 6px 0;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 12px;
+  border-top: 1px solid rgba(var(--white-rgb), 0.08);
+}
+.ed-hist-diff-linha { display: flex; gap: 8px; padding: 1px 14px; white-space: pre-wrap; word-break: break-word; }
+.ed-hist-diff-marca { width: 10px; flex-shrink: 0; text-align: center; }
+.ed-hist-diff--add { background: rgba(var(--green-rgb), 0.10); }
+.ed-hist-diff--add .ed-hist-diff-marca, .ed-hist-diff--add .ed-hist-diff-texto { color: var(--editor-token-inserido); }
+.ed-hist-diff--del { background: rgba(var(--red-rgb), 0.10); }
+.ed-hist-diff--del .ed-hist-diff-marca, .ed-hist-diff--del .ed-hist-diff-texto { color: var(--editor-token-removido); }
+.ed-hist-diff--igual .ed-hist-diff-texto { color: var(--text-muted); }
+.ed-hist-diff-salto { padding: 2px 14px; color: var(--text-muted); opacity: 0.6; }
+
+/* ── O que o Assistente mostra sobre um arquivo (modal do menu de contexto) ──
+   Vive aqui, e não em `modais.css`: é conteúdo desta aba dentro do modal
+   padrão, não um desenho novo de modal. */
+.ed-assist-lista {
+  /* `flex: 1` — o modal (Obra "modal-grande") agora tem altura FIXA, então
+     cada lista cresce pra preencher o espaço que sobrar, em vez de um
+     `max-height` fixo que deixava espaço vazio embaixo em modal curto. Com
+     3 listas na mesma tela (quemUsa: uso, usado_por, cascata), as 3 dividem
+     o espaço igualmente — é o efeito desejado. */
+  flex: 1; min-height: 80px; overflow: auto;
+  border: 1px solid rgba(var(--white-rgb), 0.10);
+  border-radius: var(--radius);
+  background: rgba(var(--black-rgb), 0.14);
+}
+.ed-assist-item {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 5px 10px; font-size: 12px;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.05);
+}
+.ed-assist-item:last-child { border-bottom: 0; }
+.ed-assist-arq { flex: 1; min-width: 0; color: var(--text); word-break: break-all; }
+/* Os identificadores que ligam os dois arquivos — a resposta ao "por onde". */
+.ed-assist-via {
+  flex-shrink: 0; max-width: 45%;
+  font-size: 11px; color: var(--teal);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Selo "nível N" da cascata de indiretos — mesma ideia de `.lvl` em
+   relacoes.css (aba Análise), simplificada pro modal do Editor. */
+.ed-assist-nivel {
+  flex-shrink: 0; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--text-muted);
+  background: rgba(var(--white-rgb), 0.08); border-radius: 8px; padding: 1px 7px;
+}
+.ed-assist-doc {
+  /* Mesma ideia de `.ed-assist-lista` acima — cresce pra preencher a altura
+     fixa do modal, em vez de encolher pro próprio conteúdo. */
+  flex: 1; min-height: 120px; overflow: auto;
+  font-size: 13px; line-height: 1.6; color: var(--text-muted);
+}
+.ed-assist-doc h1, .ed-assist-doc h2, .ed-assist-doc h3 {
+  color: var(--text); font-size: 15px; margin: 14px 0 6px;
+}
+/* Bloco de código de markdown (\`\`\`) dentro da documentação — sem isto ele
+   usa o padrão do navegador e pode estourar a largura do modal, empurrando
+   uma barra de rolagem HORIZONTAL na tela inteira em vez de só no bloco. */
+.ed-assist-doc pre {
+  overflow-x: auto; max-width: 100%;
+  background: rgba(var(--black-rgb), 0.25); border-radius: 6px;
+  padding: 10px 12px; margin: 8px 0;
+}
+.ed-assist-doc pre code { background: none; padding: 0; }
+.ed-assist-doc code {
+  background: rgba(var(--black-rgb), 0.25); border-radius: 4px; padding: 1px 5px;
+  font-family: Consolas, monospace; font-size: 12px;
+}
+.ed-assist-doc ul { padding-left: 20px; }
+.ed-assist-doc li { margin: 3px 0; }

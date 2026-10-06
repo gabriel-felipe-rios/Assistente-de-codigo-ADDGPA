@@ -1,0 +1,71 @@
+/* ═══ EDITOR → o rodapé de status e o painel vazio ═════════════════════════
+   Inclui o estado "nenhum arquivo aberto", que é tela, não erro.           */
+/* ── Buscar e substituir no projeto (Obra 13, Ctrl+Shift+F) ──
+   Flutua ancorado no canto, como `.ed-find` (Ctrl+F) — sem fundo escuro nem
+   centralização de modal. Testado pelo usuário como modal cheio e achado
+   pesado demais para uma busca; o painel é maior que `.ed-find` (tem
+   substituir + lista de resultados), mas a ideia é a mesma: não bloqueia o
+   resto da tela, fecha no Esc ou clicando fora. `position: fixed`
+   (não relativo a `.ed-corpo`) porque este painel é da ABA inteira, não de um
+   painel específico — evita pular de lugar ao trocar de painel ativo. */
+.ed-replace-painel {
+  position: fixed; top: 64px; right: 24px; z-index: 60;
+  width: 420px; max-width: 92vw; max-height: 70vh;
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius); box-shadow: 0 12px 34px rgba(var(--black-rgb), 0.5);
+  overflow: hidden;
+}
+.rp-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 8px 8px 12px; border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);
+}
+.rp-fechar {
+  width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; font-size: 14px; color: var(--text-muted);
+  background: transparent; border: 1px solid rgba(var(--white-rgb), 0.12); cursor: pointer;
+}
+.rp-fechar:hover { color: var(--text); background: rgba(var(--white-rgb), 0.10); }
+.rp-campos {
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+}
+.rp-campo { display: flex; align-items: center; gap: 8px; }
+.rp-campo label { width: 60px; flex-shrink: 0; font-size: 11.5px; color: var(--text-muted); }
+.rp-campo input {
+  flex: 1; background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb), 0.12);
+  border-radius: 6px; color: var(--text); padding: 5px 8px; font-size: 12px;
+  font-family: Consolas, monospace; outline: none;
+}
+.rp-campo input:focus { border-color: var(--blue); }
+.rp-lista { padding: 6px 12px; overflow: auto; flex: 1; min-height: 60px; }
+.rp-res {
+  font-size: 11.5px; color: var(--text-muted); padding: 6px 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.04); line-height: 1.5;
+}
+.rp-res b { color: var(--text); }
+.rp-res div { font-family: Consolas, monospace; font-size: 10.5px; opacity: 0.8; }
+.rp-rodape { padding: 8px 12px; border-top: 1px solid rgba(var(--white-rgb), 0.08); display: flex; justify-content: flex-end; }
+
+/* ── Rodapé de status ── */
+.ed-status {
+  display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+  padding: 4px 14px; font-size: 11.5px; color: var(--text-muted);
+  background: var(--surface-dark);
+  border-top: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.ed-status-dir { margin-left: auto; display: flex; gap: 14px; }
+.ed-status kbd {
+  background: rgba(var(--white-rgb), 0.09);
+  border: 1px solid rgba(var(--white-rgb), 0.14);
+  border-radius: 4px; padding: 0 5px; font-size: 10.5px; font-family: inherit;
+}
+
+/* ── Nenhum arquivo aberto ── */
+.ed-placeholder {
+  flex: 1; display: flex; flex-direction: column; gap: 6px;
+  align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;
+}
+

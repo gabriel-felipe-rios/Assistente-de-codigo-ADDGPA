@@ -1,0 +1,76 @@
+Preciso de um MCP LOCAL QUE RODA UM COMANDO para a biblioteca do meu assistente de código.
+
+QUAL SERVIDOR: [descreva aqui — o pacote (npx, uvx, docker…), de quem ele é e o que ele faz; se tiver, cole o trecho de configuração da documentação dele]
+
+Neste tipo (comando), a pasta do item NÃO tem servidor nenhum: só o manifesto e
+a descrição. O servidor é um pacote de internet, baixado e executado na hora
+pelo npx, uvx, bunx ou docker. Ligar copia a pasta e registra o servidor;
+desligar tira o registro e apaga a cópia.
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do MCP>/
+    mcp.json         (obrigatório, na raiz)
+    Descrição.md     (de quem é o pacote, o que ele faz e o que ele acessa)
+
+REGRAS DO FORMATO
+
+1. Trazer um MCP de internet para cá é TRADUZIR, não copiar. O mcp.json tem
+   estes campos:
+
+     "nome"               igual ao nome da pasta, letra por letra
+     "versao"             use a versão do pacote que você fixou
+     "descricao"          uma frase, mostrada na biblioteca
+     "tipo"               "comando"
+     "comando"            o executável: npx, uvx, bunx, docker, node…
+     "args"               os argumentos, na ordem (opcional)
+     "env"                variáveis de ambiente do processo (opcional)
+     "pasta_do_programa"  "" — quem preenche é o programa, na cópia
+
+   Exemplo:
+
+     {
+       "nome": "Filesystem",
+       "versao": "1",
+       "descricao": "Lê e escreve arquivos numa pasta que você escolhe.",
+       "tipo": "comando",
+       "comando": "npx",
+       "args": ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "${PASTA}"],
+       "env": {},
+       "pasta_do_programa": ""
+     }
+
+2. Nunca escreva "command", "url" ou "type" no manifesto — são os nomes do
+   formato de destino, e quem os escreve é o programa, a partir do "tipo".
+
+3. FIXE A VERSÃO do pacote nos args. Sem ela, "npx -y" baixa a mais nova a cada
+   sessão, e o MCP muda de comportamento sozinho.
+
+4. O "comando" precisa estar no PATH desta máquina — ao ligar, o programa
+   confere e diz o que instalar. Não escreva o caminho completo do executável:
+   isso amarra o manifesto a uma máquina só.
+
+5. ${PASTA} vira o caminho absoluto da cópia dentro do projeto. Aqui ele serve
+   para dizer ao servidor em que pasta ele pode trabalhar. Nunca escreva caminho
+   de máquina no lugar dele.
+
+6. Senha e token NUNCA vão no manifesto, mesmo que a documentação do pacote
+   mostre a chave escrita por extenso. Escreva ${NOME_DA_VARIAVEL} e diga, na
+   Descrição.md, qual variável de ambiente eu preciso criar.
+
+7. NÃO declare "lista_de_ligadas" (o --enabled): ele é invenção deste programa,
+   e um servidor de terceiro que o recebe morre no argumento desconhecido. Só se
+   o pacote tiver um argumento próprio para isso, ponha o nome dele em "nome".
+   Declarar só "ferramentas" é o certo: a tela as lista, sem caixinhas.
+
+8. A chave do registro é o nome da pasta em minúsculas, com hífen e sem acento,
+   e entra no endereço de cada ferramenta (mcp__<chave>__<ferramenta>).
+   Renomear a pasta depois muda todos os endereços.
+
+9. Na Descrição.md, diga de quem é o pacote e o que ele lê: é código de
+   terceiro rodando com os meus privilégios, sem sandbox.
+
+ONDE VOU SALVAR
+  Arquivos/MCPs/<Nome do MCP>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

@@ -1,0 +1,21 @@
+{
+  "notificacoes_posicao": "superior-centro",
+  "notificacoes_tamanho": "media",
+  "notificacoes_origens": {
+    "projetos": "tudo",
+    "arquivos": "tudo",
+    "configuracoes": "tudo",
+    "chat": "tudo",
+    "fila": "tudo",
+    "designer": "tudo",
+    "pipeline": "tudo",
+    "automacao": "tudo",
+    "decisoes": "tudo",
+    "documentacao": "tudo",
+    "terminal": "tudo",
+    "backups": "tudo",
+    "inspetor": "tudo",
+    "aparencia": "tudo",
+    "mapas": "tudo"
+  }
+}

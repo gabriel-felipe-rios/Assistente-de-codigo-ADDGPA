@@ -1,0 +1,10 @@
+• navegador — Lista arquivos e subpastas de uma pasta do projeto.
+  ATENÇÃO: para este subagente, o campo "pergunta" NÃO é uma pergunta — é o caminho da pasta a listar.
+  O caminho é relativo à raiz do projeto E precisa estar dentro das pastas de trabalho: caminho que existe no disco mas está fora delas é recusado.
+  Use para: explorar a estrutura antes de pedir leitura de um arquivo.
+  NÃO CHUTE o caminho. Comece pelo ".", que devolve as pastas de trabalho com o primeiro nível de cada uma, e desça a partir do que ele mostrar — ou tire o caminho do índice de navegação (🔍 Buscador).
+  Ele lista PASTA. Para ver o conteúdo de um arquivo, é o Leitor (📖).
+  Para começar:
+  {"chamadas": [{"subagente": "navegador", "pergunta": "."}]}
+  Depois, com um caminho que o "." mostrou:
+  {"chamadas": [{"subagente": "navegador", "pergunta": "Program/Code"}]}

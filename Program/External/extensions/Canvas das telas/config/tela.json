@@ -1,0 +1,31 @@
+{
+  "cartoes": [
+    { "titulo": "O que ela lê",
+      "dica": "Páginas: HTML (.html, .htm). Ligações: JavaScript (.js e o que está dentro do HTML). Aparência: CSS (.css). Outras linguagens: ainda não — só site nesta versão.",
+      "campos": [] },
+    { "titulo": "De onde o canvas começa",
+      "dica": "A primeira tela é o arquivo principal do projeto. As outras são as que aparecem nas pastas de trabalho.",
+      "campos": [
+        { "chave": "primeira_tela", "rotulo": "Primeira tela", "tipo": "escolha", "padrao": "principal",
+          "opcoes": [ { "valor": "principal", "rotulo": "O arquivo principal do projeto" },
+                      { "valor": "index", "rotulo": "index.html da raiz" } ] },
+        { "chave": "ler_paginas", "rotulo": "Arquivos .html", "tipo": "interruptor", "padrao": true },
+        { "chave": "ler_abas", "rotulo": "Abas internas de cada página", "tipo": "interruptor", "padrao": true },
+        { "chave": "ler_modais", "rotulo": "Janelas que abrem por cima (modais)", "tipo": "interruptor", "padrao": true }
+      ] },
+    { "titulo": "As telas",
+      "dica": "O tamanho em que cada tela é desenhada. Dá para trocar na hora, no topo da aba.",
+      "campos": [
+        { "chave": "tamanho_inicial", "rotulo": "Tamanho inicial", "tipo": "escolha", "padrao": "computador",
+          "opcoes": [ { "valor": "celular", "rotulo": "Celular · 390 × 844" },
+                      { "valor": "tablet", "rotulo": "Tablet · 768 × 1024" },
+                      { "valor": "computador", "rotulo": "Computador · 1920 × 1080" } ] },
+        { "chave": "porta", "rotulo": "Porta do servidor das telas", "tipo": "numero", "padrao": 5600,
+          "min": 1024, "max": 65535, "passo": 1,
+          "nota": "Só deste canvas; sobe ao abrir a aba e cai ao sair dela." },
+        { "chave": "redesenhar_ao_salvar", "rotulo": "Redesenhar a cada Ctrl+S", "tipo": "interruptor", "padrao": true },
+        { "chave": "lembrar_posicoes", "rotulo": "Lembrar onde arrastei cada tela", "tipo": "interruptor", "padrao": true,
+          "nota": "Para esquecer as posições deste projeto, use ↺ Arrumar no topo da aba." }
+      ] }
+  ]
+}

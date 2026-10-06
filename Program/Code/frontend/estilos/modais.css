@@ -1,0 +1,163 @@
+/* ══════════════════════════════════════════════════════ Modais */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(var(--black-rgb),0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; backdrop-filter: blur(3px);
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 12px; padding: 28px 32px; width: 380px;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 20px 60px rgba(var(--black-rgb),0.6);
+}
+.modal h3 { font-size: 18px; font-weight: 700; }
+.modal label { font-size: 13px; color: var(--text-muted); margin-bottom: -8px; }
+.modal input[type="text"] {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 15px;
+  padding: 10px 14px; width: 100%; outline: none; transition: border-color var(--t);
+}
+.modal input[type="text"]:focus { border-color: var(--blue); }
+.modal textarea.modal-textarea {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 14px;
+  padding: 10px 14px; width: 100%; outline: none; resize: vertical;
+  font-family: inherit; line-height: 1.5; transition: border-color var(--t);
+}
+.modal textarea.modal-textarea:focus { border-color: var(--blue); }
+.modal select.modal-select {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 14px;
+  padding: 10px 14px; width: 100%; outline: none; cursor: pointer;
+}
+.modal select.modal-select:focus { border-color: var(--blue); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+.modal-error { font-size: 13px; color: var(--red); background: rgba(var(--red-rgb),0.12); border-radius: var(--radius); padding: 8px 12px; }
+.modal-error.hidden { display: none; }
+.modal-body-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+.modal-body-text strong { color: var(--text); }
+
+/* Linha explicativa dentro de um modal — o que vai acontecer se confirmar. */
+.modal-dica { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+.modal-dica code {
+  background: rgba(var(--white-rgb),0.08); padding: 1px 5px;
+  border-radius: 3px; color: var(--text);
+}
+
+/* ── Modal maior — painéis "quem usa"/documentação/resumo de pasta do Editor.
+   `height` FIXO, e não `max-height`: os três (quemUsa, verDocumentacao,
+   verResumoDaPasta) passam por `_edAssistModal`, e o usuário pediu que os três
+   ficassem do MESMO tamanho — com `max-height` cada um encolhia pro seu
+   próprio conteúdo, e um resumo curto abria visivelmente menor que uma
+   documentação longa. Maior que `.modal-prompt` nas duas direções, e SEM o
+   padding:0/tipografia monoespaçada dele: o conteúdo aqui é HTML formatado
+   (listas, `marked.parse`), não texto de prompt cru. ── */
+/* Meio-termo entre o `.modal` de 380px e o `.modal-grande` de 1000px. Para
+   diálogo com `<select>` de opção descritiva ou lista de itens com botões: em
+   380px o texto da opção é cortado e a linha de ações fica espremida. */
+.modal-medio { width: 520px; max-width: 94vw; }
+
+.modal-grande {
+  width: 1000px;
+  max-width: 96vw;
+  height: 88vh;
+  overflow-y: auto;
+}
+
+/* ── Modal: Visualizar Prompt ── */
+.modal-prompt {
+  width: 680px;
+  max-width: 94vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+.modal-prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+}
+.modal-prompt-header h3 { margin: 0; font-size: 14px; }
+.modal-prompt-content {
+  flex: 1;
+  overflow: auto;
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 12px;
+  font-family: 'Consolas', monospace;
+  color: var(--text);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--surface-dark);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* ── Importar pasta como projeto (arrastada na grade de Projetos) ────────────
+   Só o nome da pasta e as duas ações — o caminho completo fica no title, porque
+   ler o caminho inteiro não ajuda a escolher entre importar com ou sem preparar. */
+/* Era 420px — apertado demais depois que Grupo/Subgrupo/Tags/Descrição
+   entraram no fluxo de importar (ver `projetos-kanban.css` para a mesma
+   largura em `.modal-projeto`, usada por Novo Projeto e Editar Projeto —
+   os três compartilham os mesmos campos agora, por decisão do usuário). */
+.modal-import { width: 560px; padding: 30px 36px; gap: 16px; }
+.import-project-nome {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.10);
+  border-radius: var(--radius); padding: 12px 14px;
+  font-size: 15px; font-weight: 600; color: var(--teal);
+  text-align: center; word-break: break-all;
+}
+.import-project-op { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.import-project-btn {
+  padding: 11px 12px; font-size: 13.5px; line-height: 1.3;
+  font-family: inherit; white-space: normal;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.14);
+  transition: background var(--t), border-color var(--t), transform var(--t);
+}
+.import-project-btn:hover { background: var(--surface-hover); border-color: rgba(var(--white-rgb),0.28); }
+.import-project-btn.btn-primary { border-color: var(--blue); }
+.import-project-btn.btn-primary:hover { background: var(--blue-hover); border-color: var(--blue-hover); }
+.import-project-btn:disabled { opacity: .45; cursor: not-allowed; }
+.import-project-btn:disabled:hover { background: var(--surface); border-color: rgba(var(--white-rgb),0.14); }
+.import-project-btn.btn-primary:disabled:hover { background: var(--blue); border-color: var(--blue); }
+/* Preset — só vale para "Importar e preparar", então fica logo abaixo dos botões. */
+.import-project-preset { display: flex; align-items: center; gap: 10px; }
+.import-project-preset label { font-size: 13px; color: var(--text-muted); margin: 0; }
+.import-project-preset select { flex: 1; }
+
+/* ── Modal: Limpar dados gerados ──────────────────────────────────────────
+   Uma linha por rotina, marcável. Mais largo que o `.modal` de 380px porque
+   o nome mais comprido ("Índice de Identificadores") já ocupa metade dele com
+   a caixa e o ícone na frente; e com altura máxima porque são quinze linhas,
+   e num modal sem teto elas empurram os botões para fora da tela em monitor
+   baixo. ⚠️ O `overflow` fica na LISTA, nunca no `.modal`: rolar o modal
+   inteiro esconderia justamente o "Limpar dados". */
+.modal-limpar { width: 460px; max-width: 94vw; }
+.limpar-atalhos { display: flex; align-items: center; gap: 8px; }
+.limpar-contagem { font-size: 12.5px; color: var(--text-muted); margin-left: auto; }
+.limpar-lista {
+  display: flex; flex-direction: column; gap: 2px;
+  background: var(--surface); border-radius: var(--radius);
+  padding: 10px 14px; max-height: 46vh; overflow-y: auto;
+}
+.limpar-grupo {
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-muted); margin: 10px 0 4px;
+}
+.limpar-grupo:first-child { margin-top: 0; }
+.limpar-item {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 14px; color: var(--text); cursor: pointer;
+  padding: 4px 6px; border-radius: 5px; transition: background var(--t);
+}
+.limpar-item:hover { background: rgba(var(--white-rgb),0.05); }
+.limpar-item input[type="checkbox"] {
+  accent-color: var(--red); width: 15px; height: 15px; cursor: pointer;
+  flex-shrink: 0;
+}
+.limpar-item-icone { flex-shrink: 0; }

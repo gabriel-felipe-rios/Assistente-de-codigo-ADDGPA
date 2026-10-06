@@ -1,0 +1,13 @@
+{
+  "ordem": 6,
+  "nome": "Instruções base",
+  "icone": "📘",
+  "destino": "Arquivos/Instruções base/",
+  "tabela": null,
+  "botao": {
+    "rotulo": "📋 Copiar prompt de instrução base",
+    "prompt": "Prompt.txt"
+  },
+  "nota": "Quando estiver pronto, ponha em `Arquivos/Instruções base/`.",
+  "apoio": null
+}

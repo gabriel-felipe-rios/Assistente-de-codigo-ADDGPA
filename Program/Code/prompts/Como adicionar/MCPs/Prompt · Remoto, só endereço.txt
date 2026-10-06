@@ -1,0 +1,71 @@
+Preciso de um MCP REMOTO (só endereço) para a biblioteca do meu assistente de código.
+
+QUAL SERVIÇO: [descreva aqui — o endereço, de quem ele é, o que ele recebe e o que devolve]
+
+Neste tipo (remoto), NÃO roda processo nenhum na minha máquina: o assistente
+externo fala direto com um endereço HTTP, e o servidor está no computador de
+outra pessoa. É o único dos três tipos em que os meus dados saem da máquina.
+
+Entregue uma PASTA com esta forma:
+
+  <Nome do MCP>/
+    mcp.json         (obrigatório, na raiz)
+    Descrição.md     (de quem é o endereço, o que ele recebe, o que devolve)
+
+REGRAS DO FORMATO
+
+1. O mcp.json tem estes campos:
+
+     "nome"        igual ao nome da pasta, letra por letra
+     "versao"      texto livre
+     "descricao"   uma frase, mostrada na biblioteca
+     "tipo"        "remoto"
+     "transporte"  "http" ou "sse" — e só esses dois
+     "url"         o endereço, com https
+     "headers"     cabeçalhos enviados a cada chamada (opcional)
+
+   Exemplo:
+
+     {
+       "nome": "Serviço remoto",
+       "versao": "1",
+       "descricao": "Consulta o catálogo da empresa. Os dados saem desta máquina.",
+       "tipo": "remoto",
+       "transporte": "http",
+       "url": "https://mcp.exemplo.com/v1",
+       "headers": { "Authorization": "Bearer ${MEU_TOKEN_DO_SERVICO}" }
+     }
+
+2. Nunca escreva "command", "args", "type" ou "env" no manifesto. O formato do
+   registro é derivado do "tipo". E "transporte" não é "type": quem escreve o
+   "type" do registro é o programa.
+
+3. Use https. Um endereço http manda o cabeçalho de autenticação em texto aberto.
+
+4. Senha e token NUNCA vão por extenso: o programa RECUSA ligar um manifesto
+   remoto com o valor escrito num cabeçalho de autenticação (Authorization,
+   X-Api-Key, qualquer nome com token, secret, password, api-key…). Escreva
+   "Bearer ${NOME_DA_VARIAVEL}" ou "${NOME_DA_VARIAVEL}", e diga, na
+   Descrição.md, qual variável de ambiente eu preciso criar.
+
+5. Não use ${PASTA}: um servidor remoto não tem como usar um caminho da minha
+   máquina. E nunca escreva caminho de máquina no manifesto.
+
+6. Não declare "campos" nem "lista_de_ligadas": um servidor remoto não recebe
+   argumento de linha de comando, e a escolha não chegaria a lugar nenhum.
+   "ferramentas" pode ir, só para a tela listar o que o endereço expõe. Opção do
+   serviço vai na "url" ou nos "headers", fixa no manifesto.
+
+7. Um serviço que oferece as duas formas (pacote npx e endereço hospedado) são
+   dois itens aqui: um "comando" e um "remoto". Não misture os campos dos dois.
+
+8. A chave do registro é o nome da pasta em minúsculas, com hífen e sem acento,
+   e entra no endereço de cada ferramenta (mcp__<chave>__<ferramenta>).
+   Renomear a pasta depois muda todos os endereços.
+
+9. Na Descrição.md, diga de quem é o endereço e o que sai desta máquina.
+
+ONDE VOU SALVAR
+  Arquivos/MCPs/<Nome do MCP>/
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

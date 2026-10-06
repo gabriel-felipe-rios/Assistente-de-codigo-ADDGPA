@@ -1,0 +1,24 @@
+/* O cartão em si (`.project-card`/`.project-icon`/`.project-name`) e a
+   moldura em volta dele (era `.project-grid`, grade solta) foram para
+   `estilos/projetos-kanban.css`, junto do quadro por grupo/subgrupo que
+   substituiu a grade — ver `projetos-kanban.js`. Ficam só os botões de ação
+   do cartão aqui, que não mudaram. */
+.card-actions { display: flex; gap: 6px; justify-content: flex-end; margin-top: 4px; }
+.card-btn {
+  border: none; border-radius: 5px; color: var(--text); font-size: 13px;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: background var(--t), transform var(--t);
+}
+.card-btn:active { transform: scale(0.92); }
+.card-btn-rename { background: var(--blue);  } .card-btn-rename:hover { background: var(--blue-hover); }
+.card-btn-delete { background: var(--red);   } .card-btn-delete:hover { background: var(--red-hover); }
+
+/* ── Empty State ── */
+.empty-state {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; color: var(--text-muted); text-align: center; padding: 40px;
+}
+.empty-state code {
+  background: var(--surface); padding: 2px 7px; border-radius: 4px;
+  font-family: 'Cascadia Code','Consolas',monospace; font-size: 13px; color: var(--teal);
+}

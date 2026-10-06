@@ -1,0 +1,452 @@
+/* ══════════════════════════════════════════════════════ ABA: REGRAS ══ */
+
+.regras-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Barra do preset (primeira fileira) ──
+   Mesmo desenho de `.arq-preset-barra` (Assistentes externos), que é a outra
+   tela onde o projeto escolhe um preset global pelo nome.
+
+   🔴 A REGRA DO `select` NÃO É OPCIONAL. O programa não tem estilo global para
+   `select` (Padrões de interface › Componentes › Seletor de projeto): quem não
+   escreve a própria regra fica com o widget nativo do Windows — caixa branca de
+   texto preto no meio de uma tela escura. É o defeito que esta barra veio
+   corrigir, e ela o repetiria em silêncio se estas linhas saíssem. */
+.regras-preset-barra {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+}
+.regras-preset-rotulo {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap;
+}
+.regras-preset-select {
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.regras-preset-select:focus { outline: none; border-color: var(--accent); }
+/* O `option` herda o fundo do sistema, não o do `select` — sem esta linha a
+   lista aberta sai branca mesmo com o campo escuro. Mesmo ⚠️ de
+   `.arq-preset-select option`. */
+.regras-preset-select option { background: var(--surface-dark); color: var(--text); }
+.regras-preset-dica { font-size: 12px; color: var(--text-muted); }
+
+/* ── Toolbar topo ── */
+.regras-toolbar {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.regras-search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.regras-search-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.regras-search-input:focus { outline: none; border-color: var(--accent); }
+.regras-search-input::placeholder { color: var(--text-muted); }
+
+.regras-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.regras-mode-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.regras-mode-btn {
+  background: transparent;
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.regras-mode-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+.regras-mode-btn:not(.active):hover {
+  background: rgba(var(--white-rgb),0.05);
+  color: var(--text);
+}
+
+/* ── Corpo principal ── */
+.regras-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Painel árvore (esquerdo) ── */
+.regras-tree-panel {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(var(--white-rgb),0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.regras-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 4px;
+}
+
+.regras-empty {
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+/* ── Cabeçalho da árvore ── */
+.regras-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  flex-shrink: 0;
+}
+
+.regras-tree-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.regras-tree-actions {
+  display: flex;
+  gap: 2px;
+}
+
+/* Agrupa o ＋ com o ⊞/⊟/↻. O botão de preset saiu daqui: virou o `<select>` da
+   primeira fileira (`.regras-preset-barra`). */
+.regras-tree-header-botoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* As classes .regras-folder* saíram junto com as pastas virtuais, que viviam
+   no _meta.json das regras. No disco cada item é uma pasta com o nome dele
+   (um `.md` só é regra; com `Como aplicar.md` é instrução), e a tela usa
+   filtro por tipo. */
+
+/* ── Item da lista (regra ou instrução) ── */
+.regras-rule-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: background 0.12s, color 0.12s;
+  margin-bottom: 1px;
+}
+.regras-rule-item:hover {
+  background: rgba(var(--white-rgb),0.05);
+  color: var(--text);
+}
+.regras-rule-item.active {
+  background: rgba(var(--accent-rgb, 99,102,241), 0.18);
+  color: var(--text);
+}
+.regras-rule-icon { flex-shrink: 0; font-size: 11px; }
+.regras-rule-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.regras-rule-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.12s;
+  flex-shrink: 0;
+}
+.regras-rule-item:hover .regras-rule-actions { opacity: 1; }
+
+.regras-del-btn {
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: background 0.1s, color 0.1s;
+}
+.regras-del-btn:hover { background: rgba(var(--vermelho-vivo-rgb),0.2); color: var(--coral-strong); }
+
+/* ── Painel editor (direito) ── */
+.regras-editor-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.regras-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.regras-placeholder.hidden { display: none; }
+
+/* ── Editor ── */
+.regras-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 10px;
+  overflow: hidden;
+}
+.regras-editor.hidden { display: none; }
+
+.regras-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.regras-editor-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Vira <input> só quando o usuário está nomeando um arquivo novo do Acervo
+   (hoje o nome vem do menu do botão direito) — mesmo truque de
+   "renomear inline" de `_cprRenomear` (config-preparar.js). */
+.regras-editor-title-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 2px 6px;
+  font-family: inherit;
+}
+
+/* O 💾/✕ do editor — a ação de salvar/remover do item aberto, agora DENTRO
+   do editor (o ícone fixo do cabeçalho da árvore saiu, Obra 6 item 7). */
+.regras-editor-header-acoes {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.regras-editor-header-acoes .btn-icon {
+  font-size: 15px;
+  transition: background 0.12s, transform 0.1s;
+}
+.regras-editor-header-acoes .btn-icon:hover {
+  background: rgba(var(--accent-rgb, 99,102,241), 0.2);
+  transform: scale(1.1);
+}
+
+.regras-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.regras-field-grow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.regras-field-grow .regras-textarea {
+  flex: 1;
+  resize: none;
+}
+
+.regras-field-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.regras-textarea {
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  min-height: 60px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  width: 100%;
+}
+.regras-textarea:focus { outline: none; border-color: var(--accent); }
+.regras-textarea::placeholder { color: var(--text-muted); }
+.regras-textarea-desc { min-height: 52px; }
+
+/* ── Resultados de busca por conteúdo ── */
+.regras-search-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.regras-search-results.hidden { display: none; }
+
+.regras-result-item {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.regras-result-item:hover {
+  border-color: var(--accent);
+  background: rgba(var(--white-rgb),0.03);
+}
+
+.regras-result-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.regras-result-snippet {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ══════════════════════════════════════ ABA DECISÕES — o que entrou ══ */
+
+/* Barra de caminho: diz onde a coisa mora e quem alcança aquele arquivo.
+   Sem ela a mudança de casa da base normativa fica invisível na tela — o
+   usuário continuaria achando que a regra vive dentro do Assistente. */
+.regras-caminho {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 14px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05);
+  font-size: 12px; color: var(--text-muted);
+}
+.regras-caminho code {
+  background: rgba(var(--white-rgb),0.06); padding: 2px 8px;
+  border-radius: 4px; color: var(--text);
+}
+.regras-caminho-alcance { font-style: italic; opacity: 0.85; }
+
+
+/* Abas de arquivo dentro do editor de uma instrução. */
+.regras-arquivo-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0;
+  padding-bottom: 8px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+}
+.regras-arquivo-tab {
+  background: transparent; border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius-sm, 6px); color: var(--text-muted);
+  padding: 3px 10px; cursor: pointer; font-size: 11.5px; font-family: inherit;
+  transition: background var(--t), color var(--t);
+}
+.regras-arquivo-tab:hover { background: rgba(var(--white-rgb),0.05); color: var(--text); }
+.regras-arquivo-tab.active {
+  color: var(--purple); border-color: var(--purple);
+  background: rgba(var(--purple-rgb),0.1);
+}
+.regras-arquivo-add { border-style: dashed; }
+
+.regras-field-dica {
+  font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 3px;
+}
+
+.regras-result-arquivo {
+  font-size: 11px; color: var(--text-muted); font-weight: 400;
+}
+
+/* ── Linha de pasta de um preset ──
+   ⚠️ NÃO É DESTA ABA. Quem desenha estas linhas é Configurações → Acervo
+   (`config-acervo.js::_acpPintarPastas`); aqui na aba Acervo o preset só se
+   ESCOLHE. As regras continuam neste arquivo porque o prefixo `.regras-pasta-`
+   é o nome delas em todo lugar, e renomeá-lo custaria mais do que resolve —
+   mesmo acordo de `.arq-preparar-` em `arquivos.css`.
+
+   O `#regras-pastas-lista` que morava aqui saiu: era o modal "Pastas do
+   Acervo", que editava as pastas dentro da própria aba. Esse modal não existe
+   mais, e o id não aparecia em nenhum arquivo do front. */
+.regras-pasta-linha {
+  display: flex; align-items: center; gap: 6px;
+}
+.regras-pasta-campo {
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+.regras-pasta-campo[data-campo="titulo"] { flex: 0 0 34%; }
+.regras-pasta-campo[data-campo="caminho"] { flex: 1; min-width: 0; }
+.regras-pasta-editavel {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11.5px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0;
+}
+.regras-pasta-remover { flex-shrink: 0; }

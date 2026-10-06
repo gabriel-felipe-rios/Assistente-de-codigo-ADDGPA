@@ -1,0 +1,59 @@
+Preciso de um ESTILO para a biblioteca de aparência do meu assistente de código.
+
+QUE ESTRUTURA DE TELA: [descreva aqui — ex.: painel lateral com lista e detalhe]
+
+Um ESTILO é um rascunho de ESTRUTURA: onde as regiões ficam, que tamanho têm,
+como se empilham. Ele não decide cor (isso é a Paleta) nem fonte (isso é a
+Tipografia) — ele decide densidade, espaçamento e arranjo.
+
+Entregue UM arquivo .html, autocontido, que abra sozinho no navegador.
+
+FORMATO — os dois comentários do topo são lidos pelo programa:
+
+  <!DOCTYPE html>
+  <!-- Rascunho de estrutura: <Nome do estilo> -->
+  <!-- <uma frase dizendo o que esta estrutura é> -->
+  <html lang="pt-BR"><head><meta charset="UTF-8"><title><Nome do estilo></title><style>
+  ...
+  </style></head><body>
+  ...
+  </body></html>
+
+REGRAS DO FORMATO
+
+1. O SEGUNDO comentário é a descrição que aparece no cartão da tela. O primeiro
+   é ignorado de propósito (ele começa com "Rascunho de estrutura:"). Não
+   inverta a ordem e não junte os dois num só.
+
+2. O <style> começa com este bloco, exatamente:
+
+    /* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+    :root{
+      --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+      --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+      --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+         font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+
+   Use SÓ essas variáveis para cor, nunca hexadecimal solto no corpo. É trocando
+   o bloco :root que o Designer tinge o arquivo com a paleta escolhida — um item
+   com cor escrita à mão no meio do CSS não pode ser tingido.
+
+   Os cinzas são de propósito: reserva é ausência de decisão de cor, e uma
+   reserva colorida faz a biblioteca inteira parecer que já tem paleta aplicada.
+
+3. RÓTULE cada região. Retângulo sem rótulo não diz ao modelo se aquilo é barra
+   lateral ou coluna de cards — e o arquivo existe justamente para dizer isso.
+   Escreva o nome da região dentro dela, não em comentário.
+
+4. Preencha com texto de mentira curto, só o bastante para a densidade aparecer.
+   Não é um mockup bonito: é o esqueleto que o modelo vai copiar.
+
+5. A tag NÃO vai dentro do arquivo. Ela mora só no tags.json, na raiz de
+   Arquivos/Estilos e cores/, e eu atribuo pela própria tela depois. Não crie
+   campo "tags" no JSON nem meta no HTML.
+
+ONDE VOU SALVAR
+  Arquivos/Estilos e cores/Estilos/<Nome do estilo>.html

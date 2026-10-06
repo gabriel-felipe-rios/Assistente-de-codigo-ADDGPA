@@ -1,0 +1,98 @@
+/* ── Análise → Duplicados ─────────────────────────────────────────────────── */
+
+/* ⚠️ O CONTAINER ROLÁVEL É DAQUI, e não do pai. `.analise-tab-content`
+   (navegacao.css) declara `overflow-y: auto` e logo depois `overflow: hidden`
+   na MESMA regra — o segundo vence, então o pai nunca rola. É de propósito: cada
+   sub-aba de Análise decide o que nela rola, e as cinco irmãs (Relações,
+   Símbolos, Mapa de I/O, LSP, Tree-sitter) têm o próprio filho com
+   `flex: 1; overflow-y: auto`.
+
+   Esta era a única sem — o conteúdo que passasse da altura era simplesmente
+   cortado, sem barra. Com 50 pares na lista, quase tudo ficava inalcançável.
+
+   `min-height: 0` não é enfeite: sem ele um filho flex se recusa a encolher
+   abaixo do próprio conteúdo, e o `overflow-y` do neto nunca chega a valer. */
+.dup-layout {
+  display: flex; flex-direction: column; gap: 14px; padding: 4px 2px;
+  flex: 1; min-height: 0;
+}
+/* O cabeçalho e a linha de status ficam parados; só a lista rola. */
+.dup-header, .dup-status { flex-shrink: 0; }
+
+.dup-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.dup-header-info { display: flex; flex-direction: column; gap: 3px; }
+.dup-title { font-size: 16px; font-weight: 700; }
+.dup-sub   { font-size: 12.5px; color: var(--text-muted); }
+
+.dup-controls { display: flex; align-items: center; gap: 12px; }
+.dup-thresh {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12.5px; color: var(--text-muted);
+}
+.dup-thresh select {
+  background: var(--surface-dark); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), 0.15); border-radius: 6px;
+  padding: 5px 8px; font-size: 12.5px;
+}
+
+.dup-status { font-size: 12.5px; color: var(--text-muted); }
+
+.dup-list {
+  display: flex; flex-direction: column; gap: 10px;
+  flex: 1; min-height: 0; overflow-y: auto;
+  /* ⚠️ OS 11px DE CIMA NÃO SÃO ENFEITE — são o selo `.dup-simi`, que fica
+     pendurado 9px ACIMA da borda do cartão (`top: -9px`, logo abaixo).
+
+     `overflow-y: auto` com `overflow-x: visible` computa para `auto` nos DOIS
+     eixos: esta lista recorta o que passa dos limites dela. Do segundo cartão
+     em diante o selo cai sobre o `gap: 10px` que sobra do cartão anterior e
+     aparece inteiro — mas o PRIMEIRO não tem cartão antes, só este padding.
+     Com os 2px de antes, ele vinha cortado ao meio, e era a única coisa no
+     código que tratava o primeiro item de forma diferente (não há regra de
+     primeiro-filho, nem classe extra, nem rolagem automática).
+
+     Quem mexer no `top` do selo mexe aqui junto: 11 = 9 do selo + 2 de folga.
+
+     À direita, espaço para a barra de rolagem não encostar no cartão; embaixo,
+     para o último par não ficar colado no fim da área rolável. */
+  padding: 11px 4px 8px 0;
+}
+
+.dup-group {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px; align-items: start;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), 0.07);
+  border-radius: var(--radius); padding: 14px 16px; position: relative;
+}
+.dup-simi {
+  position: absolute; top: -9px; left: 14px;
+  background: var(--amber); color: var(--amber-text);
+  font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 20px;
+}
+.dup-vs { align-self: center; color: var(--amber); font-weight: 800; font-size: 18px; }
+
+.dup-side { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.dup-name { font-size: 13.5px; }
+.dup-name code {
+  background: rgba(var(--blue-rgb), 0.14); color: var(--sky);
+  padding: 1px 7px; border-radius: 5px;
+  font-family: ui-monospace, Consolas, monospace; font-size: 12.5px;
+}
+.dup-tipo { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.dup-loc  { font-size: 11.5px; color: var(--text-muted); font-family: ui-monospace, Consolas, monospace; }
+.dup-excerpt {
+  margin-top: 4px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), 0.06); border-radius: 6px;
+  padding: 8px 10px; font-family: ui-monospace, Consolas, monospace;
+  font-size: 11.5px; color: var(--text-muted); white-space: pre-wrap;
+  max-height: 120px; overflow: auto;
+}
+
+@media (max-width: 720px) {
+  .dup-group { grid-template-columns: 1fr; }
+  .dup-vs { justify-self: start; }
+}

@@ -1,0 +1,31 @@
+{
+  "acesso_rapido_modos": [
+    {
+      "chave": "comando",
+      "ligado": true
+    },
+    {
+      "chave": "aba",
+      "ligado": true
+    },
+    {
+      "chave": "nome",
+      "ligado": true
+    },
+    {
+      "chave": "conteudo",
+      "ligado": true
+    },
+    {
+      "chave": "semantico",
+      "ligado": true
+    }
+  ],
+  "acesso_rapido_posicao": "superior-centro",
+  "acesso_rapido_tamanho": "grande",
+  "acesso_rapido_resultados": 20,
+  "acesso_rapido_esconder_modos": true,
+  "acesso_rapido_prefixo_extensao": true,
+  "acesso_rapido_prefixo_aba": true,
+  "menu_contexto_titulo_extensao": true
+}

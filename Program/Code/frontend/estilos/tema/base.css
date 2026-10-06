@@ -1,0 +1,62 @@
+/* ══════════════════════════════════════════════════════ ESTRUTURA BASE ══
+   O esqueleto que não muda com o tema: reset, corpo da página, topbar, telas e
+   botões. Todas as cores aqui saem por `var(--…)`, e quem define esses tokens é
+   o arquivo de tema em `estilos/tema/tema-*.css`, trocado em execução.
+
+   ⚠️ Este arquivo NÃO tem `:root`. Ele tinha, com 99 tokens — e era isso que
+   impedia o programa de ter tema: para mudar as cores era preciso duplicar as
+   46 linhas de estrutura junto. A separação foi feita em 20/08/2026, na obra
+   "Constantes e código repetido".
+
+   Carregado por `@import` em `style.css`, como antes; só o caminho mudou. */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%; background: var(--bg); color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; overflow: hidden;
+}
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ── Topbar ── */
+.topbar {
+  background: var(--surface-dark); padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  flex-shrink: 0; user-select: none;
+}
+.btn-back {
+  background: transparent; border: 1px solid rgba(var(--white-rgb),0.18);
+  border-radius: 6px; color: var(--text-muted); font-size: 13px;
+  padding: 5px 12px; cursor: pointer; white-space: nowrap;
+  transition: color var(--t), border-color var(--t), background var(--t);
+}
+.btn-back:hover { color: var(--text); border-color: var(--blue); background: rgba(var(--blue-rgb),0.12); }
+
+/* ── Screens ── */
+.screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+.screen.active { display: flex; }
+.screen-body { flex: 1; padding: 28px 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
+.screen-header { display: flex; align-items: center; justify-content: space-between; }
+.screen-header h2 { font-size: 22px; font-weight: 700; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 9px 20px; border: none; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; color: var(--text); outline: none;
+  transition: background var(--t), transform var(--t);
+}
+.btn:active { transform: scale(0.97); }
+.btn-sm   { padding: 6px 14px; font-size: 13px; }
+/* Menor que `.btn-sm`, para barra flutuante SOBRE um desenho: ali cada pixel de
+   botão é pixel roubado da área de trabalho. Nasceu porque a Oficina já usava
+   `.btn-xs` sem que a classe existisse — os botões caíam no `.btn` cheio
+   (9px/14px) e a barra ficava larga a ponto de uma cobrir a outra. */
+.btn-xs   { padding: 4px 10px; font-size: 11.5px; border-radius: 6px; }
+.btn-full { width: 100%; }
+.btn-primary  { background: var(--blue);   } .btn-primary:hover  { background: var(--blue-hover); }
+.btn-positive { background: var(--green);  } .btn-positive:hover { background: var(--green-hover); }
+.btn-negative { background: var(--red);    } .btn-negative:hover { background: var(--red-hover); }
+.btn-special  { background: var(--purple); } .btn-special:hover  { background: var(--purple-hover); }
+.btn-utility  { background: var(--teal);   } .btn-utility:hover  { background: var(--teal-hover); }
+.btn-muted    { background: var(--gray);   } .btn-muted:hover    { background: var(--gray-hover); }

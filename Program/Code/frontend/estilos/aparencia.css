@@ -1,0 +1,398 @@
+/* ── Aba Aparência: busca visual (cor / texto / auditoria) ── */
+
+.aparencia-corpo { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Coluna esquerda: filtros ── */
+.aparencia-filtros {
+  width: 320px; flex-shrink: 0; padding: 18px 18px 24px; overflow-y: auto;
+  border-right: 1px solid rgba(var(--white-rgb),0.06);
+  background: rgba(var(--black-rgb),0.10);
+}
+.aparencia-bloco { margin-bottom: 20px; }
+.aparencia-bloco-titulo {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10.5px; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 700; margin-bottom: 9px;
+}
+.aparencia-bloco-titulo::after {
+  content: ''; flex: 1; height: 1px; background: rgba(var(--white-rgb),0.08);
+}
+
+/* Título que dobra o bloco. A régua do ::after passa a viver ENTRE o rótulo e o
+   resumo, para o resumo encostar na direita — daí o `order` e o `margin-left`. */
+.aparencia-dobra { cursor: pointer; user-select: none; transition: color var(--t); }
+.aparencia-dobra:hover { color: var(--text); }
+.aparencia-dobra:focus-visible { outline: 1px solid rgba(var(--blue-rgb),0.6); outline-offset: 2px; }
+.aparencia-dobra-seta { font-size: 9px; width: 8px; flex-shrink: 0; }
+.aparencia-dobra-resumo {
+  order: 2; margin-left: auto; letter-spacing: 0; text-transform: none;
+  font-weight: 600; color: var(--mint);
+}
+.aparencia-dobra::after { order: 1; }
+
+/* seletor Cor / Texto / Auditoria */
+.aparencia-seletor {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.10);
+  border-radius: var(--radius); padding: 4px;
+}
+.aparencia-seletor-botao {
+  background: transparent; border: none; color: var(--text-muted);
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  padding: 9px 4px; border-radius: 5px; cursor: pointer;
+  transition: color var(--t), background var(--t);
+}
+.aparencia-seletor-botao:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.aparencia-seletor-botao.active { background: var(--blue); color: var(--text); }
+.aparencia-seletor-botao.active[data-aparenciamodo="auditoria"] { background: var(--amber); color: var(--surface-dark); }
+/* "Onde procurar" reusa a MESMA peça do "Buscar por" — o que muda é só a cor do
+   estado ligado, para as duas escolhas não se confundirem à primeira vista. */
+.aparencia-seletor-botao.active[data-aparenciafonte] { background: var(--teal); color: var(--surface-dark); }
+
+/* ── Seletor de cor: a escala + os três controles ────────────────────────────
+   A fileira É a escala de luz visível (vermelho → violeta), na mesma ordem do
+   trilho do Matiz. Os três neutros ficam separados por um tracejado: não são
+   posições da escala, e não mudam com ela. */
+.aparencia-escala { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.aparencia-escala-neutros {
+  margin-top: 9px; padding-top: 9px;
+  border-top: 1px dashed rgba(var(--white-rgb),0.12);
+}
+.aparencia-neutros-rotulo {
+  font-size: 9.4px; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text-muted); margin-right: 3px;
+}
+.aparencia-amostra {
+  width: 22px; height: 24px; border-radius: 5px; cursor: pointer;
+  border: 1px solid rgba(var(--white-rgb),0.14);
+  transition: transform var(--t), box-shadow var(--t);
+}
+.aparencia-amostra:hover { transform: translateY(-2px); }
+.aparencia-amostra.active {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px rgba(var(--white-rgb),0.35);
+  transform: translateY(-2px);
+}
+
+.aparencia-linha { display: flex; gap: 7px; align-items: center; }
+.aparencia-chip-cor {
+  width: 30px; height: 30px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid rgba(var(--white-rgb),0.2);
+}
+
+/* Matiz, saturação e luminância. O trilho é um elemento PRÓPRIO, e não o fundo
+   do `input[type=range]`: gradiente no fundo do range não é portátil entre os
+   motores, e aqui o trilho precisa ser repintado a cada gesto. */
+.aparencia-controle { display: flex; align-items: center; gap: 10px; margin-top: 11px; }
+.aparencia-controle label {
+  font-size: 11.3px; color: var(--text-muted); width: 66px; flex-shrink: 0;
+}
+.aparencia-controle-valor {
+  font-size: 11.3px; color: var(--mint); font-weight: 700;
+  width: 36px; text-align: right; font-variant-numeric: tabular-nums;
+}
+.aparencia-trilho {
+  flex: 1; height: 10px; border-radius: 99px; position: relative;
+  border: 1px solid rgba(var(--white-rgb),0.14);
+}
+.aparencia-trilho input[type="range"] {
+  position: absolute; inset: -4px -2px; width: calc(100% + 4px); height: 18px;
+  margin: 0; padding: 0; background: transparent; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.aparencia-trilho input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent; height: 18px;
+}
+.aparencia-trilho input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%; margin-top: 1px;
+  background: var(--pino, var(--text)); border: 2px solid rgba(var(--white-rgb),0.95);
+  box-shadow: 0 1px 4px rgba(var(--black-rgb),0.55); cursor: pointer;
+}
+/* Desligado = o controle não decide nada naquele estado (matiz e saturação de um
+   neutro). Fica visível e apagado, e não some: sumir mudaria a altura da coluna
+   a cada clique. */
+.aparencia-controle.desligado { opacity: 0.4; }
+.aparencia-controle.desligado .aparencia-controle-valor { color: var(--text-muted); }
+.aparencia-controle.desligado input[type="range"] { cursor: default; }
+.aparencia-linha + .aparencia-linha { margin-top: 8px; }
+.aparencia-campo {
+  width: 100%; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.12); border-radius: var(--radius);
+  color: var(--text); font-family: inherit; font-size: 13px; padding: 9px 11px; outline: none;
+  transition: border-color var(--t);
+}
+.aparencia-campo:focus { border-color: var(--blue); }
+.aparencia-campo-cor { font-family: 'Cascadia Code', 'Consolas', monospace; }
+
+.aparencia-tolerancia { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.aparencia-tolerancia label { font-size: 11.5px; color: var(--text-muted); }
+.aparencia-tolerancia input[type="range"] { flex: 1; accent-color: var(--blue); }
+.aparencia-tolerancia .aparencia-tolerancia-valor {
+  font-size: 11.5px; color: var(--mint); font-weight: 700; width: 26px; text-align: right;
+}
+
+.aparencia-opcao {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--text); padding: 5px 0; cursor: pointer;
+}
+.aparencia-opcao input { accent-color: var(--blue); flex-shrink: 0; }
+
+/* escopo travado (Projeto → Trabalho) */
+.aparencia-escopo {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.09);
+  border-radius: var(--radius); padding: 11px 12px;
+}
+.aparencia-escopo-topo {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;
+}
+.aparencia-escopo-pasta {
+  display: flex; align-items: center; gap: 7px; padding: 3px 0;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11.5px; color: var(--text);
+  word-break: break-all;
+}
+.aparencia-escopo-pasta::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+}
+/* O item removido é clicável: um clique o religa só nesta sessão. */
+.aparencia-escopo-pasta.fora {
+  color: var(--cinza); text-decoration: line-through;
+  cursor: pointer; transition: color var(--t);
+}
+.aparencia-escopo-pasta.fora::before { background: var(--red); }
+.aparencia-escopo-pasta.fora:hover { color: var(--text); }
+/* Religado: sem risco, ponto âmbar e um aviso de que é temporário — para nunca
+   se confundir com uma pasta de trabalho de verdade. */
+.aparencia-escopo-pasta.fora.religado { color: var(--yellow-soft); text-decoration: none; }
+.aparencia-escopo-pasta.fora.religado::before { background: var(--amber); }
+.aparencia-escopo-pasta.fora.religado::after {
+  content: 'só nesta sessão'; margin-left: auto; flex-shrink: 0;
+  font-family: inherit; font-size: 9.5px; letter-spacing: 0.3px;
+  padding: 1px 6px; border-radius: 4px;
+  background: rgba(var(--amber-rgb),0.16); color: var(--yellow-soft);
+}
+.aparencia-escopo-fonte {
+  font-size: 10.8px; color: var(--text-muted); margin-top: 9px;
+  padding-top: 8px; border-top: 1px solid rgba(var(--white-rgb),0.07);
+}
+
+.aparencia-indice {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.09);
+  border-radius: var(--radius); padding: 9px 11px;
+  font-size: 11.5px; color: var(--text-muted);
+}
+.aparencia-indice strong { color: var(--mint); }
+
+/* ── Coluna direita: resultados ── */
+.aparencia-resultados { flex: 1; padding: 18px 20px 28px; overflow-y: auto; }
+.aparencia-resultados-topo {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.aparencia-contagem { font-size: 13.5px; color: var(--text); }
+.aparencia-contagem strong { color: var(--mint); font-size: 17px; }
+.aparencia-contagem span { color: var(--text-muted); font-size: 12px; }
+
+.aparencia-linguagens { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.aparencia-linguagem-filtro {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.10);
+  color: var(--text-muted); font-family: inherit; font-size: 11.3px; font-weight: 600;
+  padding: 5px 11px; border-radius: 99px; cursor: pointer;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.aparencia-linguagem-filtro:hover { background: var(--surface-hover); color: var(--text); }
+.aparencia-linguagem-filtro.active {
+  background: rgba(var(--blue-rgb),0.22); border-color: rgba(var(--blue-rgb),0.5); color: var(--sky-light);
+}
+/* Ficha de ORIGEM (código / imagens) e ficha de ETIQUETA (rótulo, mensagem,
+   atributo, identificador). Cor diferente da de linguagem porque as três
+   respondem a perguntas diferentes e convivem na mesma linha. */
+.aparencia-linguagem-filtro.fonte.active {
+  background: rgba(var(--teal-rgb),0.22); border-color: rgba(var(--teal-rgb),0.5); color: var(--mint);
+}
+.aparencia-linguagem-filtro.etiqueta.active {
+  background: rgba(var(--purple-rgb),0.22); border-color: rgba(var(--purple-rgb),0.5); color: var(--lilas-claro);
+}
+.aparencia-separador-chip { width: 1px; background: rgba(var(--white-rgb),0.12); margin: 2px 5px; }
+
+.aparencia-achado {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-left: 3px solid var(--blue); border-radius: 9px;
+  margin-bottom: 9px; overflow: hidden;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+/* A borda esquerda diz de onde o achado veio: azul = código, teal = imagem.
+   Aberto vence as duas, porque aí a pergunta é "qual eu estou lendo agora?". */
+.aparencia-achado.imagem { border-left-color: var(--teal); }
+.aparencia-achado.aberto { border-left-color: var(--mint); }
+/* Abaixo da presença mínima o achado APAGA, e não some: sumir seria o usuário
+   não ter como saber que a cor está lá, em 6% da área. */
+.aparencia-achado.abaixo { opacity: 0.5; border-left-color: var(--cinza); }
+.aparencia-achado-cabecalho { padding: 11px 14px; cursor: pointer; transition: background var(--t); }
+.aparencia-achado-cabecalho:hover { background: var(--surface-hover); }
+.aparencia-achado-identidade { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.aparencia-pastilha {
+  width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0;
+  border: 1px solid rgba(var(--white-rgb),0.25);
+}
+.aparencia-alvo {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 12.8px; color: var(--sky-light); font-weight: 600;
+}
+.aparencia-linguagem {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px;
+  background: rgba(var(--white-rgb),0.09); color: var(--text-muted);
+}
+.aparencia-achado-detalhe {
+  font-size: 11.5px; color: var(--text-muted); margin-top: 6px;
+  display: flex; gap: 9px; flex-wrap: wrap; align-items: center;
+}
+.aparencia-achado-arquivo { font-family: 'Cascadia Code', 'Consolas', monospace; }
+.aparencia-marcador {
+  background: rgba(var(--white-rgb),0.06); border-radius: 4px;
+  padding: 1px 7px; font-size: 10.6px;
+}
+.aparencia-marcador.alerta { background: rgba(var(--amber-rgb),0.16); color: var(--yellow-soft); }
+.aparencia-marcador.token { background: rgba(var(--purple-rgb),0.18); color: var(--lilas-claro); }
+.aparencia-marcador.fonte-imagem { background: rgba(var(--teal-rgb),0.18); color: var(--mint); }
+.aparencia-marcador.fonte-codigo { background: rgba(var(--blue-rgb),0.18); color: var(--sky-light); }
+
+.aparencia-achado-corpo {
+  display: none; padding: 0 14px 14px;
+  border-top: 1px solid rgba(var(--white-rgb),0.07);
+}
+.aparencia-achado.aberto .aparencia-achado-corpo { display: block; }
+.aparencia-achado-grade {
+  display: grid; grid-template-columns: 1fr 200px; gap: 14px; margin-top: 12px;
+}
+.aparencia-propriedades {
+  display: grid; grid-template-columns: 104px 1fr; gap: 4px 10px;
+  font-size: 12px; align-items: start;
+}
+.aparencia-propriedades dt { color: var(--text-muted); }
+.aparencia-propriedades dd {
+  color: var(--text); font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11.6px; word-break: break-word;
+}
+
+.aparencia-trecho {
+  margin-top: 11px; background: var(--terminal-bg);
+  border: 1px solid rgba(var(--white-rgb),0.07); border-radius: 7px;
+  padding: 9px 0; overflow-x: auto;
+}
+.aparencia-trecho-linha {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11.4px;
+  color: var(--terminal-text); line-height: 1.75; white-space: pre; padding: 0 12px;
+}
+.aparencia-trecho-linha .aparencia-trecho-numero {
+  color: var(--terminal-muted); display: inline-block; width: 42px; user-select: none;
+}
+.aparencia-trecho-linha.alvo {
+  background: rgba(var(--blue-rgb),0.16);
+  border-left: 2px solid var(--blue); padding-left: 10px;
+}
+
+.aparencia-previa {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.09);
+  border-radius: 9px; padding: 12px; text-align: center;
+}
+.aparencia-previa-titulo {
+  font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 700; margin-bottom: 10px;
+}
+.aparencia-previa-palco {
+  background: var(--bg); border-radius: 7px; padding: 18px 10px;
+  display: grid; place-items: center; min-height: 74px;
+}
+.aparencia-previa-amostra {
+  font-size: 12px; font-weight: 600; padding: 8px 16px;
+  border-radius: 6px; color: var(--text);
+}
+.aparencia-previa-valor {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11px; color: var(--text-muted); margin-top: 9px;
+}
+
+.aparencia-acoes { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 13px; }
+
+/* auditoria */
+.aparencia-apontamento {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-left: 3px solid var(--amber); border-radius: 9px;
+  margin-bottom: 9px; padding: 12px 14px;
+}
+.aparencia-apontamento-titulo {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  font-size: 13px; font-weight: 700; color: var(--text);
+}
+.aparencia-apontamento-especie {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(var(--amber-rgb),0.16); color: var(--yellow-soft);
+}
+.aparencia-apontamento-resumo { font-size: 11.8px; color: var(--text-muted); margin-top: 5px; }
+.aparencia-apontamento-lugares { margin-top: 9px; display: flex; flex-direction: column; gap: 3px; }
+.aparencia-apontamento-lugar {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11.3px;
+  color: var(--text-muted); cursor: pointer; padding: 2px 0;
+  transition: color var(--t);
+}
+.aparencia-apontamento-lugar:hover { color: var(--sky-light); }
+
+/* ── Imagem: miniatura, paleta e etiqueta ─────────────────────────────────── */
+/* O fundo xadrez existe para o PNG transparente não desaparecer no escuro. */
+.aparencia-miniatura {
+  width: 38px; height: 38px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid rgba(var(--white-rgb),0.14);
+  background: repeating-conic-gradient(rgba(var(--white-rgb),0.06) 0% 25%, transparent 0% 50%) 50%/10px 10px;
+  display: grid; place-items: center; overflow: hidden;
+}
+.aparencia-miniatura img, .aparencia-miniatura svg { width: 26px; height: 26px; display: block; object-fit: contain; }
+.aparencia-miniatura.grande { width: 96px; height: 96px; }
+.aparencia-miniatura.grande img, .aparencia-miniatura.grande svg { width: 66px; height: 66px; }
+
+/* A barra é a resposta visual a "de que cor é essa imagem?": cada faixa é uma
+   família, e a largura É a fatia da área. */
+.aparencia-paleta {
+  display: flex; height: 10px; border-radius: 3px; overflow: hidden; margin-top: 8px;
+  border: 1px solid rgba(var(--white-rgb),0.12);
+}
+.aparencia-paleta-faixa { height: 100%; }
+.aparencia-paleta-lista { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
+.aparencia-paleta-item {
+  display: flex; align-items: center; gap: 8px; font-size: 11.4px; color: var(--text-muted);
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+.aparencia-paleta-item .aparencia-pastilha { width: 13px; height: 13px; }
+.aparencia-paleta-item b { color: var(--text); font-weight: 700; }
+.aparencia-paleta-item .pct { margin-left: auto; color: var(--mint); font-weight: 700; }
+.aparencia-paleta-item.abaixo { opacity: 0.45; }
+.aparencia-paleta-item.abaixo .pct { color: var(--text-muted); }
+
+.aparencia-etiqueta {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px;
+  background: rgba(var(--purple-rgb),0.18); color: var(--lilas-claro);
+}
+.aparencia-etiqueta.msg { background: rgba(var(--amber-rgb),0.16); color: var(--yellow-soft); }
+
+/* Aviso da linha do índice — hoje só a Pillow ausente o usa. */
+.aparencia-aviso {
+  margin-top: 8px; padding: 8px 11px; border-radius: var(--radius); font-size: 11.3px;
+  background: rgba(var(--amber-rgb),0.12); border: 1px solid rgba(var(--amber-rgb),0.3);
+  color: var(--yellow-soft);
+}
+
+.aparencia-vazio {
+  padding: 44px 20px; text-align: center; color: var(--text-muted);
+  font-size: 13px; font-style: italic;
+}
+.aparencia-erro {
+  padding: 14px 16px; border-radius: var(--radius); font-size: 13px;
+  background: rgba(var(--red-rgb),0.12); border: 1px solid rgba(var(--red-rgb),0.35);
+  color: var(--coral-light);
+}

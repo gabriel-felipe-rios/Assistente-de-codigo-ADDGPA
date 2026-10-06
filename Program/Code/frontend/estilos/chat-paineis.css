@@ -1,0 +1,241 @@
+/* ═══ CHAT → o contexto inicial e o painel de modo ═════════════════════════
+   Os dois dropdowns do rodapé do Chat.
+
+   ⚠️ O PAINEL SE VIRA PARA CABER (`--abaixo`, `--direita`): ancorado no botão,
+   ele sairia da tela quando o Chat está encostado numa borda. As variantes são
+   escolhidas pelo JS, e não por media query — quem decide é a posição do botão,
+   não o tamanho da janela.                                                 */
+/* ── Contexto inicial (botão + painel dropdown) ── */
+.ctx-inicial-wrap { position: relative; }
+.btn-ctx-inicial {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--surface-hover); border-radius: 6px;
+  font-size: 12px; padding: 4px 10px; cursor: pointer;
+  transition: background var(--t);
+  white-space: nowrap;
+}
+.btn-ctx-inicial:hover { background: var(--surface-hover); }
+.ctx-inicial-panel {
+  position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 50;
+  background: var(--surface-dark); border: 1px solid var(--surface-hover);
+  border-radius: var(--radius); padding: 8px;
+  box-shadow: 0 6px 20px rgba(var(--black-rgb),0.45);
+  min-width: 380px;
+}
+.ctx-inicial-table { border-collapse: collapse; width: 100%; }
+.ctx-inicial-table th {
+  font-size: 10px; color: var(--text-muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  text-align: right; padding: 2px 8px 6px;
+}
+.ctx-inicial-table th:first-child { text-align: left; }
+.ctx-inicial-table td { padding: 3px 8px; }
+.ctx-inicial-table td.ctx-stat {
+  font-size: 11px; color: var(--text-muted); text-align: right;
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.ctx-inicial-table tr:hover td { background: rgba(var(--white-rgb),0.04); }
+
+/* O painel abre para CIMA por padrão, porque no chat ele mora na barra do
+   rodapé. Estes dois modificadores são para quem o usa num cabeçalho (as telas
+   de Resumo), onde não há espaço acima e sobra abaixo. */
+.ctx-inicial-panel--abaixo { bottom: auto; top: calc(100% + 6px); }
+.ctx-inicial-panel--direita { left: auto; right: 0; }
+
+/* ── Painel de modo do chat ── */
+.prompt-fixo-panel { min-width: 220px; display: flex; flex-direction: column; gap: 2px; }
+.prompt-fixo-option {
+  background: none; border: none; color: var(--text);
+  font-size: 12px; text-align: left; padding: 6px 10px;
+  border-radius: 6px; cursor: pointer; transition: background var(--t);
+  white-space: nowrap;
+}
+.prompt-fixo-option:hover { background: var(--surface-hover); }
+.prompt-fixo-option.ativo { background: var(--surface); color: var(--blue); }
+/* O `.btn-copy-payload` é estilizado junto do `.message-copiar`, lá em cima na
+   seção das mensagens: os dois são o mesmo botão de copiar, e uma regra só
+   impede que um mude sem o outro. */
+.model-indicator-wrap, .chat-model-row {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+}
+.model-indicator {
+  font-size: 13px; color: var(--text-muted); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.model-indicator.model-offline { color: var(--red); }
+.btn-refresh-model {
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 16px; padding: 2px 4px; line-height: 1;
+  transition: color var(--t); flex-shrink: 0;
+}
+.btn-refresh-model:hover { color: var(--text); }
+
+/* Botão deletar chat na sidebar */
+.chat-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.btn-delete-chat {
+  background: none; border: none; color: transparent; cursor: pointer;
+  font-size: 16px; padding: 0 4px; line-height: 1; flex-shrink: 0;
+  transition: color var(--t);
+}
+.chat-list-item:hover .btn-delete-chat { color: var(--text-muted); }
+.btn-delete-chat:hover { color: var(--red) !important; }
+
+/* Context Builder */
+.chat-context-panel {
+  border: 1px solid rgba(var(--white-rgb),0.08); border-radius: var(--radius);
+  background: var(--surface-dark); margin-bottom: 8px; overflow: hidden;
+}
+.context-panel-header {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  padding: 7px 12px; font-size: 13px; text-align: left;
+  transition: background var(--t);
+}
+.context-panel-header:hover { background: rgba(var(--white-rgb),0.04); }
+#context-panel-arrow { font-size: 11px; flex-shrink: 0; }
+#context-panel-header-label { flex: 1; }
+.context-total-size { font-size: 12px; color: var(--blue); flex-shrink: 0; }
+.context-items-list { padding: 6px 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+.context-item-row {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 3px 0; font-size: 13px; color: var(--text-muted);
+  transition: color var(--t);
+}
+.context-item-row:hover { color: var(--text); }
+.context-checkbox { accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+.context-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.context-item-size { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+/* `center` e não `flex-end`: o botão Enviar ficava colado na base da caixa de
+   texto de três linhas, desalinhado de tudo o mais que há na linha. */
+.chat-input-row { display: flex; gap: 10px; align-items: center; }
+/* Enquanto a resposta vem, o botão só apaga: não há o que enviar por cima. A
+   regra fica aqui, e não num `.btn:disabled` global, para não repintar todo
+   botão desabilitado do programa. */
+.chat-send-group .btn:disabled {
+  background: var(--gray); color: var(--text-muted);
+  cursor: not-allowed; opacity: 0.75;
+}
+.chat-send-group .btn:disabled:hover { background: var(--gray); }
+.chat-send-group .btn:disabled:active { transform: none; }
+.chat-send-group { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+/* ⚠️ Largura TRAVADA no botão de enviar, e ela é obrigatória: durante a
+   resposta ele vira "Parar" / "Parar agora" / "Parando…", e sem um piso a
+   linha inteira se remontava a cada troca de texto — o botão saltava de lugar,
+   que é o defeito que fez o "Pensando…" ser removido dali um dia. O valor cobre
+   o mais largo dos quatro rótulos. */
+.chat-send-group .btn { min-width: 104px; }
+.btn-build {
+  background: rgba(var(--teal-rgb),0.15); border: 1px solid rgba(var(--teal-rgb),0.35);
+  color: var(--teal); border-radius: var(--radius); padding: 8px 14px;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background var(--t), border-color var(--t);
+}
+.btn-build:hover { background: rgba(var(--teal-rgb),0.28); border-color: var(--teal); }
+.btn-build:disabled { opacity: 0.45; cursor: not-allowed; }
+.chat-textarea {
+  flex: 1; background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 14px;
+  padding: 10px 14px; resize: none; outline: none;
+  font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.5;
+  transition: border-color var(--t);
+}
+.chat-textarea:focus { border-color: var(--blue); }
+/* ⚠️ Sem esta regra a caixa DESABILITADA parecia normal: o estilo do autor
+   acima (background, color, border) vence o apagado que o navegador aplicaria
+   sozinho, então `disabled = true` não mudava nada na tela e o campo parecia
+   apenas não aceitar teclas. Mesmo apagado do botão Enviar ao lado
+   (`.chat-send-group .btn:disabled`) — os dois desabilitam juntos, pelo mesmo
+   motivo, e precisam parecer a mesma coisa. */
+.chat-textarea:disabled { cursor: not-allowed; opacity: 0.75; }
+
+/* A tira "pensando" da conversa: o programa dizendo que ainda há trabalho em
+   curso. NÃO é balão, de propósito — não é fala de ninguém. É a mesma etiqueta
+   discreta das notificações de subagente (`.subagent-notice`, subagentes.css),
+   de onde vem também a rodinha. */
+.chat-pensando {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius);
+  background: var(--surface); color: var(--text-muted); font-size: 13px;
+  align-self: flex-start;
+}
+.chat-pensando strong { color: var(--text); font-weight: 600; }
+
+/* A nota do programa dentro da conversa — hoje só a da chamada que não coube no
+   teto de rodadas. Mesma família da tira "pensando", sem a rodinha: também não é
+   fala de ninguém. O amarelo diz que é ressalva, não erro. */
+.chat-nota-programa {
+  align-self: flex-start; max-width: 82%;
+  padding: 8px 12px; border-radius: var(--radius);
+  background: rgba(var(--yellow-rgb),0.10);
+  border: 1px solid rgba(var(--yellow-rgb),0.28);
+  color: var(--text-muted); font-size: 12.5px; line-height: 1.5;
+}
+/* A mesma nota quando ela OFERECE o que fazer a respeito, e não só informa
+   (componente "Faixa de aviso com ação"). O botão fica ao LADO do texto, nunca
+   abaixo: isto continua sendo uma linha de fala do programa, não um painel. */
+.chat-nota-programa.tem-acao {
+  display: flex; align-items: center; gap: 10px;
+}
+.chat-nota-programa.tem-acao > span { flex: 1; }
+.chat-nota-programa.tem-acao > .btn { flex: none; }
+
+/* Context Build status */
+.context-build-status {
+  font-size: 12px; color: var(--text-muted); padding: 4px 2px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{ opacity:1 } 50%{ opacity:0.45 } }
+
+/* Context Builder preview */
+.context-builder-preview {
+  border: 1px solid rgba(var(--teal-rgb),0.3); border-radius: var(--radius);
+  background: var(--surface-dark); display: flex; flex-direction: column;
+  overflow: hidden; flex-shrink: 0; max-height: 380px;
+}
+.preview-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; border-bottom: 1px solid rgba(var(--white-rgb),0.07); flex-shrink: 0;
+}
+.preview-title { font-size: 13px; font-weight: 600; color: var(--teal); }
+.preview-actions { display: flex; gap: 8px; }
+.built-prompt-textarea {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text); font-family: 'Cascadia Code','Consolas',monospace;
+  font-size: 12px; line-height: 1.6; padding: 12px 14px; resize: none;
+  overflow-y: auto;
+}
+
+/* Sub-aba Agentes */
+.chat-agentes-list {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px; overflow-y: auto; flex: 1;
+}
+.chat-agente-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.07);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.chat-agente-toggle {
+  flex-shrink: 0; min-width: 90px; padding: 5px 12px;
+  border-radius: 6px; border: 1px solid; font-size: 12px;
+  font-weight: 600; cursor: pointer; transition: all var(--t);
+}
+.chat-agente-toggle.ativo {
+  background: rgba(var(--blue-rgb),0.15); border-color: var(--blue);
+  color: var(--blue);
+}
+.chat-agente-toggle.inativo {
+  background: rgba(var(--white-rgb),0.04); border-color: rgba(var(--white-rgb),0.15);
+  color: var(--text-muted);
+}
+.chat-agente-toggle.ativo:hover  { background: rgba(var(--blue-rgb),0.25); }
+.chat-agente-toggle.inativo:hover { background: rgba(var(--white-rgb),0.08); color: var(--text); }
+.chat-agente-info {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.chat-agente-nome {
+  font-size: 14px; font-weight: 600; color: var(--text);
+}
+.chat-agente-desc {
+  font-size: 12px; color: var(--text-muted); line-height: 1.5;
+}

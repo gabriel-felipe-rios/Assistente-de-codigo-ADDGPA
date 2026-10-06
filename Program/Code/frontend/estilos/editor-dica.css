@@ -1,0 +1,40 @@
+/* ══════════════════════════ EDITOR: A DICA AO PASSAR O MOUSE ══
+   O balão que aparece quando o mouse para sobre uma palavra (fase 12 —
+   Recursos do Editor › dica). O texto é de extensão; o balão é do programa.
+
+   ⚠️ Herda as medidas do Popup de autocomplete (e, por ele, do Menu de
+   contexto): mesmo `--surface`, mesma borda, mesma sombra, mesmo raio. São
+   três caixas que flutuam sobre o código; três aparências fariam a interface
+   parecer montada por três pessoas.
+
+   ⚠️ `pointer-events: none`: o balão nunca está no caminho do mouse nem do
+   clique — sem isso, parar o mouse sobre ele o tiraria de cima da palavra e o
+   fecharia. */
+
+.ed-dica {
+  position: fixed;
+  /* Abaixo do autocomplete (420): quem digita provocou o popup agora, e ele
+     vence. Acima do menu de contexto (400). */
+  z-index: 410;
+  max-width: 460px;
+  max-height: 220px;
+  overflow: hidden;
+  padding: 6px 9px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 34px rgba(var(--black-rgb), 0.5);
+  pointer-events: none;
+}
+
+/* Texto simples, uma ou poucas linhas por resposta. `pre-wrap` respeita a
+   quebra que a extensão mandou; as respostas de várias extensões se empilham. */
+.ed-dica-linha {
+  font-family: var(--mono, monospace); font-size: 12px; line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap; word-break: break-word;
+}
+.ed-dica-linha + .ed-dica-linha {
+  margin-top: 4px; padding-top: 4px;
+  border-top: 1px solid rgba(var(--white-rgb), 0.08);
+}

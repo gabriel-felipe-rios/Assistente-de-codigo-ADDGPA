@@ -1,0 +1,21 @@
+{
+  "cartoes": [
+    {
+      "titulo": "O que marcar",
+      "dica": "A fonte é o Vocabulário.md do projeto aberto (Saída das skills › Terminologia e nomenclatura).",
+      "campos": [
+        { "chave": "marcar_termos", "rotulo": "Sublinhar os termos do Vocabulário", "tipo": "interruptor", "padrao": true },
+        { "chave": "riscar_proibidos", "rotulo": "Riscar os sinônimos que o Vocabulário proíbe", "tipo": "interruptor", "padrao": true },
+        { "chave": "ignorar_maiusculas", "rotulo": "Ignorar maiúsculas e minúsculas", "tipo": "interruptor", "padrao": false,
+          "nota": "Desligado, \"Fila\" e \"fila\" são palavras diferentes — que é como o Vocabulário costuma distinguir a entidade do texto solto." }
+      ]
+    },
+    {
+      "titulo": "Limite",
+      "campos": [
+        { "chave": "teto", "rotulo": "Marcas por lista, no máximo", "tipo": "numero", "padrao": 400, "min": 50, "max": 2000, "passo": 50,
+          "nota": "Uma lista para os termos e outra para os proibidos. Acima de algumas centenas de sublinhados ninguém lê mais nada, e o ponto tem 150 ms." }
+      ]
+    }
+  ]
+}

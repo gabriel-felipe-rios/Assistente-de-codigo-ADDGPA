@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════ CANVAS DAS TELAS — ESTILO ══
+   Todo seletor com o prefixo `ct-`, e só tokens de cor (cinco temas, um claro).
+   As regras vêm do preview aprovado (`Referência · preview.html`). */
+
+.ct-corpo{flex:1;display:flex;min-height:0}
+.ct-lista{width:220px;flex-shrink:0;background:var(--surface-dark);border-right:1px solid rgba(var(--white-rgb),.06);padding:18px 10px;overflow-y:auto}
+.ct-lista-titulo{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);padding:0 10px 10px}
+.ct-item{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text-muted);font-family:inherit;font-size:13.5px;font-weight:500;padding:8px 11px;cursor:pointer;text-align:left}
+.ct-item:hover{color:var(--text);background:rgba(var(--white-rgb),.05)}
+.ct-item.active{color:var(--blue);background:rgba(var(--blue-rgb),.12);border-color:rgba(var(--blue-rgb),.35)}
+.ct-item.filho{padding-left:30px;font-size:13px}
+.ct-item-icone{width:16px;text-align:center;flex-shrink:0;font-size:13px}
+.ct-grupo{font-size:11px;color:var(--text-muted);padding:14px 11px 6px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.ct-lista .config-busca{margin:0 0 10px}
+.ct-lista-cab{display:flex;align-items:center;justify-content:space-between;padding:0 4px 10px 10px}
+.ct-lista-cab .ct-lista-titulo{padding:0}
+.ct-comeca{padding:0 10px 14px;display:flex;flex-direction:column;gap:3px}
+.ct-comeca-arq{font-size:12.5px;color:var(--sky-light);font-family:'Cascadia Code',Consolas,monospace}
+.ct-lista .mapa-stat{display:block;padding:0 10px 12px;line-height:1.5}
+
+/* ── o canvas (fase 02) ─────────────────────────────────────────────────── */
+.ct-canvas{flex:1;position:relative;overflow:hidden;background:var(--bg);cursor:grab;
+  background-image:radial-gradient(rgba(var(--white-rgb),.09) 1px,transparent 1px);background-size:22px 22px}
+.ct-canvas{--ct-seta-cor:rgb(var(--blue-rgb))}
+.ct-canvas.arrastando{cursor:grabbing}
+.ct-canvas.deslizando{transition:background-position .55s cubic-bezier(.25,.8,.25,1),background-size .55s cubic-bezier(.25,.8,.25,1)}
+.ct-canvas > .config-erro,.ct-canvas > .config-nota{margin:24px}
+.ct-mundo{position:absolute;left:0;top:0;transform-origin:0 0}
+.ct-mundo.deslizando{transition:transform .55s cubic-bezier(.25,.8,.25,1)}
+.ct-botao-aceso{box-shadow:0 0 0 4px var(--ct-seta-cor)!important;transition:box-shadow .2s}
+.ct-rotulo-peq{font-size:12px;color:var(--text-muted)}
+.ct-ancora{position:relative}
+.ct-pop{position:absolute;top:calc(100% + 8px);right:0;z-index:30;background:var(--surface);border:1px solid rgba(var(--white-rgb),.12);border-radius:var(--radius);box-shadow:0 10px 30px rgba(var(--black-rgb),.45);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:240px}
+.ct-pop-titulo{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted)}
+.ct-pop hr{border:0;border-top:1px solid rgba(var(--white-rgb),.08);margin:2px 0}
+.ct-tam-linha{display:grid;grid-template-columns:86px 1fr auto 1fr;gap:6px;align-items:center;font-size:13px}
+.ct-tam-linha input{width:100%;background:var(--surface-dark);border:1px solid rgba(var(--white-rgb),.07);border-radius:6px;color:var(--text);padding:5px 8px;font-size:13px;font-family:inherit}
+.ct-tam-x{color:var(--text-muted);font-size:12px}
+.ct-op-linha{display:grid;grid-template-columns:1fr 64px auto;gap:6px;align-items:center}
+.ct-op-linha input{width:100%;background:var(--surface-dark);border:1px solid rgba(var(--white-rgb),.07);border-radius:6px;color:var(--text);padding:5px 8px;font-size:13px;font-family:inherit}
+.ct-op-linha .toggle-label{font-size:12.5px}
+
+.ct-quadro{position:absolute}
+.ct-quadro-rotulo{position:absolute;left:0;bottom:100%;margin-bottom:6px;font-size:12.5px;color:var(--text-muted);white-space:nowrap;cursor:move;user-select:none;display:flex;gap:6px;align-items:center}
+.ct-quadro-rotulo b{color:var(--text);font-weight:600}
+.ct-quadro.selecionado .ct-quadro-rotulo b{color:var(--blue)}
+/* Um iframe: a página em branco como num navegador (`Canvas`, a cor de
+   sistema — nenhuma cor fixa), rolando por dentro quando é mais comprida (D34). */
+.ct-quadro-pagina{display:block;width:100%;height:100%;border-radius:4px;box-shadow:0 6px 24px rgba(var(--black-rgb),.35);border:1px solid rgba(var(--white-rgb),.12);border-style:solid;cursor:default;background:Canvas}
+.ct-quadro.selecionado .ct-quadro-pagina{border-color:var(--blue);box-shadow:0 0 0 2px rgba(var(--blue-rgb),.6),0 6px 24px rgba(var(--black-rgb),.35)}
+.ct-capa{position:absolute;inset:0;z-index:2;cursor:pointer}
+.ct-quadro.dentro .ct-capa{display:none}
+.ct-quadro.dentro .ct-quadro-pagina{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue),0 6px 24px rgba(var(--black-rgb),.35)}
+.ct-dentro-tag{display:none;color:var(--blue);font-weight:600}
+.ct-quadro.dentro .ct-dentro-tag{display:inline}
+.ct-quadro.chegou .ct-quadro-pagina{box-shadow:0 0 0 3px var(--amber),0 6px 24px rgba(var(--black-rgb),.35)}
+/* Arrastando, o mouse não pode "cair" dentro de uma página. */
+.ct-canvas.arrastando iframe,.ct-quadro.movendo iframe{pointer-events:none}
+
+.ct-recolher{padding:2px 8px;font-size:12px;line-height:1.2}
+.ct-flutua{position:absolute;top:10px;z-index:10;padding:5px 10px;box-shadow:0 4px 14px rgba(var(--black-rgb),.35)}
+.ct-flutua-esq{left:10px}
+.ct-flutua-dir{right:10px}
+.ct-linha-unica{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.ct-zoom-grupo{display:inline-flex;align-items:center;gap:4px}
+.ct-zoom-val{font-size:12px;color:var(--text-muted);min-width:42px;text-align:center}
+
+/* ── as ligações (fase 03) ──────────────────────────────────────────────── */
+/* Por cima das telas (D17). A espessura fica igual NA TELA em qualquer zoom:
+   ⚠️ `vector-effect: non-scaling-stroke` NÃO basta aqui — o zoom do mundo é um
+   `transform` de CSS, e o WebView2 não o desconta (medido em 25/09/2026: a
+   linha de 4 px saía com 1 px a 25%). Por isso a espessura é dividida pela
+   escala, que `ct-ligacoes.js` põe no SVG (`--ct-ref`, nunca abaixo de 40%: dali
+   para baixo a linha encolhe com as telas; `--ct-z`, para o mínimo de 1 px). */
+.ct-setas{position:absolute;left:0;top:0;width:4000px;height:3000px;overflow:visible;pointer-events:none;z-index:5;--ct-ref:1;--ct-z:1}
+.ct-borda{fill:none;stroke:rgb(var(--black-rgb));stroke-width:max(calc(7.5px / var(--ct-ref)), calc(1px / var(--ct-z)));stroke-linejoin:round;stroke-linecap:round}
+.ct-borda.acesa{stroke-width:max(calc(10px / var(--ct-ref)), calc(1px / var(--ct-z)))}
+.ct-seta{fill:none;stroke:var(--ct-seta-cor);stroke-width:max(calc(4px / var(--ct-ref)), calc(1px / var(--ct-z)));stroke-linejoin:round;stroke-linecap:round}
+.ct-seta.acesa{stroke-width:max(calc(5.5px / var(--ct-ref)), calc(1px / var(--ct-z)))}
+.ct-anel-borda{fill:none;stroke:rgb(var(--black-rgb));stroke-width:max(calc(8.5px / var(--ct-ref)), calc(1px / var(--ct-z)))}
+.ct-anel{fill:none;stroke:var(--ct-seta-cor);stroke-width:max(calc(4px / var(--ct-ref)), calc(1px / var(--ct-z)))}
+.ct-anel-x{stroke-linecap:round}
+.ct-anel-cheio{fill:var(--ct-seta-cor);stroke:rgb(var(--black-rgb));stroke-width:max(calc(2.5px / var(--ct-ref)), calc(1px / var(--ct-z)))}
+.ct-opacidade{width:110px;accent-color:var(--blue)}
+.ct-op-val{font-size:12px;color:var(--text-muted);min-width:34px}
+.ct-cor-bolinha{width:22px;height:22px;border-radius:50%;border:2px solid rgba(var(--white-rgb),.35);cursor:pointer;background:var(--blue)}
+.ct-cores{display:flex;gap:8px;flex-wrap:wrap}
+.ct-cor{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.ct-cor.ativa{border-color:var(--text)}
+.ct-bolinha-linha{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--text-muted)}
+.ct-bolinha-linha select{background:var(--surface-dark);border:1px solid rgba(var(--white-rgb),.07);border-radius:6px;color:var(--text);padding:5px 8px;font-size:13px;font-family:inherit}

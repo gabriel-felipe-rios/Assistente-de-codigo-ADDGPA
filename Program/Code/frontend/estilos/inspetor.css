@@ -1,0 +1,189 @@
+/* ── Faixa do programa-alvo (acima das sub-abas) ──
+   O "▶ Executar programa" é da aba inteira: o Capturar inspeciona o programa
+   aberto aqui e a Gravação grava ele. Antes eram dois botões, um por sub-aba,
+   com ids diferentes chamando a mesma função. */
+.insp-topo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 24px 0; flex-shrink: 0;
+}
+.insp-alvo {
+  font-size: 11.5px; color: var(--text-muted);
+  font-family: 'Cascadia Code', Consolas, monospace;
+}
+
+/* ── Aba Inspetor: sub-abas ── */
+.insp-tabs-bar {
+  display: flex; gap: 2px; padding: 12px 24px 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05); flex-shrink: 0;
+}
+.insp-tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.insp-tab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.insp-tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+
+.insp-tab-content { display: none; flex: 1; padding: 20px 24px; overflow-y: auto; flex-direction: column; gap: 16px; }
+.insp-tab-content.active { display: flex; }
+
+/* ── Callout explicativo ── */
+.insp-note {
+  border-radius: var(--radius); padding: 12px 16px; font-size: 13px; line-height: 1.5;
+  border: 1px solid rgba(var(--blue-rgb),0.35); background: rgba(var(--blue-rgb),0.08); color: var(--text-muted);
+}
+.insp-note b { color: var(--text); }
+
+/* ── Linha de ação (botão Ativar + toggle, lado a lado) ── */
+.insp-action-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* ── Toggle Controle específico / Janela inteira ── */
+.insp-toggle-row { display: flex; gap: 6px; }
+.insp-toggle {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1); color: var(--text-muted);
+  font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+.insp-toggle.active { background: var(--surface-hover); border-color: rgba(var(--white-rgb),0.3); color: var(--text); }
+
+/* ── Seletores da Gravação (Mouse completo / Teclado) ──
+   Checkbox nativo, não `.toggle-pill`: a escolha só vale quando a gravação
+   INICIA, e o interruptor promete efeito imediato. Mesmas medidas de
+   `.aparencia-opcao`; a unificação das três cópias do projeto está registrada
+   em "Padrões de interface/Exceções.md". */
+.insp-opcoes-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.insp-opcao {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--text); padding: 5px 0;
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.insp-opcao input { accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+
+/* ── Estado vazio ── */
+.insp-empty { color: var(--text-muted); font-size: 13px; padding: 18px; text-align: center; }
+.insp-empty.hidden { display: none; }
+
+/* ── Relatório de captura ── */
+.insp-props-panel { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 8px; padding: 16px; }
+.insp-props-panel h3 { font-size: 13px; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+.insp-prop-row { display: grid; grid-template-columns: 150px 1fr; gap: 8px; font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid rgba(var(--white-rgb),0.05); }
+.insp-prop-row span.k { color: var(--text-muted); }
+.insp-prop-row span.v { font-family: 'Cascadia Code', Consolas, monospace; }
+.insp-prop-source { margin-top: 8px; font-size: 11px; color: var(--text-muted); }
+
+/* ── Candidatos ── */
+.insp-candidate-card { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.insp-candidate-card.selected { border-color: rgba(var(--blue-rgb),0.5); box-shadow: 0 0 0 1px rgba(var(--blue-rgb),0.3); }
+.insp-candidate-head { display: flex; justify-content: space-between; align-items: center; }
+.insp-candidate-path { font-family: 'Cascadia Code', Consolas, monospace; font-size: 12.5px; color: var(--sky-light); }
+.insp-confidence { font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 3px 10px; }
+.insp-confidence.alta { background: rgba(var(--green-rgb),0.18); color: var(--green); }
+.insp-confidence.media { background: rgba(var(--amber-rgb),0.18); color: var(--amber); }
+.insp-confidence.baixa { background: rgba(var(--red-rgb),0.18); color: var(--red); }
+.insp-candidate-snippet { background: rgba(var(--black-rgb),0.25); border-radius: 6px; padding: 8px 12px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12px; color: var(--text-muted); overflow-x: auto; white-space: pre; }
+.insp-candidate-actions { display: flex; gap: 8px; margin-top: 2px; }
+
+/* ── Restringir a um trecho: os candidatos, recolhidos ──
+   Fica no fim da esteira de Capturar, não numa sub-aba: escolher um candidato
+   é opcional, e recolhido ele não compete com o relatório da captura. */
+.insp-restringir {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 8px; padding: 10px 14px;
+}
+.insp-restringir.hidden { display: none; }
+.insp-restringir-btn { display: flex; align-items: center; gap: 8px; width: 100%; }
+.insp-restringir-corpo { margin-top: 10px; }
+.insp-restringir-corpo.hidden { display: none; }
+/* Aviso de corte — "(mostrando 5 de 47)". Sem ele o relatório mente por
+   omissão: parece que aqueles são os únicos candidatos que existem. */
+.insp-corte { font-size: 11.5px; color: var(--text-muted); font-family: inherit; }
+.insp-aviso {
+  font-size: 12px; color: var(--amber); background: rgba(var(--amber-rgb),0.08);
+  border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; line-height: 1.45;
+}
+.insp-candidate-motivo { font-size: 11.5px; color: var(--text-muted); }
+
+/* ── Copiar para a IA ── */
+.insp-envio { display: flex; flex-direction: column; gap: 10px; }
+.insp-envio.hidden { display: none; }
+.insp-envio-nota { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Enviar para IA ── */
+.insp-send-summary { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.insp-send-summary h4 { font-size: 13px; color: var(--text-muted); }
+.insp-expand-toggle {
+  background: transparent; border: none; color: var(--sky-light); font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 12.5px; text-align: left; cursor: pointer; padding: 4px 0;
+}
+.insp-expand-toggle:hover { color: var(--text); }
+/* Bloco de código do candidato: reusa o componente .ts-code-line/.highlight
+   das abas Análise (a linha encontrada fica destacada em azul). Aqui só damos
+   o enquadramento (fundo/arredondamento), como nos outros blocos de código. */
+.insp-expand-code { background: rgba(var(--black-rgb),0.25); border-radius: 6px; overflow: hidden; }
+.insp-expand-code.hidden { display: none; }
+.insp-instrucao {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 8px;
+  padding: 12px 14px; font-size: 13.5px; color: var(--text); min-height: 90px; font-family: inherit; resize: vertical;
+}
+.insp-send-actions { display: flex; justify-content: flex-end; }
+
+/* ── Gravação ── */
+/* Linha própria, ABAIXO dos botões, com altura reservada: texto de tamanho
+   variável no meio de uma linha de controles reposiciona os vizinhos a cada
+   mudança e o usuário perde o alvo que já estava mirando. */
+.insp-grav-status {
+  font-size: 12px; color: var(--text-muted); display: flex; align-items: center;
+  gap: 6px; min-height: 18px; flex-shrink: 0; margin-top: -8px;
+}
+.grav-rec-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); display: inline-block; animation: gravBlink 1s steps(2, start) infinite; }
+@keyframes gravBlink { 50% { opacity: .25; } }
+.insp-grav-dica.hidden { display: none; }
+
+/* Lista ao vivo (durante a gravação) */
+.grav-live-row { display: flex; align-items: center; gap: 10px; padding: 7px 12px; font-size: 12.5px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05); color: var(--text); }
+
+/* Passo que não deu pra nomear. Âmbar, não vermelho: é uma PENDÊNCIA pro
+   usuário decidir (manter ou remover), não um erro. Ele entra na lista de
+   propósito — descartar em silêncio era a causa da sensação de "cliquei e não
+   aconteceu nada". */
+.grav-sem-nome {
+  border-left: 2px solid var(--amber);
+  background: rgba(var(--amber-rgb),0.08);
+}
+
+/* Passo na linha do tempo (revisão) */
+.grav-step { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+.grav-step-head { display: flex; align-items: center; gap: 10px; }
+.grav-step-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(var(--blue-rgb),0.18);
+  color: var(--blue); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.grav-step-rotulo { flex: 1; font-size: 13px; color: var(--text); }
+.grav-step-del { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px;
+  padding: 2px 6px; border-radius: 5px; transition: color var(--t), background var(--t); }
+.grav-step-del:hover { color: var(--red); background: rgba(var(--red-rgb),0.12); }
+.grav-step-anchor { font-size: 12px; color: var(--text-muted); }
+.grav-step .mono, .grav-anchor-path { font-family: 'Cascadia Code', Consolas, monospace; }
+.grav-anchor-path { color: var(--sky-light); }
+.grav-dim { color: var(--text-muted); font-size: 11.5px; }
+
+/* Âncora automática: alternativas recolhidas atrás de um toggle discreto */
+.grav-ancora-toggle { background: transparent; border: none; color: var(--text-muted); font-size: 11px;
+  cursor: pointer; padding: 0 4px; opacity: .7; }
+.grav-ancora-toggle:hover { color: var(--sky-light); opacity: 1; }
+.grav-cands { font-size: 11.5px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.grav-cands.hidden { display: none; }
+.grav-cand-chip { background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.12); color: var(--sky-light);
+  font-family: 'Cascadia Code', Consolas, monospace; font-size: 11px; padding: 3px 8px; border-radius: 999px; cursor: pointer; }
+.grav-cand-chip:hover { border-color: rgba(var(--blue-rgb),0.5); }
+.grav-cand-chip.ativo { background: rgba(var(--blue-rgb),0.18); color: var(--blue); border-color: rgba(var(--blue-rgb),0.5); }
+
+/* Teia: duas colunas (dispara / acionado por) */
+.grav-teia { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; }
+.grav-teia-col { background: rgba(var(--black-rgb),0.22); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+.grav-teia-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 6px; }
+.grav-teia-item { font-size: 12px; padding: 2px 0; overflow-x: auto; white-space: nowrap; }
+.grav-teia-vazio { font-size: 12px; color: var(--text-muted); opacity: .6; }
+.grav-teia-files { font-size: 11.5px; padding: 4px 0 0; margin-top: 4px; border-top: 1px dashed rgba(var(--white-rgb),0.08);
+  overflow-x: auto; white-space: nowrap; }

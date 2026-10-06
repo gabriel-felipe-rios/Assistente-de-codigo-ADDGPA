@@ -1,0 +1,265 @@
+/* ═══════════════════════════════════════════════════ Aba Backups (tab-git) ══
+   Cópias completas do projeto (código + dados). Reutiliza os tokens de base.css
+   e os componentes .btn/.modal-overlay/.modal já existentes. */
+
+/* ── Cabeçalho: "Cópias salvas" e o botão lado a lado ── */
+.bk-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap;
+}
+.bk-status { font-size: 12.5px; color: var(--teal); }
+
+/* ── Título de seção ── */
+.bk-sec-h { font-size: 15px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 9px; }
+.bk-count {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  background: rgba(var(--white-rgb),0.08); padding: 2px 9px; border-radius: 20px;
+}
+
+/* ── Lista de cópias ── */
+.bk-list { display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
+.bk-empty { color: var(--text-muted); font-size: 13.5px; padding: 24px 4px; }
+
+.bk-card {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.05);
+  border-radius: 10px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 14px;
+  transition: border-color var(--t), background var(--t);
+}
+.bk-card:hover { border-color: rgba(var(--teal-rgb),0.4); background: var(--surface-hover); }
+.bk-card.safety { border-left: 3px solid var(--amber); }
+
+.bk-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.bk-main { flex: 1; min-width: 0; }
+.bk-date { font-size: 14px; font-weight: 600; font-family: ui-monospace,'Consolas',monospace; }
+.bk-tag-safety {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--amber); background: rgba(var(--amber-rgb),0.15);
+  padding: 2px 8px; border-radius: 4px; margin-left: 8px;
+}
+.bk-note { font-size: 13px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; font-style: italic; }
+.bk-note.empty { opacity: 0.5; }
+.bk-meta { display: flex; gap: 14px; margin-top: 8px; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; }
+
+.bk-card-actions { display: flex; gap: 7px; flex-shrink: 0; align-items: center; }
+
+/* Botões-ícone discretos dentro do cartão (abrir pasta / excluir) */
+.bk-icon-btn {
+  background: transparent; border: 1px solid rgba(var(--white-rgb),0.16);
+  color: var(--text-muted); border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer;
+  transition: color var(--t), border-color var(--t), background var(--t);
+}
+.bk-icon-btn:hover { color: var(--text); border-color: var(--text-muted); }
+.bk-icon-btn.danger:hover { color: var(--red); border-color: var(--red); background: rgba(var(--red-rgb),0.1); }
+
+/* ── Modais específicos ── */
+.bk-auto-name {
+  font-family: ui-monospace,'Consolas',monospace; font-size: 14px; color: var(--teal);
+  background: var(--surface); border-radius: var(--radius); padding: 10px 14px;
+  border: 1px solid rgba(var(--teal-rgb),0.25);
+}
+.modal textarea.bk-note-input {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius); color: var(--text); font-size: 14px; padding: 10px 14px;
+  width: 100%; outline: none; font-family: inherit; resize: vertical; transition: border-color var(--t);
+}
+.modal textarea.bk-note-input:focus { border-color: var(--blue); }
+
+.bk-warn {
+  background: rgba(var(--red-rgb),0.1); border: 1px solid rgba(var(--red-rgb),0.3);
+  border-radius: var(--radius); padding: 11px 14px; font-size: 13px; line-height: 1.6; color: var(--text);
+}
+.bk-warn-head { color: var(--red); font-weight: 700; display: block; margin-bottom: 3px; }
+.bk-revert-target { font-family: ui-monospace,'Consolas',monospace; color: var(--teal); font-weight: 600; }
+
+.bk-safety-check {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(var(--amber-rgb),0.1); border-radius: var(--radius);
+  padding: 11px 14px; font-size: 13px; line-height: 1.5; cursor: pointer;
+}
+.bk-safety-check input { margin-top: 3px; accent-color: var(--amber); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+.bk-safety-check b { color: var(--text); }
+
+/* ═══════════════════ Versões: as duas metades, os blocos e os modais ═══════
+   O cartão passou a ter duas linhas — Código e Documentação —, porque a
+   pergunta "o que esta cópia guardou?" quase nunca tem a mesma resposta dos
+   dois lados. */
+
+.bk-metade {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 12px; margin-top: 3px;
+}
+.bk-metade-nome {
+  color: var(--text-muted); font-weight: 600;
+  min-width: 92px; flex-shrink: 0;
+}
+.bk-metade-dado { color: var(--text); }
+
+.bk-tag-completa {
+  font-size: 10px; font-weight: 700; letter-spacing: .4px;
+  color: var(--amber-text); background: var(--amber);
+  border-radius: 99px; padding: 1px 8px; margin-left: 6px;
+}
+
+.bk-carregando { font-size: 12.5px; color: var(--text-muted); padding: 10px 2px; }
+
+/* ── Blocos dos modais ── */
+.bk-bloco {
+  border: 1px solid rgba(var(--white-rgb), .08);
+  border-radius: var(--radius);
+  padding: 10px 12px; margin-top: 12px;
+}
+.bk-bloco-h {
+  font-size: 11px; font-weight: 700; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+}
+.bk-bloco-nota { font-size: 11.5px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+
+.bk-resumo-linha { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; margin: 3px 0; }
+.bk-resumo-nome { font-weight: 600; min-width: 92px; }
+.bk-resumo-dado { flex: 1; color: var(--text-muted); }
+.bk-mais  { color: var(--green-light); font-variant-numeric: tabular-nums; }
+.bk-menos { color: var(--coral); font-variant-numeric: tabular-nums; }
+
+/* Pré-requisito que falta NÃO desabilita nada: os três são parser puro, então
+   o botão vira "Gerar o que falta e copiar". O `!` é aviso, não bloqueio. */
+.bk-pre { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin: 3px 0; }
+.bk-pre-marca { width: 16px; text-align: center; font-weight: 700; }
+.bk-pre.pronto .bk-pre-marca { color: var(--green-light); }
+.bk-pre.falta  .bk-pre-marca { color: var(--amber); }
+
+.bk-tamanhos { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+.bk-escopo { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin: 4px 0; cursor: pointer; }
+
+/* ── A tabela das naturezas: informação, nunca interruptor ── */
+.bk-natureza {
+  display: grid; grid-template-columns: 150px 190px 1fr;
+  gap: 10px; align-items: baseline;
+  font-size: 12px; padding: 6px 0;
+  border-top: 1px solid rgba(var(--white-rgb), .05);
+}
+.bk-natureza:first-child { border-top: none; }
+.bk-natureza.generica { grid-template-columns: 1fr; font-style: italic; }
+.bk-natureza-nome { font-weight: 600; }
+.bk-natureza-acao { font-weight: 700; }
+.bk-natureza-acao.ok     { color: var(--green-light); }
+.bk-natureza-acao.aviso  { color: var(--amber); }
+.bk-natureza-acao.neutro { color: var(--text-muted); }
+.bk-natureza-porque { color: var(--text-muted); line-height: 1.5; }
+
+.modal-largo { max-width: 720px; width: 92vw; }
+
+/* ═══════════════════════════ Sub-aba Configuração ══════════════════════════
+   Só existe interruptor onde o usuário escolhe: os blocos "Código", "O que
+   acontece quando você reverte" e "Onde as Versões ficam" são informativos. */
+
+.bc-corpo { display: flex; flex-direction: column; gap: 16px; max-width: 860px; }
+.bc-bloco {
+  border: 1px solid rgba(var(--white-rgb), .08);
+  border-radius: var(--radius); padding: 14px 16px;
+  background: var(--surface);
+}
+.bc-bloco-h { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.bc-info { font-size: 12.5px; color: var(--text); }
+.bc-nota { font-size: 11.5px; color: var(--text-muted); line-height: 1.55; margin-top: 8px; }
+.bc-nota.destaque {
+  border-left: 3px solid var(--teal); padding-left: 10px;
+  color: var(--text); margin-bottom: 10px;
+}
+
+.bc-solta {
+  border: 1px dashed rgba(var(--white-rgb), .18);
+  border-radius: var(--radius);
+  padding: 18px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  transition: border-color var(--t), background var(--t);
+}
+.bc-solta.sobre { border-color: var(--teal); background: rgba(var(--white-rgb), .04); }
+.bc-solta-texto { font-size: 12.5px; color: var(--text-muted); }
+
+.bc-lista { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.bc-vazio { font-size: 12px; color: var(--text-muted); font-style: italic; }
+.bc-item {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(var(--white-rgb), .035);
+  border-radius: 6px; padding: 5px 8px;
+}
+.bc-item-caminho {
+  flex: 1; font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11.5px; color: var(--sky-light); word-break: break-all;
+}
+.bc-rodape {
+  display: flex; gap: 18px; margin-top: 10px;
+  font-size: 12px; color: var(--text-muted);
+}
+
+.bc-interruptores { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+.bc-interruptor { display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer; }
+.bc-losango { color: var(--teal); font-size: 11px; }
+
+.bc-caminhos { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 10.5px; opacity: .8; }
+.bc-arvore {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11.5px;
+  color: var(--sky-light); background: rgba(var(--black-rgb), .2);
+  border-radius: 6px; padding: 10px 12px; overflow-x: auto; margin: 0;
+}
+.bc-numeros { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 10px; font-size: 12px; color: var(--text-muted); }
+
+/* ═══════════ A regra de container que faltava, escopada a esta aba ═════════
+   `.agentes-subtab-content` é `flex:1; overflow:hidden` e NÃO tem
+   `min-height:0`. O default de item flex é `min-height:auto`, então um painel
+   alto cresce além do pai e o `overflow:hidden` do ancestral recorta em
+   silêncio — é por isso que a aba Backups não rolava.
+   Escopado aos três painéis daqui de propósito: a classe é compartilhada com
+   Assistente e Automação, e mexer nela mexeria nas duas. */
+#bksub-versoes, #bksub-mapa, #bksub-config { min-height: 0; }
+
+/* O `.screen-body` já é `flex:1; overflow-y:auto` — é ele quem rola nas
+   sub-abas Versões e Configuração. */
+#bksub-config > .screen-body { padding-top: 18px; }
+
+/* ── Bloco "Arquivos grandes no Mapa" ──────────────────────────────────────
+   O único desta tela com interruptor novo, porque aqui o usuário de fato
+   escolhe. ⚠️ Não muda o que a cópia guarda — a cópia leva tudo, sempre. */
+.bc-grandes-linha {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12.5px; margin: 6px 0; flex-wrap: wrap;
+}
+.bc-num {
+  width: 74px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), .1);
+  color: var(--text); border-radius: 6px; padding: 4px 8px;
+  font-size: 12.5px; font-variant-numeric: tabular-nums;
+}
+.bc-aviso-firme {
+  border-left: 3px solid var(--amber); padding-left: 10px;
+  font-size: 12px; color: var(--text); line-height: 1.55; margin-top: 10px;
+}
+
+/* A lista do que hoje conta como "grande" — caminho, tamanho e METADE.
+   A metade é o dado que faltava: sem ela a regra era inconferível, porque os
+   arquivos grandes deste projeto estão todos em Documentação e quem estivesse
+   olhando Código mexia no teto sem ver efeito nenhum. */
+.bc-grandes-lista { margin: 10px 0 4px; }
+.bc-grandes-h {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+}
+.bc-grande-item {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 4px 8px; border-radius: 6px;
+  background: rgba(var(--white-rgb), .04);
+  margin-bottom: 4px; font-size: 12px;
+}
+.bc-grande-tam {
+  font-variant-numeric: tabular-nums; color: var(--amber);
+  font-weight: 600; min-width: 62px; text-align: right;
+}
+.bc-grande-metade {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-muted); background: rgba(var(--white-rgb), .07);
+  border-radius: 99px; padding: 1px 8px;
+}
+.bc-grande-item .bc-item-caminho {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+

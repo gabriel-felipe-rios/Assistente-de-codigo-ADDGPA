@@ -1,0 +1,16 @@
+{
+  "nome": "Erro na própria linha",
+  "versao": "2",
+  "descricao": "A linha com erro de sintaxe fica com o fundo rosado, inteira. A lista dos erros, com \"ir para a linha\", abre pelo menu da aba ou pelo Acesso rápido.",
+  "prefixo": "erl",
+  "tipos": ["2", "3"],
+  "acrescenta": [
+    { "recurso": "marca", "id": "erl.linha-com-erro", "lugar": "editor.decorador",
+      "arquivo": "frontend/encaixes/decorador.js" },
+    { "recurso": "comando", "id": "erl.menu-da-aba", "lugares": ["editor.aba.menu"],
+      "arquivo": "frontend/encaixes/aba.js" },
+    { "recurso": "comando", "id": "erl.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js" }
+  ],
+  "escreve_fora": []
+}

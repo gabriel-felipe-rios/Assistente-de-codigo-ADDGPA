@@ -1,0 +1,11 @@
+{
+  "nome": "Ícones de arquivo",
+  "versao": "2",
+  "descricao": "Os ícones coloridos do Material Icon Theme para a árvore do Editor, o Acervo e as outras listas do programa. Só dado, sem uma linha de código.",
+  "prefixo": "ico",
+  "tipos": ["4"],
+  "acrescenta": [
+    { "recurso": "visual", "id": "ico.icones", "parte": "icones", "arquivo": "mapa.json" }
+  ],
+  "escreve_fora": []
+}

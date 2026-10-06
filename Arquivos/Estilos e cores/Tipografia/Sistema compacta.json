@@ -1,0 +1,26 @@
+{
+  "nome": "Sistema compacta",
+  "descricao": "Sem serifa, a fonte do próprio sistema operacional. Escala curta e entrelinha justa — some na interface em vez de chamar atenção.",
+  "instrucao": "Aplique só família, peso, proporção da escala e entrelinha. O tamanho-base do corpo e a densidade do espaçamento vêm do ESTILO, não daqui — uma tipografia nunca deve engordar um layout que o estilo definiu como denso.",
+  "tipografia": {
+    "familias": {
+      "titulo": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "texto": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "mono": "ui-monospace, Consolas, \"SF Mono\", monospace"
+    },
+    "pesos": {
+      "titulo": 600,
+      "texto": 400,
+      "enfase": 600
+    },
+    "escala": {
+      "proporcao": 1.2,
+      "observacao": "Passo curto: os títulos ficam perto do corpo, sem degrau visível entre níveis."
+    },
+    "entrelinha": {
+      "titulo": 1.25,
+      "texto": 1.45,
+      "compacto": 1.3
+    }
+  }
+}

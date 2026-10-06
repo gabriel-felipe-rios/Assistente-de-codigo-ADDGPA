@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Painel dividido -->
+<!-- Topbar -> duas colunas de peso igual separadas por divisória arrastável -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Painel dividido</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:36px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.main{display:flex;flex:1;min-height:0}
+.lado{flex:1;min-width:0;display:flex;flex-direction:column;padding:12px 14px;gap:8px;overflow:auto}
+.divisoria{width:5px;background:var(--superficie-hover);cursor:col-resize;flex-shrink:0;position:relative}
+.divisoria::after{content:"";position:absolute;left:1px;top:50%;width:3px;height:34px;margin-top:-17px;background:var(--texto-secundario);border-radius:2px;opacity:.5}
+.h2{font-size:13px;font-weight:700}
+.cod{background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:7px;padding:10px;font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--texto-secundario);white-space:pre;flex:1}
+.previa{background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:7px;flex:1;padding:12px;display:flex;flex-direction:column;gap:7px}
+</style></head><body>
+<div class="topbar"><span style="font-weight:700">Editor e prévia</span><button class="bt">Rodar</button></div>
+<div class="main">
+  <div class="lado">
+    <div class="rot">Painel esquerdo · edição</div>
+    <div class="h2">documento.md</div>
+    <div class="cod"># Título da página
+
+Parágrafo de exemplo com **negrito**
+e uma lista:
+
+- primeiro item
+- segundo item</div>
+  </div>
+  <div class="divisoria"></div>
+  <div class="lado">
+    <div class="rot">Painel direito · resultado</div>
+    <div class="h2">Prévia</div>
+    <div class="previa">
+      <div style="font-size:15px;font-weight:700">Título da página</div>
+      <div style="color:var(--texto-secundario)">Parágrafo de exemplo com <b style="color:var(--texto)">negrito</b> e uma lista:</div>
+      <div style="color:var(--texto-secundario)">• primeiro item<br>• segundo item</div>
+    </div>
+  </div>
+</div>
+</body></html>

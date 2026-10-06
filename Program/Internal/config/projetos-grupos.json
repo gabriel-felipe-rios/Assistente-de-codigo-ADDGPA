@@ -1,0 +1,122 @@
+{
+  "grupos": [
+    {
+      "id": "g_e37f8187",
+      "nome": "Computador",
+      "cor": "#6C93B8",
+      "subgrupos": []
+    },
+    {
+      "id": "g_e747be1a",
+      "nome": "Mobile",
+      "cor": "#D8BE6B",
+      "subgrupos": []
+    },
+    {
+      "id": "g_7584b5ca",
+      "nome": "Site",
+      "cor": "#C98F5E",
+      "subgrupos": []
+    }
+  ],
+  "tags": [
+    {
+      "id": "t_51b5a456",
+      "nome": "Estou trabalhando",
+      "cor": "#7fa98c"
+    }
+  ],
+  "atribuicoes": {
+    "Achar elmentos na tela e clicar neles": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Teste": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "TESTE - Transcrever voz com Whisper": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Assistente de código vibe-coding - backup": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Gráfico de radar áreas por função": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Confiar em LLMs": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Criador de slides com IA": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Projeto LUNA": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Treinar IA - Macros de voz": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Transcrever voz em tempo real": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Site portifólio +currículo": {
+      "grupo_id": "g_7584b5ca",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Criador de motion com IA": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    },
+    "Teste ver abas programa": {
+      "grupo_id": "g_e37f8187",
+      "subgrupo_id": null,
+      "tags": [
+        "t_51b5a456"
+      ]
+    }
+  }
+}

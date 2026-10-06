@@ -1,0 +1,19 @@
+{
+  "acervo_presets": [
+    {
+      "nome": "Padrão",
+      "pastas": [
+        {
+          "titulo": "Saída das skills",
+          "caminho": "Saída das skills",
+          "editavel": true
+        },
+        {
+          "titulo": "Saída dos comandos",
+          "caminho": "Saída dos comandos",
+          "editavel": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "ordem": 4,
+  "nome": "Regras e instruções",
+  "icone": "📌",
+  "destino": "Arquivos/Regras e instruções/",
+  "tabela": null,
+  "botao": {
+    "rotulo": "📋 Copiar prompt de regra ou instrução",
+    "prompt": "Prompt.txt"
+  },
+  "nota": "Quando estiver pronto, ponha em `Arquivos/Regras e instruções/`.",
+  "apoio": null
+}

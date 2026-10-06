@@ -1,0 +1,360 @@
+/* ═════════════════════════════════ AGENTES — VISUALIZAR PIPELINE ══
+   Todo o `.vp-*` mora aqui. Saiu de `agentes-execucao.css` porque aquele
+   arquivo já estava em 410 linhas — a faixa em que a AMF manda dividir — e
+   metade dele era esta tela, que não tem nada a ver com Fila nem com Rotinas.
+   Mesmo precedente de `mapas.css` → `mapas-ligacoes.css`.
+
+   As SEIS leituras (Raias, Trilho, Sequência, Cadeias, Fases, Markdown) são
+   desenhos do MESMO `pipeline.md`, montados pelo programa. A cor identifica a
+   CADEIA; o laranja identifica a TRAVESSIA de camada. São dois eixos
+   diferentes de propósito: a cadeia é "de qual fluxo isto é", a travessia é
+   "aqui o fluxo trocou de camada" — se dividissem a mesma cor, ler um
+   apagaria o outro.
+
+   ⚠️ Nada de hex solto e nada de token inventado. Esta tela já teve o bug de
+   `var(--bg-2, …)` — um token que nunca existiu — caindo no fallback roxo do
+   Designer. Cor só sai do `:root` do tema. */
+
+/* ══════════════════════════════════════════════════════ Casca da tela ══ */
+.vp-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px 16px;
+  /* `flex: 1` é o idioma da casa; `height: 100%` dependia de o pai ter altura
+     resolvida, o que é mais frágil e divergia do resto do programa. */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Cabeçalho: uma linha de identificação + a faixa de números ──
+   As duas linhas de texto solto (`.vp-hint` e `.vp-status`) viraram uma só. Do
+   `cabecalho` que o backend manda ("199 passos · 9 cadeias · gerado em …") só
+   se aproveita a data: os números são recontados no navegador, porque agora
+   existe um que o arquivo não traz — o de LIGAÇÕES. */
+.vp-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.vp-cabecalho-texto { flex: 1; min-width: 0; }
+.vp-titulo {
+  font-size: 13px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.vp-titulo-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.vp-titulo-sub .vp-sem-modelo { color: var(--teal); }
+
+.vp-metricas {
+  display: flex;
+  background: rgba(var(--black-rgb),0.2);
+  border-radius: var(--radius);
+  padding: 6px 2px;
+  flex-shrink: 0;
+}
+/* `cursor: help` porque cada número tem um `title` dizendo o que ele conta —
+   "ligação" e "travessia" não são palavras que se adivinhem olhando. */
+.vp-metrica {
+  display: flex; align-items: baseline; gap: 7px;
+  padding: 1px 13px; cursor: help;
+}
+.vp-metrica + .vp-metrica { border-left: 1px solid rgba(var(--white-rgb),0.08); }
+.vp-metrica b {
+  font-size: 19px; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.vp-metrica span {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted); white-space: nowrap;
+}
+.vp-m-cadeias b   { color: var(--teal); }
+.vp-m-passos b    { color: var(--blue); }
+.vp-m-ligacoes b  { color: var(--green); }
+.vp-m-travessias b{ color: var(--amber); }
+.vp-m-fases b     { color: var(--purple); }
+
+/* ── Barra de controles ── */
+.vp-barra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  padding-bottom: 8px;
+}
+.vp-barra-espaco { flex: 1; }
+.vp-barra-sep { width: 1px; height: 20px; background: rgba(var(--white-rgb),0.12); margin: 0 2px; }
+
+/* O toggle das leituras é o `.mapa-toggle` do projeto; daqui sai só o aperto.
+   São SEIS opções, acima das 2–3 que o componente prevê — exceção registrada
+   em `Padrões de interface/Exceções.md`, porque a leitura é o eixo inteiro da
+   tela. O pictograma vem junto para dar para escolher olhando, não lendo. */
+.vp-leituras { flex-wrap: wrap; }
+.vp-leituras .mapa-toggle-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 9px; font-size: 11px;
+}
+.vp-leituras .mapa-toggle-btn svg { flex-shrink: 0; opacity: 0.65; }
+.vp-leituras .mapa-toggle-btn.active svg { opacity: 1; }
+
+.vp-busca {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+.vp-busca svg { opacity: 0.5; flex-shrink: 0; }
+.vp-busca input {
+  background: transparent; border: none; outline: none;
+  color: var(--text); font-family: inherit; font-size: 12px; width: 130px;
+}
+.vp-busca:focus-within { border-color: var(--blue); }
+
+.vp-zoom { display: flex; align-items: center; gap: 4px; }
+.vp-zoom-val {
+  font-size: 11px; color: var(--text-muted); min-width: 38px; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Convenção da casa, e ela nasceu nesta tela: texto de tamanho variável não
+   fica ENTRE controles, senão os botões dançam de lugar a cada mensagem. Fica
+   embaixo, com a altura já reservada. */
+.vp-status {
+  font-size: 12px; color: var(--text-muted);
+  min-height: 17px; margin: 0; flex-shrink: 0;
+}
+
+/* O que o agente cortou fica atrás de um botão: é informação que se consulta
+   uma vez, não que precisa ocupar altura o tempo todo. Só o ícone fica em
+   âmbar — o bloco inteiro amarelo competia com o desenho. */
+.vp-avisos {
+  flex-shrink: 0;
+  max-height: 22vh;
+  overflow-y: auto;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: rgba(var(--black-rgb),0.3);
+  border: 1px solid rgba(var(--amber-rgb),0.4);
+  font-size: 11.5px; line-height: 1.7;
+}
+.vp-aviso-item { display: flex; gap: 8px; color: var(--text-muted); }
+.vp-aviso-item b { color: var(--amber); flex-shrink: 0; }
+
+/* ══════════════════════════════════════ Palco: trilha + viewport ══ */
+.vp-palco { display: flex; gap: 12px; flex: 1; min-height: 0; }
+
+/* ── Trilha de cadeias ──
+   Mesmo par da aba Documentação (`.doc-tree-panel` + `.doc-right`): lista de
+   itens de DADO à esquerda, conteúdo à direita. Não é `.config-trilho`, que é
+   navegação entre áreas do programa.
+
+   Ela existe porque as 9 cadeias desenhadas de uma vez são 199 passos numa
+   rolagem só. E, de quebra, é a legenda permanente das cores: a premissa
+   antiga ("as cores só aparecem juntas na leitura Fases, que tem legenda")
+   caiu no instante em que a trilha passou a mostrar as nove lado a lado. */
+.vp-trilha {
+  width: 224px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-right: 3px;
+}
+.vp-trilha-titulo {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 2px 4px 4px;
+  flex-shrink: 0;
+}
+.vp-trilha-item {
+  text-align: left;
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.06);
+  border-left: 3px solid var(--vp-cor, var(--teal));
+  border-radius: var(--radius);
+  padding: 7px 9px;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--t), border-color var(--t);
+}
+.vp-trilha-item:hover { background: rgba(var(--white-rgb),0.07); }
+.vp-trilha-item.ativo {
+  background: rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.16);
+  border-color: rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.5);
+  border-left-color: var(--vp-cor);
+  color: var(--text);
+}
+.vp-trilha-l1 {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 700; color: var(--text);
+}
+.vp-trilha-nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vp-trilha-l2 { font-size: 10px; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.vp-trilha-l2 .vp-conta-travessias { color: var(--amber); }
+
+/* Cinco segmentos: quais fases a cadeia ocupa. Diz de relance se ela é rasa
+   (tela → backend e pronto) ou funda. */
+.vp-trilha-fases { display: flex; gap: 2px; margin-top: 5px; height: 4px; }
+.vp-trilha-fases span { flex: 1; border-radius: 2px; background: rgba(var(--white-rgb),0.1); }
+.vp-trilha-fases span.on { background: var(--vp-cor, var(--teal)); }
+
+/* Cadeia grande abre em fases. No projeto real a C9 tem 143 dos 199 passos e
+   66 arquivos: desenhá-la inteira é o mesmo problema de antes, só que dentro
+   de uma cadeia só. O limiar está em mapas-pipeline-trilha.js. */
+.vp-trilha-sub {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin: 4px 0 2px 12px;
+  flex-shrink: 0;
+}
+.vp-trilha-fase {
+  background: rgba(var(--white-rgb),0.06);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 99px;
+  color: var(--text-muted);
+  font-family: inherit; font-size: 10px;
+  padding: 2px 9px; cursor: pointer;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.vp-trilha-fase:hover { color: var(--text); background: rgba(var(--white-rgb),0.12); }
+.vp-trilha-fase.ativo {
+  background: rgba(var(--vp-cor-rgb, var(--teal-rgb)),0.22);
+  border-color: var(--vp-cor); color: var(--text); font-weight: 700;
+}
+
+/* As SEIS leituras são listas e desenhos: quem lê, ROLA. O `overflow: hidden`
+   que morava aqui era herança do tempo em que o conteúdo era um SVG do Mermaid
+   com pan — e como todos os ancestrais também eram `hidden`, ninguém rolava
+   por ele e o conteúdo longo simplesmente sumia. */
+.vp-viewport {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: var(--radius);
+  overflow: auto;
+  padding: 14px 18px;
+}
+/* O zoom escala o conteúdo a partir do canto superior esquerdo; a área rolável
+   do viewport acompanha a escala sozinha. `transform: scale`, nunca
+   `style.zoom` — o `zoom` do CSS refaz o layout e rearredonda cada caixa. */
+#vp-area { transform-origin: 0 0; }
+
+.vp-vazio { color: var(--text-muted); font-size: 13px; }
+
+/* ═══════════════════════════════ As nove cores de cadeia ══
+   Eram seis, e a sétima recomeçava na primeira. Dava para viver com isso
+   enquanto elas só apareciam juntas na leitura Fases; com a trilha lateral
+   mostrando todas de uma vez, duas cadeias da mesma cor viravam mentira.
+   As três novas NÃO são tokens novos: `--indigo`, `--rosa` e `--ciano-mapa`
+   já existem nos três temas.
+
+   Nove cores num alfabeto de seis famílias significa três azulados juntos
+   (blue, indigo, ciano). Não é problema porque a cor nunca é o identificador
+   sozinho: o pino traz o número escrito (C1…C9) e a trilha lateral está
+   sempre à vista funcionando de legenda. A cor é atalho, não legenda.
+
+   `--coral`, `--rosa` e `--indigo` não têm gêmeo `-rgb` próprio; o par
+   translúcido usa o `-rgb` da família mais próxima, que é o que já se faz em
+   `agentes-execucao.css` para os estados da Fila. */
+.vp-cadeia-0 { --vp-cor: var(--teal);       --vp-cor-rgb: var(--teal-rgb); }
+.vp-cadeia-1 { --vp-cor: var(--blue);       --vp-cor-rgb: var(--blue-rgb); }
+.vp-cadeia-2 { --vp-cor: var(--purple);     --vp-cor-rgb: var(--purple-rgb); }
+.vp-cadeia-3 { --vp-cor: var(--amber);      --vp-cor-rgb: var(--amber-rgb); }
+.vp-cadeia-4 { --vp-cor: var(--green);      --vp-cor-rgb: var(--green-rgb); }
+.vp-cadeia-5 { --vp-cor: var(--coral);      --vp-cor-rgb: var(--red-rgb); }
+.vp-cadeia-6 { --vp-cor: var(--indigo);     --vp-cor-rgb: var(--indigo-rgb); }
+.vp-cadeia-7 { --vp-cor: var(--rosa);       --vp-cor-rgb: var(--purple-rgb); }
+.vp-cadeia-8 { --vp-cor: var(--ciano-mapa); --vp-cor-rgb: var(--ciano-mapa-rgb); }
+
+/* ═══════════════════════════════ Peças comuns às leituras ══ */
+
+/* Cabeçalho do desenho: quem é a cadeia e o tamanho dela. */
+.vp-titulo-cadeia {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+}
+/* O pino é fundo saturado com texto por cima — `--amber-text` é justamente o
+   token de "texto sobre preenchimento forte", e ele inverte no tema Papel. */
+.vp-pino {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 26px; height: 22px; padding: 0 7px;
+  border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+  color: var(--amber-text); background: var(--vp-cor, var(--teal));
+  flex-shrink: 0;
+}
+.vp-titulo-nome { font-size: 14px; font-weight: 700; }
+.vp-titulo-meta {
+  font-size: 11px; color: var(--text-muted);
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+.vp-tags { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.vp-tag {
+  font-size: 10px; padding: 2px 9px; border-radius: 99px;
+  background: rgba(var(--white-rgb),0.07); color: var(--text-muted);
+  white-space: nowrap;
+}
+.vp-tag.travessia { background: rgba(var(--amber-rgb),0.16); color: var(--amber); }
+/* Selo que aparece em TODOS os passos da cadeia sobe para cá e some das
+   linhas. Era ele que enchia o print de `+utils.js` repetido vinte vezes. */
+.vp-tag.selo {
+  background: rgba(var(--white-rgb),0.05);
+  border: 1px dashed rgba(var(--white-rgb),0.18);
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+
+/* O nó de arquivo. A tarja da esquerda é a CAMADA — é o que deixa ler a
+   travessia sem contar nada: a tarja muda de cor de um lado para o outro. */
+.vp-no {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11.5px;
+  color: var(--sky-light);
+  background: rgba(var(--white-rgb),0.05);
+  border: 1px solid rgba(var(--white-rgb),0.09);
+  border-left: 3px solid rgba(var(--blue-rgb),0.85);
+  border-radius: 6px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.vp-no.cam-backend { color: var(--green-light); border-left-color: rgba(var(--green-rgb),0.85); }
+.vp-no.cam-markup  { color: var(--violeta-light); border-left-color: rgba(var(--purple-rgb),0.85); }
+.vp-no.cam-outro   { color: var(--text-muted); border-left-color: rgba(var(--cinza-rgb),0.85); }
+
+.vp-seta { color: var(--text-muted); font-size: 13px; }
+.vp-seta.travessia { color: var(--amber); }
+
+/* Quantas chamadas diferentes usam a MESMA ligação. */
+.vp-vezes {
+  font-size: 10px; font-weight: 700;
+  color: var(--amber-text); background: var(--vp-cor, var(--teal));
+  border-radius: 99px; padding: 1px 7px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* O "por onde": o evento, a função ou a chamada. */
+.vp-vias { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.vp-via {
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 10px;
+  color: var(--yellow-soft);
+  background: rgba(var(--amber-rgb),0.1);
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.vp-via.mais { color: var(--text-muted); background: rgba(var(--white-rgb),0.06); }
+
+.vp-frase { font-size: 11.5px; color: var(--text-muted); }
+
+/* Filtro por arquivo: acende o que casa e apaga o resto. Apagar em vez de
+   esconder mantém o desenho no lugar — some o nó e as setas viram nada. */
+.vp-apagado { opacity: 0.14; }
+.vp-aceso { outline: 1px solid rgba(var(--amber-rgb),0.9); outline-offset: 1px; border-radius: 6px; }

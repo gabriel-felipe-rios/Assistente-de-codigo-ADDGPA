@@ -1,0 +1,451 @@
+/* ══════════════════════════════════════════════════════ ABA: MAPAS ══ */
+
+/* ── Container principal da aba Mapas ── */
+#tab-mapas { position: relative; }
+
+/* ── Sub-abas de Mapas ── */
+.mapas-tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.mapas-tab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.mapas-tab-btn.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+.mapas-tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.mapas-tab-content.active { display: flex; }
+
+/* ── Header do mapa ── */
+.mapa-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px; border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  flex-shrink: 0; gap: 16px;
+}
+.mapa-header-left { display: flex; flex-direction: column; gap: 2px; }
+.mapa-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mapa-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.mapa-desc { font-size: 12px; color: var(--text-muted); }
+.mapa-caminho {
+  font-size: 12px; color: var(--sky-light); min-height: 15px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+.mapa-stat { font-size: 12px; color: var(--text-muted); }
+
+/* Cabecalho com a estatistica embaixo dos controles, e nao no meio deles.
+   O `min-height` reserva a linha — sem ele o cabecalho encolhe quando o texto
+   esta vazio e o problema so troca de eixo, igual `.mapa-caminho` ja resolve do
+   outro lado. So a sub-aba Ligacoes usa: nas outras o texto e curto e estavel. */
+.mapa-header-right--coluna { flex-direction: column; align-items: flex-end; gap: 6px; }
+.mapa-header-controles { display: flex; align-items: center; gap: 10px; }
+.mapa-header-right--coluna .mapa-stat { min-height: 15px; text-align: right; }
+
+/* ── Área de visualização ── */
+/* O fundo é o `--bg`, o mesmo da página — e não o `--surface-dark`, que era o
+   valor antigo. Motivo: das 9 sub-abas de Mapas, 8 usavam o escuro e só a
+   Matriz de Dependências usava o `--bg`, com um override próprio. A divergência
+   só aparecia quando duas ficavam lado a lado na memória de quem troca de aba,
+   e foi assim que o usuário a viu, em 23/08/2026, comparando a Matriz de I/O
+   nova com a Matriz de Dependências ao lado.
+
+   O padrão escolhido foi o da Matriz de Dependências, e agora ele é o DEFAULT —
+   o override dela saiu junto, senão sobrava um valor repetido esperando
+   divergir de novo. */
+.mapa-container {
+  flex: 1; position: relative; overflow: hidden; min-height: 0;
+  background: var(--bg);
+}
+.mapa-placeholder {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.8;
+}
+.mapa-placeholder strong { color: var(--text); }
+.mapa-placeholder small { font-size: 11px; }
+
+/* ── Matriz de Dependências (ex-DSM) ── */
+/* O `background: var(--bg)` que morava aqui subiu para `.mapa-container` e virou
+   o padrão das nove sub-abas — ver o comentário de lá. Sobrou o que é mesmo
+   exclusivo desta tela: ela é arrastável. */
+.mapa-container--dsm {
+  overflow: hidden;
+  cursor: grab;
+}
+.mapa-container--dsm:active { cursor: grabbing; }
+
+#dsm-pan-wrap {
+  position: absolute;
+  top: 0; left: 0;
+  /* ⚠️ `will-change` e ligado/desligado por JS (`_applyDsmTransform`), nunca
+     permanente: permanente, o motor mantem o raster da escala antiga e o zoom
+     fica borrado para sempre. Ver a mesma nota em mapas-ligacoes.css. */
+}
+#dsm-container {
+  display: inline-block;
+  padding: 20px 24px;
+}
+.dsm-wrap { display: inline-block; min-width: 100%; position: relative; }
+.dsm-table {
+  border-collapse: collapse; font-size: 11px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  /* Fica ACIMA da camada de faixas. As células são transparentes, então a faixa
+     aparece através delas; a bolinha de dependência tem fundo próprio e
+     continua vindo por cima, com a cor cheia. */
+  position: relative; z-index: 1;
+}
+.dsm-table th, .dsm-table td {
+  border: 1px solid rgba(var(--white-rgb),0.05);
+  padding: 0; white-space: nowrap;
+}
+.dsm-col-header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 6px 4px;
+  color: var(--text-muted); font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dsm-row-header {
+  padding: 3px 8px; text-align: right; color: var(--text-muted);
+  font-weight: 400; white-space: nowrap;
+  cursor: pointer;
+}
+.dsm-col-header:hover, .dsm-row-header:hover { color: var(--text); background: var(--surface-hover); }
+/* ⛔ NÃO devolver `transition` para cá. Já esteve, como `transition: background
+   0.1s`, e era a causa nº 1 do travamento: um clique que acende meia matriz
+   dispara uma transição por célula, dezenas de milhares ao mesmo tempo, cada
+   uma repintando por 100ms. Medido em Chrome, projeto de 700 arquivos, o mesmo
+   clique caiu de 16.909 ms para 1.627 ms só tirando esta linha. A transição de
+   hover mora em `.dsm-cell--dep`, que são poucas — as com dependência. */
+.dsm-cell {
+  width: 20px; height: 20px; text-align: center; cursor: default;
+}
+.dsm-cell--self { background: rgba(var(--white-rgb),0.03); color: rgba(var(--white-rgb),0.2); }
+.dsm-cell--dep {
+  background: rgba(var(--blue-rgb),0.45); cursor: pointer;
+  transition: background 0.1s;
+}
+.dsm-cell--dep:hover { background: rgba(var(--blue-rgb),0.9); }
+.dsm-cell--pasta { width: 48px; height: 30px; font-weight: 700; color: var(--text); }
+.dsm-cell--pasta b { color: var(--text); }
+.dsm-table--pasta th, .dsm-table--pasta td { font-size: 12px; }
+
+/* Destaque de linha/coluna ao clicar num nome.
+   `hl`      = a linha que o usuário clicou.
+   `hl-cruz` = as perpendiculares que ela alcança (uma por dependência).
+   A diferença de intensidade é o que diz de onde a leitura parte.
+
+   ⚠️ As classes valem só para os CABEÇALHOS. O corpo do destaque são as faixas
+   logo abaixo — ver o comentário de `_matrizIndice` em mapas-matriz.js. */
+.dsm-col-header.hl, .dsm-row-header.hl { background: var(--surface-hover); color: var(--text); }
+.dsm-col-header.hl-cruz, .dsm-row-header.hl-cruz {
+  color: var(--text);
+  background: rgba(var(--blue-rgb),0.18);
+}
+
+/* A camada das faixas: atrás da tabela, e em layer próprio.
+   ⛔ Não tirar o `will-change`. Sem ele, pintar uma faixa manda repintar a
+   tabela inteira embaixo, e o clique volta de ~100ms para ~550ms em projeto
+   grande. Aqui ele pode ser permanente (ao contrário do `#dsm-pan-wrap`, que
+   escala e por isso liga e desliga por JS): esta camada nunca é escalada. */
+.dsm-camada-destaque {
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.dsm-faixa { position: absolute; }
+.dsm-faixa--eixo { background: rgba(var(--white-rgb),0.16); }
+.dsm-faixa--cruz { background: rgba(var(--blue-rgb),0.16); }
+
+/* ── Treemap ── */
+#treemap-container { min-height: 560px; }
+#treemap-container svg { display: block; }
+.treemap-rect { stroke: var(--bg); stroke-width: 1px; cursor: pointer; opacity: 0.85; transition: opacity 0.15s;
+  vector-effect: non-scaling-stroke; }
+/* O cursor anuncia que dá para arrastar (D61), como no Sunburst; enquanto
+   arrasta, quem manda é o do SVG, não a "mão de clique" do retângulo. */
+.treemap-svg { cursor: grab; }
+.treemap-svg.arrastando,
+.treemap-svg.arrastando .treemap-rect { cursor: grabbing; }
+.treemap-rect:hover { opacity: 1; }
+.treemap-label { fill: var(--text); font-size: 11px; pointer-events: none;
+  font-family: 'Cascadia Code', 'Consolas', monospace; }
+
+/* ── Sunburst ── */
+#sunburst-container { min-height: 560px; }
+#sunburst-container svg { display: block; }
+/* O cursor é o que anuncia que dá para arrastar — sem ele o pan fica escondido. */
+.sunburst-svg { cursor: grab; }
+.sunburst-svg.arrastando { cursor: grabbing; }
+/* A fatia tem cursor próprio (é clicável), mas enquanto arrasta quem manda é
+   o do SVG: o ponteiro não pode virar "mão de clique" no meio de um pan. */
+.sunburst-svg.arrastando .sunburst-arc { cursor: grabbing; }
+/* `non-scaling-stroke`: a borda fica com 1px NA TELA em qualquer zoom. Sem
+   isso ela crescia junto com o desenho, e ampliar para ver uma fatia fina
+   fazia justamente a borda engolir a fatia. */
+.sunburst-arc {
+  stroke: var(--bg); stroke-width: 1px; vector-effect: non-scaling-stroke;
+  cursor: pointer; opacity: 0.82; transition: opacity 0.12s;
+}
+/* O destaque precisa ser obvio: ampliado, as fatias sao parecidas e so a
+   opacidade subindo de 0,85 para 1 nao dizia onde estava o cursor. */
+.sunburst-arc:hover {
+  opacity: 1;
+  stroke: var(--text); stroke-width: 2px;
+  filter: brightness(1.35);
+}
+.sunburst-label { fill: var(--text); font-size: 10px; pointer-events: none; text-anchor: middle; }
+
+/* O arco sob o cursor, escrito no cabeçalho.
+   Substituiu a `.sunburst-center-label`, que ficava flutuando no miolo da
+   rosca: ela era ancorada na TELA e o desenho se move com o zoom/pan, então
+   bastava ampliar para o texto cair em cima dos arcos.
+   `min-height` reserva a linha para o cabeçalho não pular a cada hover. */
+.sunburst-hover {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-height: 1.35em;
+}
+
+/* ── Loading spinner dentro do container ── */
+.mapa-loading {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: var(--text-muted); font-size: 13px;
+}
+
+/* ── Painel de controles flutuante ── */
+.mapas-controls-panel {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 100;
+  background: rgba(var(--mapa-fundo-rgb), 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--white-rgb),0.09);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 200px;
+  box-shadow: 0 6px 24px rgba(var(--black-rgb),0.5);
+  pointer-events: all;
+}
+
+.mapas-ctrl-stat {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+  min-height: 14px;
+}
+
+.mapas-ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mapas-ctrl-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  /* "Profundidade" mede ~76px a 11px: com 68px e `nowrap` ele invadia o slider
+     ao lado, porque nao ha overflow escondido aqui. */
+  width: 84px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.mapas-ctrl-row input[type="range"] {
+  flex: 1;
+  height: 3px;
+  accent-color: var(--teal, var(--ciano-mapa));
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(var(--white-rgb),0.12);
+  border-radius: 2px;
+  outline: none;
+}
+.mapas-ctrl-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--teal, var(--ciano-mapa));
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(var(--ciano-mapa-rgb),0.5);
+}
+
+.mapas-ctrl-val {
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.mapas-ctrl-btn {
+  margin-top: 2px;
+  background: rgba(var(--white-rgb),0.07);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 11px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
+}
+.mapas-ctrl-btn:hover {
+  background: rgba(var(--white-rgb),0.13);
+  border-color: rgba(var(--white-rgb),0.2);
+}
+
+/* ── Toggle segmentado (Por arquivo/pasta, recortes, cor) ── */
+.mapa-toggle { display: inline-flex; gap: 4px; }
+.mapa-toggle-btn {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  color: var(--text-muted);
+  font-size: 12px; font-weight: 600; padding: 5px 11px;
+  border-radius: 6px; cursor: pointer;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+.mapa-toggle-btn:hover:not(:disabled) { color: var(--text); background: var(--surface-hover); }
+.mapa-toggle-btn.active {
+  color: var(--text); border-color: rgba(var(--white-rgb),0.3); background: var(--surface-hover);
+}
+.mapa-toggle-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Container rolável (telas sem zoom/pan próprio) */
+.mapa-container--scroll { overflow: auto; padding: 22px 24px; }
+
+/* ── Hotspots (barras horizontais) ── */
+/* ⚠️ A GRADE É UMA SÓ, do gráfico inteiro — não uma por linha.
+   Cada `.bar-row` era um grid próprio, com o rótulo em `1fr`: as três colunas
+   ficavam alinhadas entre si por acidente (metade da largura para cada), e o
+   rótulo tinha de ser alinhado à DIREITA para encostar na barra, deixando a
+   borda esquerda serrilhada.
+   Com a grade no `.bar-chart` e `display: contents` nas linhas, a coluna do
+   rótulo é `max-content`: ela mede o caminho MAIS LONGO da lista e todas as
+   barras começam logo depois dele. Assim o rótulo alinha à esquerda, e a barra
+   se acomoda sozinha quando os nomes são curtos ou longos.
+   O `minmax(0, max-content)` deixa a coluna encolher em tela estreita — aí o
+   `text-overflow` corta, em vez de a barra sumir. */
+.bar-chart {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(120px, 1fr) 56px 22px;
+  align-items: center;
+  gap: 10px 12px;
+  font-size: 12.5px;
+}
+.bar-row { display: contents; }
+.bar-label {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text-muted); text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bar-track { background: rgba(var(--white-rgb),0.06); border-radius: 5px; height: 16px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 5px; }
+.bar-fill--azul  { background: linear-gradient(90deg, var(--blue), var(--sky)); }
+.bar-fill--ambar { background: linear-gradient(90deg, var(--amber), var(--yellow-soft)); }
+.bar-count { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+.bar-copy {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; width: 22px; height: 22px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border-radius: 5px; flex-shrink: 0;
+  transition: color var(--t), background var(--t);
+}
+.bar-copy:hover { color: var(--text); background: rgba(var(--blue-rgb),0.12); }
+
+/* ── Dispersão (scatter) ── */
+.scatter-search { margin-bottom: 12px; }
+.scatter-search input {
+  width: 280px; max-width: 100%;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: 13px;
+}
+.scatter-row { display: flex; align-items: stretch; gap: 8px; }
+.scatter-main { flex: 1; min-width: 0; }
+.scatter-axis-y {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 11px; color: var(--text-muted); text-align: center; padding-right: 4px;
+}
+.scatter-axis-x { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+.scatter-plot {
+  position: relative; width: 100%; height: 340px;
+  background:
+    linear-gradient(rgba(var(--white-rgb),0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--white-rgb),0.06) 1px, transparent 1px);
+  background-size: 20% 25%;
+  border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 6px;
+  background-color: var(--surface-dark);
+}
+/* `pointer-events: auto` — este ponto já foi inerte ao mouse, e era o que
+   impedia o hover de existir. Onde dois rótulos se sobrepõem, quem está por
+   cima recebe o cursor: é exatamente o que se quer, porque é o que se vê. */
+.scatter-point { position: absolute; transform: translateX(-50%); text-align: center; pointer-events: auto; transition: opacity var(--t); }
+.scatter-point::before {
+  content: ''; display: block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sky); margin: 0 auto 4px;
+}
+.scatter-point span {
+  font-size: 11px; font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: var(--sky-light); white-space: nowrap;
+}
+.scatter-point--alerta::before { background: var(--coral); }
+.scatter-point--alerta span { color: var(--coral-light); }
+.scatter-point--dim { opacity: 0.15; }
+/* Apagado pelo HOVER, não pela busca. São duas classes porque são dois filtros
+   que convivem: sair do ponto tira só esta, e o que o usuário digitou continua
+   valendo. */
+.scatter-point--dim-hover { opacity: 0.15; }
+/* O ponto sob o cursor. Fundo próprio no rótulo porque o nome precisa ser lido
+   POR CIMA dos vizinhos — sem ele o texto se mistura com o que está atrás. */
+.scatter-point--foco { opacity: 1; z-index: 5; }
+.scatter-point--foco span {
+  font-weight: 600; color: var(--text);
+  background: var(--surface-dark); padding: 1px 5px; border-radius: 4px;
+  border: 1px solid rgba(var(--white-rgb),0.15);
+}
+
+/* ── Proporção (rosca) ── */
+/* A rosca ocupa uma aba inteira e estava desenhada como se fosse um widget de
+   canto: 340px num painel de 900+ e legenda em 13,5px. Cresceu junto — rosca,
+   furo, número do centro, legenda e marcadores —, porque aumentar só o círculo
+   deixaria a legenda parecendo nota de rodapé. */
+.donut-wrap { display: flex; align-items: center; gap: 56px; flex-wrap: wrap; }
+.donut { width: 460px; height: 460px; border-radius: 50%; position: relative; flex-shrink: 0; }
+.donut::after { content: ''; position: absolute; inset: 78px; border-radius: 50%; background: var(--surface-dark); }
+.donut-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 1; }
+.donut-center b { font-size: 58px; color: var(--text); line-height: 1.1; }
+.donut-center span { font-size: 17px; color: var(--text-muted); }
+.donut-legend { display: flex; flex-direction: column; gap: 11px; font-size: 16px; color: var(--text); }
+.donut-legend-item { display: flex; align-items: center; gap: 10px; }
+.donut-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+
+/* ── Painel (medidores radiais) ── */
+/* Sete medidores de cobertura. Eles encolheram para 132px quando passaram de
+   quatro para sete, com medo de não caberem — mas a aba é larga e os sete
+   entram numa fileira só com folga. Voltaram a crescer, e junto com eles o
+   número, o rótulo e a fração: um medidor grande com legenda de 11px fica
+   desequilibrado, e é a fração que diz a escala. */
+.gauge-row { display: flex; gap: 34px; flex-wrap: wrap; }
+.gauge-item { display: flex; flex-direction: column; align-items: center; gap: 13px; width: 200px; }
+.gauge {
+  width: 178px; height: 178px; border-radius: 50%; position: relative;
+  background: conic-gradient(var(--gc) calc(var(--gp) * 1%), rgba(var(--white-rgb),0.08) 0);
+}
+.gauge::after { content: ''; position: absolute; inset: 20px; border-radius: 50%; background: var(--surface-dark); }
+.gauge b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; font-size: 33px; color: var(--text); }
+.gauge--vazio b { color: var(--text-muted); }
+.gauge-label { font-size: 15px; color: var(--text-muted); text-align: center; line-height: 1.4; }
+/* "12 de 47" abaixo do rótulo: a porcentagem sozinha esconde a escala —
+   3 de 4 e 300 de 400 não pedem a mesma reação. */
+.gauge-sub {
+  font-size: 13.5px; color: var(--text-muted); opacity: 0.75; text-align: center;
+  margin-top: -5px; font-variant-numeric: tabular-nums;
+}

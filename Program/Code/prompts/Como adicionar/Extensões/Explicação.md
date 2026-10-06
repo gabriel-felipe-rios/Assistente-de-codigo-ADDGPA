@@ -1,0 +1,1 @@
+Uma extensão **muda o comportamento** do programa — liga e desliga sem reiniciar. O tipo é a categoria dela; uma extensão pode ser de mais de um tipo, ou de todos. O `extensao.json` diz os tipos e cada recurso que ela usa. Toda extensão ganha uma página em Configurações › Extensões, com as opções que ela tiver.

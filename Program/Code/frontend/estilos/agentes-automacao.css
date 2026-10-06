@@ -1,0 +1,286 @@
+/* ══════════════════════════════════════════════════════ AGENTES — AUTOMAÇÃO (Acionamentos) ══ */
+/* ── Este arquivo era 530 linhas, e virou dois ──────────────────────────────
+   Pelo teto de 500 da AMF, na ordem em que os blocos estavam:
+
+     agentes-automacao.css             os cartões e os botões da sub-aba
+     agentes-automacao-visualizar.css  o desenho da cadeia                   */
+
+/* ══════════════════════════════════════════════════════════
+   Sub-aba: Acionamentos
+══════════════════════════════════════════════════════════ */
+.ac-layout {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.ac-global-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+}
+.ac-botoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+  /* O motivo da trava (ver modulos/trava-ia.js) mora aqui dentro e é um item
+     de flex como os botões. Sem estas duas linhas ele disputaria a largura
+     com eles em vez de cair na linha de baixo. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+/* Altura da linha FIXA: "🗑️ Limpar dados gerados" e "⚡ Ativar o principal"
+   saíam com 29px e os dois sem emoji com 27px — o emoji vem de outra fonte,
+   mais alta, e com `line-height: normal` ele estica a linha do botão. Medido
+   com o CSS real: com 16px os quatro ficam com 28px. */
+.ac-botoes .btn { line-height: 16px; }
+.ac-botoes .trava-motivo {
+  flex-basis: 100%;
+  margin-top: 0;
+  text-align: right;
+}
+/* Separa visualmente da dupla "ligar/desligar" — é uma ação destrutiva, não
+   mais um jeito de configurar o acionamento. */
+.ac-botao-perigo { margin-right: 10px; }
+
+/* Botão de ligar ('Ativar o principal' ou 'Ativar tudo'), enquanto o ciclo que
+   ele disparou ainda está rodando: o usuário pode deixar essa aba minutos,
+   então o botão precisa continuar sinalizando "modo diferente do normal" mesmo
+   sem olhar pro status global. Fica no botão que DISPAROU, não num id fixo —
+   são dois botões que podem disparar um ciclo. */
+.ac-ciclo-rodando {
+  box-shadow: 0 0 0 2px rgba(var(--blue-rgb),0.9), 0 0 10px rgba(var(--blue-rgb),0.6);
+  animation: ac-pulse 1.2s ease-in-out infinite;
+}
+
+/* Legenda das bolinhas — mesma ideia da .vis-legenda da sub-aba Visualizar. */
+.ac-legenda {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.ac-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.ac-dot-idle    { background: rgba(var(--white-rgb),0.2); }
+.ac-dot-active  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.ac-dot-running { background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: ac-pulse 1.2s ease-in-out infinite; }
+/* Esperando OUTRA ABA DE PROJETO soltar a janela do LM Studio. Índigo e SEM
+   pulso: o pulso desta tela significa "está acontecendo aqui", e aqui não está
+   acontecendo nada — o trabalho é do outro projeto. Mesma cor do estado
+   bloqueado na sub-aba Visualizar. */
+.ac-dot-bloqueado { background: var(--indigo); box-shadow: 0 0 8px rgba(var(--indigo-rgb),0.7); }
+
+@keyframes ac-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.ac-global-label {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.ac-section {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid rgba(var(--white-rgb),0.07);
+  overflow: hidden;
+  /* Sem isto o flex espreme as seções para caber na altura da tela e o
+     overflow:hidden acima corta a última linha ao meio, em vez de rolar. */
+  flex-shrink: 0;
+}
+
+.ac-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 11px 18px 9px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+
+.ac-agent-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+}
+.ac-agent-row:last-child { border-bottom: none; }
+/* Espera e Detector não rodam sob demanda por aqui, então não têm o botão ⟳ —
+   este espaçador ocupa o slot dele para as colunas continuarem alinhadas com
+   as linhas das outras rotinas. */
+.ac-run-once-vazio {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 2.1em;
+  font-size: 13px;
+}
+
+.ac-toggle {
+  background: rgba(var(--white-rgb),0.08);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 82px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  transition: all 0.15s;
+}
+.ac-toggle:hover { background: rgba(var(--white-rgb),0.13); color: var(--text); }
+.ac-toggle.active {
+  background: rgba(var(--green-rgb),0.18);
+  border-color: rgba(var(--green-rgb),0.38);
+  color: var(--green);
+}
+/* O selo "Sempre" da base — não é interruptor, e por isso não tem :hover nem
+   cursor de clique.
+
+   ⚠️ ELE TAMBÉM TEM DOIS ESTADOS, e a primeira versão desta regra não tinha:
+   pintava teal SEMPRE, e aí o `.active` que `_acPintarBase()` liga e desliga
+   não mudava nada na tela. "Desativar tudo" apagava tudo por baixo e as três
+   linhas da base continuavam acesas, dizendo o contrário do que o programa
+   estava fazendo.
+
+   Apagado é o mesmo cinza de qualquer toggle desligado; aceso é teal, a cor da
+   seção da base, para as duas se lerem juntas. O que muda em relação aos
+   outros toggles é só que ninguém clica neste — quem o acende é ligar qualquer
+   rotina abaixo. */
+.ac-toggle.fixo { cursor: default; }
+.ac-toggle.fixo:hover {
+  background: rgba(var(--white-rgb),0.08);
+  color: var(--text-muted);
+}
+/* Três classes, e é de propósito: precisa vencer o `.ac-toggle.active` verde,
+   que tem duas. */
+.ac-toggle.fixo.active,
+.ac-toggle.fixo.active:hover {
+  background: rgba(var(--teal-rgb),0.16);
+  border-color: rgba(var(--teal-rgb),0.40);
+  color: var(--teal);
+}
+
+/* A BASE — Detector, Hashes e Sincronia. A moldura existe para separar o que
+   se escolhe do que é fundação: ligar qualquer rotina abaixo acende as três,
+   e sem a moldura isso lia como "três rotinas que ligaram sozinhas". */
+.ac-section-base {
+  border-color: rgba(var(--teal-rgb),0.28);
+  background:
+    linear-gradient(180deg, rgba(var(--teal-rgb),0.05), transparent 60%),
+    var(--surface);
+}
+.ac-section-base .ac-section-title {
+  color: var(--teal);
+  border-bottom-color: rgba(var(--teal-rgb),0.25);
+}
+
+.ac-agent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ac-agent-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+.ac-agent-icon { font-size: 15px; flex-shrink: 0; }
+
+.ac-agent-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.ac-dep-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding-left: 23px;
+}
+
+/* Agente que não rodou porque um pré-requisito dele não terminou. Âmbar, o
+   mesmo tom de alerta de `.st-alerta` (agentes-execucao.css): não é erro, é
+   trabalho que ficou faltando. */
+/* Dispensada NÃO é âmbar, e a diferença de cor é a informação.
+   Âmbar no projeto inteiro quer dizer "faltou alguma coisa" — e dispensada é o
+   contrário disso: o Detector olhou, não achou trabalho, e o ciclo seguiu. Se
+   as duas fossem âmbar, um ciclo perfeito sobre um projeto em dia pareceria um
+   ciclo cheio de pendências. */
+.ac-dep-hint-dispensado {
+  color: var(--teal);
+  font-style: normal;
+}
+.ac-dep-hint-pulado {
+  color: var(--amber);
+  font-style: normal;
+}
+/* Rotina que rodou e caiu (D28 d): a linha diz o motivo, no vermelho de erro do
+   `.agente-badge-error` (agentes-base.css). */
+.ac-dep-hint-erro {
+  color: var(--red);
+  font-style: normal;
+}
+
+.ac-last-run {
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.75;
+  margin-left: 8px;
+}
+
+.ac-agent-count {
+  font-size: 10px;
+  color: var(--accent, var(--sky));
+  font-family: 'Consolas', monospace;
+  margin-left: 8px;
+}
+
+.ac-run-once {
+  background: rgba(var(--white-rgb),0.08);
+  border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.ac-run-once:hover:not(:disabled) { background: rgba(var(--white-rgb),0.13); color: var(--text); }
+.ac-run-once:disabled { opacity: 0.4; cursor: default; }
+
+

@@ -1,0 +1,63 @@
+Preciso de uma EXTENSÃO para o meu assistente de código.
+
+Uma extensão é uma pasta dentro de Program/External/extensions/ que muda o
+comportamento do programa e liga e desliga sem reiniciar. Ela é de um ou mais
+TIPOS (a categoria: o que ela é capaz de fazer) e usa RECURSOS (as peças com
+que faz). Esta vai ser dos tipos que estão logo abaixo.
+
+REGRAS QUE VALEM PARA TODA EXTENSÃO
+
+1. Na raiz da pasta fica o extensao.json — é ele que faz a pasta ser uma
+   extensão; sem ele, a pasta é só uma categoria. Campos: "nome", "versao" (só
+   rótulo), "descricao" (uma ou duas frases: é o que aparece no topo da página
+   dela), "prefixo", "tipos" (números de 1 a 4, como texto: ["1", "3"]) e
+   "acrescenta" (cada tela, painel, comando, marca, reação, conteúdo, agente,
+   ferramenta e trecho de prompt que ela põe no programa — um objeto com
+   "recurso", "id" e o lugar).
+
+2. O "prefixo" é o dono: de 2 a 6 letras minúsculas, sem acento, diferente do
+   de toda outra extensão — e nunca xt, ext ou pb. Todo "id" da lista
+   "acrescenta" é {prefixo}.{nome} (um item cujo id não começa pelo prefixo NÃO
+   carrega). Todo seletor de CSS, id de elemento, função e global do window
+   também começa por ele — o frontend do programa não tem escopo de módulo, e um
+   nome solto sobrescreve outro em silêncio.
+
+3. A extensão só escreve dentro da própria pasta: o que ela gera vai em files/;
+   o que o usuário escolhe vai em config/preferencias.json, gravado pelo
+   programa. As opções que ela oferece são declaradas em config/tela.json
+   (cartões com campos do tipo texto, numero, interruptor ou escolha). Não
+   escreva tela de configurações própria nem interruptor de ligar e desligar:
+   toda extensão ganha uma página em Configurações › Extensões, e liga e desliga
+   só em Configurações › Programa › Extensões. Se ela LÊ uma pasta fora da
+   pasta de trabalho do projeto (uma pasta da raiz), declara em "le_fora".
+
+4. Não crie nada para o que o programa já configura sozinho (tema, preset de
+   modelo, preset de Acervo) — extensão acrescenta o que o programa não tem.
+
+5. Desligar devolve o programa exatamente ao que ele era, e não apaga nada.
+   O que o programa criou, ele desfaz; o que VOCÊ criou (global no window,
+   listener, setInterval, observer, elemento pendurado numa tela) você desfaz
+   no window.xtDesmontar_{slug}. Todo <style> leva data-xt = slug — é só por ele
+   que o programa o remove.
+
+6. Se ela tiver frontend, o frontend/index.js é um IIFE que define
+   window.xtMontar_{slug} de forma SÍNCRONA (o trabalho demorado vai num
+   _montar() assíncrono chamado de dentro dela). O slug e o caminho vêm de
+   document.currentScript.dataset — nunca escritos à mão —, e a pasta sai de
+   xtBaseUrl(caminho). Depois de todo await, confira uma flag "montada" antes de
+   tocar no DOM ou no window: o usuário pode desligar a extensão enquanto a
+   ponte responde.
+
+7. Se ela tiver backend, o backend/extensao.py é a porta: executar(payload), que
+   lê payload['acao'] e roteia; a tela chama pela ponte
+   window.pywebview.api.chamar_extensao(caminho, { acao: … }). O backend fica
+   importado enquanto ela está ligada e pode ter vários arquivos
+   (from . import irmao). Nunca importe o backend do programa, nunca abra
+   arquivo por caminho relativo, e nunca deixe uma exceção escapar sem nome.
+   As ações que começam por "xt." são do programa (xt.ferramenta, xt.prompt,
+   xt.envelope): nunca use esse começo numa ação sua.
+
+8. Uma extensão que quebra não pode derrubar o programa nem as outras: trate os
+   próprios erros, não trave a tela, e nada de alert(), confirm() ou prompt()
+   (use showToast). Cor só pelos tokens do programa (var(--blue)…), nunca
+   hexadecimal: são cinco temas, um deles claro.

@@ -1,0 +1,26 @@
+{
+  "nome": "Monoespaçada técnica",
+  "descricao": "Tudo monoespaçado, inclusive títulos e rótulos. Número alinha com número; a interface parece uma ferramenta.",
+  "instrucao": "Aplique só família, peso, proporção da escala e entrelinha. O tamanho-base do corpo e a densidade do espaçamento vêm do ESTILO, não daqui — uma tipografia nunca deve engordar um layout que o estilo definiu como denso.",
+  "tipografia": {
+    "familias": {
+      "titulo": "ui-monospace, \"JetBrains Mono\", Consolas, monospace",
+      "texto": "ui-monospace, \"JetBrains Mono\", Consolas, monospace",
+      "mono": "ui-monospace, \"JetBrains Mono\", Consolas, monospace"
+    },
+    "pesos": {
+      "titulo": 700,
+      "texto": 400,
+      "enfase": 700
+    },
+    "escala": {
+      "proporcao": 1.2,
+      "observacao": "Passo curto: a diferença entre níveis vem do peso e da caixa alta, não do tamanho."
+    },
+    "entrelinha": {
+      "titulo": 1.3,
+      "texto": 1.55,
+      "compacto": 1.4
+    }
+  }
+}

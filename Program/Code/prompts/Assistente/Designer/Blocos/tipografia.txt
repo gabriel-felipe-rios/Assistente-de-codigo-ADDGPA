@@ -1,0 +1,8 @@
+[TIPOGRAFIA] Aplique família, peso, proporção da escala e entrelinha exatamente como declarado abaixo.
+- Declare as famílias com a pilha de reserva COMPLETA, do arquivo, na ordem em que ela vem. Nunca dependa de fonte externa, arquivo baixado, `@import` ou `@font-face`: a tela abre sem rede.
+- O TAMANHO-BASE do corpo e a DENSIDADE do espaçamento continuam vindo do estilo de referência. Uma tipografia nunca engorda um layout que o estilo definiu como denso.
+- A proporção da escala é o passo entre um nível de título e o seguinte, aplicado sobre o tamanho-base do estilo: corpo × proporção = título menor, e assim por diante. Calcule os níveis e use os valores calculados — não escolha tamanhos "por parecer certo".
+- Peso: aplique os declarados, e só eles. Não crie um sexto peso nem use `font-weight` fora da lista.
+- Use a família mono declarada para número em tabela, código e identificador — e só para isso.
+- Todo número que se compara em coluna (valores, datas, percentuais, contadores) leva `font-variant-numeric: tabular-nums`. Sem isso a coluna dança de linha em linha.
+- Antes de terminar, confira: os tamanhos que você usou saem todos da escala declarada?

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Canvas infinito -->
+<!-- Superfície com grade de pontos, sem bordas -> controles flutuando por cima, sem ocupar layout -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Canvas infinito</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{position:relative;overflow:hidden}
+.canvas{position:absolute;inset:0;background-color:var(--fundo);
+  background-image:radial-gradient(var(--superficie-hover) 1px, transparent 1px);
+  background-size:22px 22px}
+.no{position:absolute;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;padding:9px 11px;width:158px;display:flex;flex-direction:column;gap:3px}
+.no .t{font-size:11.5px;font-weight:700}
+.no .s{color:var(--texto-secundario);font-size:10.5px}
+.no.sel{border-color:var(--primaria);box-shadow:0 0 0 3px color-mix(in srgb,var(--primaria) 25%,transparent)}
+.fio{position:absolute;height:2px;background:var(--texto-secundario);opacity:.45;transform-origin:left center}
+.flut{position:absolute;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;box-shadow:0 8px 22px rgba(0,0,0,.4);display:flex;align-items:center;gap:5px;padding:6px 8px}
+.fb{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--texto-secundario);font-size:13px}
+.fb.on{background:var(--primaria);color:var(--fundo)}
+.zoom{font-size:11px;color:var(--texto-secundario);padding:0 4px}
+</style></head><body>
+<div class="canvas">
+  <div class="fio" style="left:174px;top:70px;width:120px"></div>
+  <div class="fio" style="left:174px;top:150px;width:120px;transform:rotate(9deg)"></div>
+  <div class="no" style="left:16px;top:52px"><span class="t">Entrada do formulário</span><span class="s">Nome, e-mail e telefone</span></div>
+  <div class="no sel" style="left:296px;top:44px"><span class="t">Validação</span><span class="s">Confere formato e duplicidade</span></div>
+  <div class="no" style="left:296px;top:150px"><span class="t">Recusa</span><span class="s">Devolve com mensagem</span></div>
+  <div class="no" style="left:520px;top:96px"><span class="t">Gravar no banco</span><span class="s">Cria o cadastro e responde</span></div>
+</div>
+<div class="flut" style="left:50%;bottom:18px;transform:translateX(-50%)">
+  <span class="fb on">↖</span><span class="fb">✋</span><span class="fb">▭</span><span class="fb">↗</span>
+  <span style="width:1px;height:18px;background:var(--superficie-hover)"></span>
+  <span class="fb">−</span><span class="zoom">80%</span><span class="fb">+</span>
+</div>
+<div class="flut" style="right:16px;top:16px;flex-direction:column;align-items:stretch;width:150px">
+  <div class="rot">Mapa</div>
+  <div style="height:70px;background:var(--superficie-escura);border-radius:6px;position:relative">
+    <span style="position:absolute;left:12px;top:14px;width:22px;height:11px;background:var(--texto-secundario);opacity:.5;border-radius:2px"></span>
+    <span style="position:absolute;left:56px;top:11px;width:22px;height:11px;background:var(--primaria);border-radius:2px"></span>
+    <span style="position:absolute;left:56px;top:38px;width:22px;height:11px;background:var(--texto-secundario);opacity:.5;border-radius:2px"></span>
+    <span style="position:absolute;left:100px;top:26px;width:22px;height:11px;background:var(--texto-secundario);opacity:.5;border-radius:2px"></span>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,14 @@
+{
+  "nome": "Plano",
+  "descricao": "Nenhum material: cor chapada, sem sombra, sem brilho, sem borda além do estritamente necessário. A ausência é a escolha.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "qualquer elemento",
+    "interfaces densas",
+    "telas de trabalho de uso longo"
+  ],
+  "nao_use_em": [
+    "nada — mas note que 'Plano' anula qualquer outra textura escolhida junto"
+  ],
+  "css": "background: var(--superficie);\nborder: 1px solid var(--superficie-hover);\nbox-shadow: none;"
+}

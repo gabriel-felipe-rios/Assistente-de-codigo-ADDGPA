@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Abas horizontais -->
+<!-- Topbar -> barra de abas -> sidebar esquerda + area central + painel direito -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Abas horizontais</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:38px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+.marca{font-weight:700;color:var(--primaria);font-size:12.5px}
+.tabbar{height:32px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;gap:2px;align-items:flex-end;padding:0 12px;flex-shrink:0}
+.tab{background:var(--superficie);border-radius:5px 5px 0 0;padding:6px 14px;font-size:11.5px;color:var(--texto-secundario)}
+.tab.on{background:var(--superficie-hover);color:var(--texto);border-bottom:2px solid var(--primaria)}
+.main{display:flex;flex:1;min-height:0}
+.sidebar{width:190px;background:var(--superficie);border-right:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;gap:3px;padding:10px 8px}
+.sitem{padding:6px 9px;border-radius:5px;color:var(--texto-secundario)}
+.sitem.on{background:var(--superficie-hover);color:var(--texto);border-left:2px solid var(--primaria)}
+.center{flex:1;min-width:0;display:flex;flex-direction:column;padding:14px;gap:9px}
+.h1{font-size:16px;font-weight:700}
+.linha{color:var(--texto-secundario)}
+.espaco{flex:1}
+.campo{height:34px;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:6px;display:flex;align-items:center;padding:0 10px;color:var(--texto-secundario)}
+.right{width:210px;background:var(--superficie);border-left:1px solid var(--superficie-hover);flex-shrink:0;padding:10px;display:flex;flex-direction:column;gap:8px}
+.rcard{background:var(--superficie-hover);border-radius:6px;padding:8px 9px}
+.rcard b{display:block;font-size:11.5px}
+.rcard span{color:var(--texto-secundario);font-size:11px}
+</style></head><body>
+<div class="topbar"><span class="marca">Produto</span><button class="bt">Salvar</button></div>
+<div class="tabbar"><div class="tab on">Visão geral</div><div class="tab">Relatórios</div><div class="tab">Configurações</div></div>
+<div class="main">
+  <div class="sidebar">
+    <div class="rot" style="padding:2px 9px 6px">Navegação</div>
+    <div class="sitem on">Painel</div><div class="sitem">Pedidos</div><div class="sitem">Clientes</div>
+    <div class="sitem">Produtos</div><div class="sitem">Equipe</div>
+  </div>
+  <div class="center">
+    <div class="rot">Conteúdo</div>
+    <div class="h1">Visão geral de agosto</div>
+    <div class="linha">Resumo do período selecionado, com os números consolidados do mês.</div>
+    <div class="linha">Comparação com o mês anterior e variação por categoria.</div>
+    <div class="espaco"></div>
+    <div class="campo">Escreva um comentário…</div>
+  </div>
+  <div class="right">
+    <div class="rot">Detalhes</div>
+    <div class="rcard"><b>Status</b><span>Publicado</span></div>
+    <div class="rcard"><b>Responsável</b><span>Equipe de vendas</span></div>
+    <div class="rcard"><b>Atualizado</b><span>há 3 horas</span></div>
+    <button class="bt sec">Exportar</button>
+  </div>
+</div>
+</body></html>

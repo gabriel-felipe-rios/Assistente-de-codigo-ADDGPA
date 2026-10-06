@@ -1,0 +1,274 @@
+/* ═══ ABA: TRABALHOS ═══════════════════════════════════════════════════════
+   Quadro (seis colunas) e Configuração.
+
+   ⚠️ A ALTURA VEM DE FORA, e é por isso que nada aqui fixa `height`. A cadeia
+   já existe e não se repete: `.tab-content` é `flex:1; flex-direction:column;
+   overflow:hidden` (navegacao.css), e `.agentes-subtab-content.active` herda o
+   mesmo papel. Quem escreve `height:100%` num descendente quebra a cadeia e
+   ganha um painel que não rola — o defeito que custou quatro rodadas de
+   discussão nesta obra.
+
+   As cores dos status saem de `:root` do tema. Nenhuma cor literal aqui:
+   trocar de tema tem que trocar o Quadro junto.                             */
+
+/* ── Este arquivo era 1.200 linhas, e virou nove ────────────────────────────
+   Pelo teto de 500 da AMF, que é obrigatório. Cada um responde uma pergunta,
+   e a ORDEM DOS @import em `style.css` reproduz exatamente a ordem em que os
+   blocos estavam aqui — porque em CSS a ordem É a regra de desempate:
+
+     trabalhos.css                     o Quadro e a Configuração
+     trabalhos-oficina.css             o palco, os fios, os grupos, a gaveta
+     trabalhos-oficina-nos.css         os nós, o terminal e a nota
+     trabalhos-fluxo.css               a sub-aba Fluxo
+     trabalhos-medidas.css             Linha do tempo e Métricas
+     trabalhos-agentes.css             a área Agentes
+     trabalhos-oficina-edicao.css      alças, pega, edição e popovers
+     trabalhos-agentes-acoes.css       as ações por item (redefine .ag-combo)
+     trabalhos-oficina-anotacoes.css   o nó de anotações do agente
+
+   ⚠️ NENHUM BLOCO MUDOU DE POSIÇÃO RELATIVA. Reordenar os @import é reordenar
+   a cascata — `trabalhos-agentes-acoes.css` depende de vir depois de
+   `trabalhos-agentes.css`, e é o único par em que isso hoje importa.       */
+
+/* ── O esqueleto do Quadro ── */
+.tr-layout { display: flex; flex: 1; min-height: 0; }
+
+.tr-lado {
+  width: 232px; flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: 1px solid rgba(var(--white-rgb), .08); min-height: 0;
+}
+.tr-lado-topo { padding: 14px; border-bottom: 1px solid rgba(var(--white-rgb), .07); }
+.tr-lado-lista { flex: 1; overflow-y: auto; padding: 10px 0; min-height: 0; }
+.tr-lado-sec {
+  padding: 12px 14px 5px; font-size: 10.5px; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); opacity: .65;
+}
+.tr-lado-item {
+  padding: 6px 14px; font-size: 12.5px; cursor: pointer; display: flex;
+  align-items: center; gap: 8px; color: var(--text-muted);
+  transition: background var(--t), color var(--t);
+}
+.tr-lado-item:hover { background: rgba(var(--white-rgb), .05); color: var(--text); }
+.tr-lado-item.on { background: rgba(var(--blue-rgb), .16); color: var(--text); }
+.tr-lado-n { margin-left: auto; font-size: 11px; opacity: .7; }
+.tr-lado-pe {
+  padding: 12px 14px; border-top: 1px solid rgba(var(--white-rgb), .07);
+  font-size: 12px; color: var(--text-muted);
+}
+.tr-alerta { color: var(--amber); }
+
+.tr-principal { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+.tr-cabecalho {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; padding: 18px 22px 14px;
+}
+.tr-cabecalho h2 { font-size: 20px; font-weight: 700; }
+
+/* ⚠️ DENTRO DE UM `.screen-body` O CABEÇALHO NÃO TEM RECUO PRÓPRIO — senão
+   ele soma duas vezes. Os 18/22/14 px acima existem para o Quadro, que põe o
+   cabeçalho direto no painel, sem casca nenhuma. Linha do tempo, Fluxo,
+   Métricas e Configuração o embrulham num `.screen-body`, que JÁ traz
+   `padding: 28px 32px` e `gap: 24px`: o título caía 46 px abaixo da barra de
+   sub-abas e 54 px da esquerda, e sobrava um vazio grande entre ele e o
+   primeiro cartão. O espaçamento passa a ser um só, o da casca. */
+.screen-body > .tr-cabecalho { padding: 0; }
+.tr-cab-botoes { display: flex; gap: 8px; }
+.tr-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.tr-mono { font-family: 'Consolas', monospace; font-size: 12px; }
+
+/* ── As seis colunas ── */
+.tr-board {
+  flex: 1; display: flex; gap: 12px; padding: 0 22px 18px;
+  overflow-x: auto; overflow-y: hidden; min-height: 0;
+}
+.tr-col {
+  width: 258px; flex-shrink: 0; display: flex; flex-direction: column;
+  background: rgba(var(--black-rgb), .16); border-radius: var(--radius);
+  border: 1px solid transparent; min-height: 0;
+  transition: border-color var(--t), background var(--t);
+}
+/* A coluna sob o cartão arrastado. Só ela muda — piscar todas seria ruído. */
+.tr-col.alvo { border-color: rgba(var(--blue-rgb), .55); background: rgba(var(--blue-rgb), .08); }
+.tr-col-h {
+  padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(var(--white-rgb), .07);
+}
+.tr-col-t { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; }
+.tr-col-n { font-size: 11px; color: var(--text-muted); }
+.tr-col-corpo { flex: 1; overflow-y: auto; padding: 9px; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+
+/* A bolinha de status da coluna. A MESMA legenda é reaproveitada pela Linha
+   do tempo e pelo Fluxo — duas legendas para os mesmos estados seria o
+   caminho mais curto para o usuário achar que são coisas diferentes. */
+.tr-st { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.tr-st-neutro   { background: var(--cinza); }
+.tr-st-azul     { background: var(--blue); }
+.tr-st-alerta   { background: var(--amber); }
+.tr-st-verde    { background: var(--green); }
+.tr-st-vermelho { background: var(--red); }
+.tr-st-cinza    { background: var(--cinza-escuro); }
+
+/* ⚠️ O MESMO PREFIXO SERVE A DUAS LISTAS, e elas não se misturam: acima estão
+   as cores das COLUNAS do Quadro (`COLUNAS_DO_QUADRO[].cor`), abaixo as dos
+   ESTADOS DE TERMINAL (`ESTADOS_DE_TERMINAL[].cor`), que a Oficina, a Linha do
+   tempo e as Métricas usam. Os nomes não colidem, e cada cor sai da variável
+   que o catálogo declara — nunca de um literal escolhido aqui.
+
+   `aguardando` é o estado que a Fase 3 passou a produzir: um terminal com
+   mensagem guardada, esperando a dependência dele entregar. Ele é CINZA e não
+   âmbar de propósito — âmbar é "parou pra perguntar", que pede ação do
+   usuário; aguardar não pede nada, sai sozinho. Duas esperas com prazos
+   diferentes não dividem a cor. */
+.tr-st-parado     { background: var(--cinza-escuro); }
+.tr-st-fazendo    { background: var(--blue); }
+.tr-st-entregue   { background: var(--green); }
+.tr-st-aguardando { background: var(--cinza); }
+.tr-st-perguntou  { background: var(--amber); }
+.tr-st-falhou     { background: var(--red); }
+
+/* ── Agrupamento por pasta, dentro da coluna ── */
+.tr-grupo {
+  border: 1px dashed rgba(var(--white-rgb), .12); border-radius: var(--radius);
+  padding: 7px; display: flex; flex-direction: column; gap: 7px;
+}
+.tr-grupo-h { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+/* ── O cartão ── */
+.tr-cartao {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), .09);
+  border-radius: var(--radius); padding: 10px; cursor: grab;
+  transition: border-color var(--t), transform var(--t), opacity var(--t);
+}
+.tr-cartao:hover { border-color: rgba(var(--white-rgb), .2); }
+.tr-cartao.arrastando { opacity: .5; cursor: grabbing; transform: scale(.98); }
+.tr-cartao-t { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.tr-cartao-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.tr-cartao-resumo { font-size: 11.5px; color: var(--text-muted); margin-top: 7px; line-height: 1.5; }
+.tr-cartao-pe {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 9px; font-size: 10.5px; color: var(--text-muted);
+}
+.tr-id { font-family: 'Consolas', monospace; opacity: .7; }
+
+/* Editar e excluir, no rodapé do cartão. Discretos por padrão e visíveis no
+   hover do cartão: são ações do usuário sobre um cartão que ele já está
+   olhando, não botões que precisam disputar atenção no meio de uma coluna. */
+.tr-cartao-acoes { display: flex; gap: 8px; opacity: 0; transition: opacity .12s; }
+.tr-cartao:hover .tr-cartao-acoes { opacity: 1; }
+.tr-acao {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: inherit; font-size: 10.5px; color: var(--sky);
+}
+.tr-acao:hover { text-decoration: underline; }
+.tr-acao-perigo { color: var(--red); }
+
+.tr-tag {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(var(--white-rgb), .09); color: var(--text-muted);
+}
+.tr-tag-briefing    { background: rgba(var(--purple-rgb), .22); color: var(--violeta-light); }
+.tr-tag-arquivos    { background: rgba(var(--teal-rgb), .2);    color: var(--mint); }
+.tr-tag-dependencia { background: rgba(var(--amber-rgb), .2);   color: var(--yellow-soft); }
+
+/* O motivo do Portão fica em destaque: um cartão parado sem o porquê visível
+   obriga o usuário a abrir para descobrir o que houve. */
+.tr-portao {
+  margin-top: 8px; padding: 7px 9px; border-radius: 5px; font-size: 11.5px;
+  background: rgba(var(--amber-rgb), .14); border-left: 2px solid var(--amber);
+  color: var(--text); line-height: 1.5;
+}
+
+/* ── As tarefas do cartão ── */
+.tr-tarefas {
+  margin-top: 9px; padding-top: 8px;
+  border-top: 1px solid rgba(var(--white-rgb), .07);
+}
+.tr-tarefas-h { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; opacity: .8; }
+.tr-tarefa {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--text-muted); padding: 2px 0;
+}
+.tr-tarefa i {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid var(--text-muted);
+}
+.tr-tarefa-fazendo         { color: var(--text); }
+.tr-tarefa-fazendo i       { background: var(--blue);  border-color: var(--blue); }
+.tr-tarefa-feita           { opacity: .6; text-decoration: line-through; }
+.tr-tarefa-feita i         { background: var(--green); border-color: var(--green); }
+
+/* ── O briefing sob demanda ── */
+.tr-briefing-link {
+  margin-top: 8px; font-size: 11px; color: var(--sky); cursor: pointer;
+}
+.tr-briefing-link:hover { text-decoration: underline; }
+.tr-briefing {
+  margin-top: 7px; padding: 9px; border-radius: 5px; font-size: 11.5px;
+  background: rgba(var(--black-rgb), .22); color: var(--text-muted);
+  line-height: 1.6; white-space: pre-wrap; max-height: 260px; overflow-y: auto;
+}
+
+/* ── O modal de nova atividade ── */
+.tr-modal {
+  position: fixed; inset: 0; z-index: 100; display: flex;
+  align-items: center; justify-content: center;
+  background: rgba(var(--black-rgb), .55); backdrop-filter: blur(3px);
+}
+.tr-modal.hidden { display: none; }
+.tr-modal-caixa {
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb), .12);
+  border-radius: var(--radius); padding: 20px; width: 520px; max-width: 92%;
+  max-height: 88%; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+}
+.tr-modal-h { font-size: 16px; font-weight: 700; }
+.tr-modal-pe { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.tr-campo { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; }
+.tr-campo input, .tr-campo textarea {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb), .12);
+  border-radius: 5px; color: var(--text); padding: 8px 10px;
+  font-family: inherit; font-size: 12.5px; font-weight: 400; outline: none;
+}
+.tr-campo input:focus, .tr-campo textarea:focus { border-color: var(--blue); }
+.tr-campo textarea { resize: vertical; line-height: 1.6; }
+
+/* ── Configuração ── */
+.tr-paineis { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+.tr-painel {
+  flex: 1; min-width: 320px; background: rgba(var(--black-rgb), .16);
+  border: 1px solid rgba(var(--white-rgb), .08); border-radius: var(--radius); padding: 15px;
+}
+.tr-painel-perigo { border-color: rgba(var(--red-rgb), .38); }
+.tr-painel h3 { font-size: 13.5px; font-weight: 700; margin-bottom: 11px; }
+.tr-h3-perigo { color: var(--red); }
+.tr-dica { font-size: 10.5px; font-weight: 400; color: var(--text-muted); opacity: .8; margin-left: 5px; }
+
+.tr-proib, .tr-linha {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 7px 0; border-bottom: 1px solid rgba(var(--white-rgb), .06); font-size: 12.5px;
+}
+.tr-proib:last-of-type, .tr-linha:last-of-type { border-bottom: none; }
+.tr-cmd { font-family: 'Consolas', monospace; font-size: 10.5px; color: var(--text-muted); opacity: .8; }
+.tr-dim { color: var(--text-muted); font-size: 12px; }
+.tr-grave { color: var(--red); font-size: 12px; }
+.tr-selo-bloq {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+  background: rgba(var(--red-rgb), .18); color: var(--red);
+}
+/* O cadeado do gatilho que não desliga. É um SELO, e não um interruptor
+   desabilitado, de propósito: interruptor cinza convida a clique, e o usuário
+   fica tentando ligar o que nunca esteve no controle dele. */
+.tr-selo-trava { font-size: 13px; cursor: help; opacity: .75; }
+.tr-num {
+  width: 58px; text-align: center; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), .12); border-radius: 5px;
+  color: var(--text); padding: 4px; font-family: inherit; font-size: 12.5px; outline: none;
+}
+.tr-num:focus { border-color: var(--blue); }
+.tr-sw { width: 15px; height: 15px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+
+.tr-nota {
+  font-size: 11.5px; color: var(--text-muted); line-height: 1.7; margin: 11px 0 0;
+}
+.tr-carregando, .tr-erro { font-size: 12.5px; color: var(--text-muted); padding: 20px; }
+.tr-erro { color: var(--red); }

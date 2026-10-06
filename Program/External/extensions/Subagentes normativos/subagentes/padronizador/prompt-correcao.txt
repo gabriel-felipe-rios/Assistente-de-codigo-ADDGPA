@@ -1,0 +1,19 @@
+Sua última resposta continha uma chamada de ferramenta com formato inválido e não pôde ser executada.
+
+ERRO DETECTADO:
+{descricao_erro}
+
+O formato correto é:
+{"ferramentas": [{"nome": "ler_base", "parametros": {"caminho": "<caminho do arquivo>"}}]}
+
+Ferramentas válidas: ler_base
+- ler_base tem um único parâmetro, "caminho": o caminho do arquivo dentro da base
+  "Padrões de interface", com a extensão e a subpasta quando houver.
+  Ex.: "Identidade visual.md" ou "Componentes/Botões.md".
+
+Regras do formato:
+- A chave externa deve ser exatamente "ferramentas" (lista).
+- Cada item deve ter exatamente as chaves "nome" e "parametros" ("parametros" é um objeto).
+- Máximo {max_ferramentas_rodada} ferramentas na lista.
+
+Tente novamente. Responda SOMENTE com o JSON da chamada — sem texto antes ou depois, sem markdown, sem ```.

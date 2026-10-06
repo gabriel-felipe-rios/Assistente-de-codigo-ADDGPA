@@ -1,0 +1,39 @@
+Preciso de uma TEXTURA (material de superfície) para a biblioteca de aparência
+do meu assistente de código.
+
+QUE ACABAMENTO: [descreva aqui — ex.: vidro fosco, papel, metal escovado]
+
+Entregue UM arquivo .json com esta forma exata:
+
+  {
+    "nome": "<Nome da textura>",
+    "descricao": "<uma frase dizendo o acabamento>",
+    "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+    "aplica_em": [],
+    "nao_use_em": [],
+    "css": ""
+  }
+
+REGRAS DO FORMATO
+
+1. A TEXTURA NÃO DECIDE COR. Ela é acabamento: sombra, brilho, grão, desfoque,
+   borda. A cor continua vindo da paleta. No "css", use as variáveis da paleta
+   (var(--superficie), var(--fundo)...) em vez de hexadecimal, sempre que a
+   regra precisar de cor.
+
+2. "aplica_em" e "nao_use_em" são listas de elementos, escritas em português
+   comum — por exemplo ["cards", "modais"] e ["fundo da página", "texto"].
+   As duas importam: sem o "nao_use_em" o modelo espalha o material pela
+   interface inteira, que é o defeito mais comum deste tipo de item.
+
+3. "css" é um bloco de CSS de verdade, pronto para colar, com as propriedades do
+   acabamento. Escreva-o como uma string única com quebras de linha (\n).
+
+4. O campo "descricao" é o que aparece no cartão da tela. Uma frase.
+
+5. A tag NÃO vai dentro do arquivo. Ela mora só no tags.json, na raiz de
+   Arquivos/Estilos e cores/, e eu atribuo pela própria tela depois. Não crie
+   campo "tags" no JSON nem meta no HTML.
+
+ONDE VOU SALVAR
+  Arquivos/Estilos e cores/Texturas e materiais/<Nome da textura>.json

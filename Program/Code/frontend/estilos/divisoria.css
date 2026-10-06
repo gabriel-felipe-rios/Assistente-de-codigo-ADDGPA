@@ -1,0 +1,59 @@
+/* ══════════════════════════════ COMPONENTE: DIVISÓRIA ══
+   A barra que se arrasta para repartir dois painéis lado a lado. Nasceu na aba
+   Editor (a árvore × o código, e o painel esquerdo × o direito da tela
+   dividida) e já nasce compartilhada: é a primeira do programa, e a próxima
+   tela que precisar de painéis redimensionáveis não deve escrever a segunda.
+
+   A pega é MAIOR que a linha visível — 7px de área contra 1px de traço. Uma
+   divisória com a largura do que se vê exige mira, e o alvo de arraste de um
+   ponteiro precisa de folga. É a mesma razão pela qual toda janela de sistema
+   tem borda de arraste invisível maior que a borda desenhada. */
+
+.divisoria {
+  flex: 0 0 7px;
+  position: relative;
+  cursor: col-resize;
+  background: transparent;
+  /* Não encolhe quando os painéis vizinhos disputam espaço: uma divisória de
+     3px em vez de 7px vira um alvo que não se acerta. */
+  flex-shrink: 0;
+  user-select: none;
+  touch-action: none;
+}
+
+/* O traço visível, centrado na pega. */
+.divisoria::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 1px;
+  background: rgba(var(--white-rgb), 0.08);
+  transition: background var(--t);
+}
+.divisoria:hover::before,
+.divisoria.divisoria--arrastando::before {
+  background: var(--blue);
+  /* Alarga só o traço no hover, nunca a pega: mudar a largura da pega no hover
+     moveria o conteúdo dos dois lados enquanto o ponteiro passa por cima. */
+  left: 2px;
+  width: 3px;
+}
+
+/* Enquanto arrasta, o cursor vale para a janela inteira e nada seleciona —
+   sem isto, passar por cima do código durante o arraste seleciona texto. */
+body.divisoria-arrastando,
+body.divisoria-arrastando * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+/* Painel retraído. É `display: none` de verdade, e não largura 0: com largura
+   0 o painel continua no fluxo, a divisória continua arrastável e sobra uma
+   borda fantasma na tela que não é nada. */
+.divisoria-retraido { display: none !important; }
+
+/* A divisória de um painel retraído sai junto — senão fica uma pega solta
+   arrastando um painel que não está lá. */
+.divisoria--inerte { display: none !important; }

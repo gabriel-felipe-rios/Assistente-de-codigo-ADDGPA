@@ -1,0 +1,81 @@
+{
+  "nome": "Dark Blue",
+  "descricao": "Paleta atual do Assistente de Código. Azul petróleo escuro com acentos em azul, verde, vermelho e roxo.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.06). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#2C3E50",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#34495E",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#3D566E",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#1A252F",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#FFFFFF",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#BDC3C7",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#3498DB",
+      "apelido": "azul",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#2980B9",
+      "apelido": "azul (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#2ECC71",
+      "apelido": "verde",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#27AE60",
+      "apelido": "verde (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#E74C3C",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#C0392B",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#9B59B6",
+      "apelido": "roxo",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#8E44AD",
+      "apelido": "roxo (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#1ABC9C",
+      "apelido": "teal",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#16A085",
+      "apelido": "teal (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

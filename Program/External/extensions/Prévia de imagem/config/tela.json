@@ -1,0 +1,20 @@
+{
+  "cartoes": [
+    {
+      "titulo": "As duas peças",
+      "campos": [
+        { "chave": "marcar_no_codigo", "rotulo": "Sublinhar no Editor todo caminho que parece de imagem", "tipo": "interruptor", "padrao": true,
+          "nota": "A marca não confere se o arquivo existe — quem confere é a modal, quando você pede." },
+        { "chave": "teto_na_modal", "rotulo": "Quantas imagens a modal desenha, no máximo", "tipo": "numero", "padrao": 30, "min": 5, "max": 200, "passo": 5,
+          "nota": "Cada imagem é uma ida ao disco, em série. Acima disto a modal mostra só as primeiras." }
+      ]
+    },
+    {
+      "titulo": "O que conta como imagem",
+      "campos": [
+        { "chave": "extensoes_extras", "rotulo": "Outras extensões, separadas por vírgula", "tipo": "texto", "padrao": "",
+          "nota": "Além de png, jpg, jpeg, gif, webp, bmp, ico, svg e avif — que são as que o Editor sabe desenhar. Ex.: tif, heic" }
+      ]
+    }
+  ]
+}

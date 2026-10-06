@@ -1,0 +1,45 @@
+{
+  "nome": "Outros projetos",
+  "versao": "1",
+  "descricao": "Consulta o código e a documentação de outro projeto cadastrado, sem sair deste.",
+  "tipo": "local",
+  "comando": "python",
+  "args": ["${PASTA}/servidor.py"],
+  "env": {},
+  "pasta_do_programa": "",
+  "configuracao": {
+    "lista_de_ligadas": { "como": "argumento", "nome": "--enabled" },
+    "campos": [
+      {
+        "chave": "projetos",
+        "tipo": "varios",
+        "argumento": "--projetos",
+        "rotulo": "Projetos que este MCP pode consultar",
+        "opcoes_de": "projetos",
+        "ajuda": "Nada marcado libera NADA — e é o padrão certo: liberar tudo por omissão daria ao assistente externo acesso a projetos que você nunca pensou em abrir. A escolha vale só neste projeto; em outro você marca outros."
+      }
+    ],
+    "ferramentas": [
+      { "nome": "projetos", "descricao": "Os projetos que este servidor pode consultar. Chame esta primeiro." },
+      { "nome": "onde_esta", "descricao": "Onde um símbolo é definido: arquivo + linha." },
+      { "nome": "eu_uso", "descricao": "De quem um arquivo depende — o que tem de vir junto." },
+      { "nome": "me_usam", "descricao": "Quem quebra se você mudar a interface dele." },
+      { "nome": "relacoes_uso", "descricao": "A cascata de impacto: só o que quebra de fato." },
+      { "nome": "indice_navegacao", "descricao": "A árvore do projeto, uma frase por arquivo." },
+      { "nome": "grafo_imports", "descricao": "Quem importa quem, por pasta." },
+      { "nome": "comentarios", "descricao": "A prosa que o autor escreveu dentro do arquivo." },
+      { "nome": "bibliotecas", "descricao": "O que o projeto já tem de terceiros." },
+      { "nome": "doc_tecnica", "descricao": "Os símbolos de um arquivo: assinatura, linha e descrição." },
+      { "nome": "resumo_pastas", "descricao": "O papel de cada pasta." },
+      { "nome": "pipeline", "descricao": "A ordem em que as coisas rodam." },
+      { "nome": "busca_semantica", "descricao": "Acha candidatos por descrição (busca literal aqui)." },
+      { "nome": "glossario", "descricao": "O que um termo próprio daquele projeto quer dizer." },
+      { "nome": "duplicados", "descricao": "Funções iguais ou quase, inclusive copiadas e editadas." },
+      { "nome": "arquivos_grandes", "descricao": "O que não cabe numa leitura só." },
+      { "nome": "io", "descricao": "O que um arquivo lê e escreve em disco." },
+      { "nome": "grep", "descricao": "Busca no código daquele projeto, dentro do escopo dele." },
+      { "nome": "ler_arquivo", "descricao": "Lê um arquivo daquele projeto, numerado." },
+      { "nome": "listar_pasta", "descricao": "Lista uma pasta daquele projeto, sem recursão." }
+    ]
+  }
+}

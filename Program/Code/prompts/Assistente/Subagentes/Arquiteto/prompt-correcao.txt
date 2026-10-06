@@ -1,0 +1,18 @@
+Sua última resposta continha uma chamada de ferramenta com formato inválido e não pôde ser executada.
+
+ERRO DETECTADO:
+{descricao_erro}
+
+O formato correto é:
+{"ferramentas": [{"nome": "<nome>", "parametros": {<parametros>}}]}
+
+Ferramentas válidas: ler_pipeline, ler_resumo_pastas, ler_arquivo
+- ler_pipeline aceita os parâmetros opcionais "parte" (o id de um nível: "A1", "B1" ou "C1") e "filtro" (um caminho de arquivo). Com {} em "parametros", devolve a Visão geral.
+- ler_arquivo tem o parâmetro "caminho" (e o opcional "linhas").
+- ler_resumo_pastas NÃO usa "parte": o parâmetro dela é "ler", obrigatório — um objeto pasta → seções, ex. {"ler": {".": "papel"}}.
+
+Regras do formato:
+- A chave externa deve ser exatamente "ferramentas" (lista).
+- Cada item deve ter exatamente as chaves "nome" e "parametros" ("parametros" é um objeto).
+
+Tente novamente. Responda SOMENTE com o JSON da chamada — sem texto antes ou depois, sem markdown, sem ```.

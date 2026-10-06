@@ -1,0 +1,118 @@
+/* ═══ BACKUPS → Mapa: o Pipeline ═══════════════════════════════════════════
+   As cinco leituras que saem do Índice de Símbolos.
+
+   ⚠️ FONTE DIFERENTE DA DE `backups-mapa-ligacoes.css`, e é esse o corte: cada
+   arquivo do Mapa lê UMA fonte. Misturar os dois faria uma mudança no formato
+   de uma base mexer no desenho da outra. */
+/* ── Pipeline ───────────────────────────────────────────────────────────────
+   As leituras vêm do Visualizar pipeline (`vpRaias`, `vpSequencia`, `vpFases`),
+   e por isso o que mora aqui é só o ajuste de contexto pareado. */
+.bm-viewport .vp-quadro { padding: 4px; }
+/* A `.vp-coluna` original tem `max-height: calc(100vh - 330px)`, calibrado para
+   o cromo do Assistente. Aqui o cromo é outro (cabeçalho + legenda + dois
+   títulos de lado), e a coluna é mais estreita porque são dois painéis. */
+.bm-viewport {
+  --vp-coluna-max-h: calc(100vh - 400px);
+  --vp-coluna-w: 232px;
+}
+/* A faixa de números e o cabeçalho de cadeia são os MESMOS do original — o que
+   muda é só a caixa: aqui eles aparecem duas vezes, cada uma em meia tela.
+   Sem a quebra de linha, as cinco métricas transbordam o painel. */
+.bm-metricas { flex-wrap: wrap; margin-bottom: 10px; }
+.bm-metricas .vp-metrica { padding: 1px 9px; }
+.bm-metricas .vp-metrica b { font-size: 16px; }
+.bm-viewport .vp-titulo-cadeia { margin-bottom: 10px; padding-bottom: 8px; }
+.bm-viewport .vp-titulo-nome { font-size: 12.5px; }
+/* `margin-left: auto` empurra as etiquetas para a direita numa tela larga;
+   em meia tela ele abre um buraco no meio do cabeçalho. */
+.bm-viewport .vp-tags { margin-left: 0; }
+
+/* ⚠️ A COR DE CAMADA PRECISA DE UM GANCHO PRÓPRIO AQUI. `vpClasseDeCamada`
+   devolve `cam-backend` / `cam-markup` / `cam-outro`, e no Visualizar pipeline
+   toda regra `.cam-*` é qualificada (`.vp-cartao-arq.cam-backend`,
+   `.vp-no-texto.cam-backend`…). A Tabela e a Fita aplicavam a classe num
+   elemento que não casava com nenhuma delas: a classe estava no HTML e não
+   pintava nada. `.bm-cam` é o qualificador que faltava — e não se reusa
+   `.vp-cartao-arq` porque ela traz caixa e borda, que não cabem numa célula. */
+.bm-cam.cam-backend { color: var(--green-light); }
+.bm-cam.cam-markup  { color: var(--violeta-light); }
+.bm-cam.cam-outro   { color: var(--text-muted); }
+/* Na Fita isto vence o azul de `.bm-casa-arq` por especificidade (duas classes
+   contra uma) — sem regra extra. A cor da camada é informação; o azul era só
+   enfeite, e apagava a informação. */
+
+.bm-pl-situacao { font-size: 10.5px; color: var(--text-muted); }
+.bm-pl-frase { font-size: 11.5px; color: var(--text-muted); line-height: 1.45; }
+/* O gancho de cor por passo: as funções do Visualizar pipeline recebem
+   `classeDoPasso` e o resultado cai nestas regras.
+   ⚠️ A LEGENDA DO PIPELINE ANUNCIAVA TRÊS CORES QUE NÃO EXISTIAM. Havia duas
+   regras aqui (`.vp-no.bm-criado`) e elas NUNCA CASAVAM: o elemento que recebe
+   a classe nas Raias é o `<g>` de `vpRaias`, que não tem a classe `vp-no` — o
+   que existe dentro dele é `.vp-no-caixa`. E para a Sequência não havia regra
+   nenhuma. Resultado: em duas das cinco leituras, a legenda prometia
+   criado/deletado/sem-alteração e o desenho saía todo igual. */
+.vp-cartao.bm-criado   { box-shadow: inset 0 0 0 1px rgba(var(--green-rgb), .55); }
+.vp-cartao.bm-removido { box-shadow: inset 0 0 0 1px rgba(var(--red-rgb), .55); opacity: .75; }
+
+/* Raias — o nó (o `<g>` leva a classe, quem pinta é o retângulo de dentro). */
+.bm-criado   > .vp-no-caixa { stroke: rgba(var(--green-rgb), .9); stroke-width: 2; }
+.bm-removido > .vp-no-caixa { stroke: rgba(var(--red-rgb), .9); stroke-width: 2; }
+.bm-removido > .vp-no-caixa,
+.bm-removido > .vp-no-texto { opacity: .7; }
+/* Raias — a aresta. */
+.vp-aresta.bm-criado   { stroke: rgba(var(--green-rgb), .85); stroke-width: 1.8; }
+.vp-aresta.bm-removido { stroke: rgba(var(--red-rgb), .85); stroke-width: 1.8; }
+
+/* Sequência — a linha do passo. */
+.vp-seq-linha.bm-criado   { box-shadow: inset 3px 0 0 rgba(var(--green-rgb), .8); }
+.vp-seq-linha.bm-removido { box-shadow: inset 3px 0 0 rgba(var(--red-rgb), .8); opacity: .75; }
+
+/* ⚠️ `SEM ALTERAÇÃO` PRECISA DE PIXEL. A legenda mostrava um quadrado cinza e a
+   tela não tinha nada — o passo igual era só a ausência das outras duas marcas.
+   "Ausência" não é o que um quadrado cinza promete: ele promete uma marca
+   cinza. Agora tem uma, tênue, e a legenda passa a ser literalmente verdadeira. */
+.vp-cartao.bm-igual    { box-shadow: inset 0 0 0 1px rgba(var(--cinza-rgb), .30); }
+.bm-igual > .vp-no-caixa   { stroke-width: 1.4; }
+.vp-seq-linha.bm-igual { box-shadow: inset 3px 0 0 rgba(var(--cinza-rgb), .35); }
+
+.bm-tabela { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.bm-tabela th, .bm-tabela td { border-bottom: 1px solid rgba(var(--white-rgb), .06); padding: 5px 8px; text-align: left; }
+.bm-tabela th { font-size: 11.5px; color: var(--text-muted); font-weight: 600; }
+.bm-tab-n { width: 88px; font-variant-numeric: tabular-nums; text-align: center; }
+.bm-tabela tr.bm-criado   td:first-child { box-shadow: inset 3px 0 0 var(--green); }
+.bm-tabela tr.bm-removido td:first-child { box-shadow: inset 3px 0 0 var(--coral); }
+/* Âmbar aqui NÃO é "alterado por dentro" como nas outras leituras: é "mudou de
+   ordem", derivado só no front. Por isso a legenda da Tabela tem item próprio,
+   com esse nome, e não o `alterado` das outras. */
+.bm-tabela tr.bm-alterado td:first-child { box-shadow: inset 3px 0 0 var(--amber); }
+/* A barra cinza do passo igual, para o quadrado cinza da legenda não mentir. */
+.bm-tabela tr.bm-igual    td:first-child { box-shadow: inset 3px 0 0 rgba(var(--cinza-rgb), .5); }
+
+/* A Fita é a ÚNICA que quebra a regra do eixo, de propósito: o fluxo corre na
+   horizontal, então a comparação acontece na vertical. As duas fitas ficam no
+   MESMO bloco de rolagem — em dois blocos separados, rolar uma desalinha a
+   outra e a comparação se perde. */
+.bm-fitas { overflow: auto; flex: 1; min-height: 0; padding: 10px 12px; container-type: inline-size; }
+.bm-fita { margin-bottom: 14px; }
+.bm-fita-h { font-size: 12.5px; font-weight: 600; margin-bottom: 6px; display: flex; gap: 8px; align-items: baseline; }
+.bm-fita-trilho { display: flex; gap: 6px; }
+.bm-casa {
+  width: 140px; flex-shrink: 0;   /* largura FIXA: é o que mantém as duas alinhadas */
+  border-radius: 6px; padding: 6px 8px;
+  border-left: 4px solid var(--vp-cor, var(--teal));
+  background: rgba(var(--bm-cor, var(--cinza-rgb)), .2);
+}
+.bm-casa-n { font-size: 10.5px; font-weight: 700; color: var(--text-muted); }
+.bm-casa-arq { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 11px; color: var(--sky-light); }
+.bm-casa-via { font-size: 11px; color: var(--text-muted); }
+.bm-fita-nota { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; max-width: 620px; }
+
+/* Raias e Sequência desenham UMA cadeia por vez. No Mapa da mudança elas são
+   empilhadas, com o título de cada uma: a comparação aqui é entre Versões, não
+   entre cadeias, e por isso não existe a trilha lateral que a sub-aba do
+   Assistente tem para escolher qual mostrar. */
+.bm-pl-cadeia { margin-bottom: 16px; }
+.bm-pl-cadeia > .bm-lado-marca {
+  display: block; margin-bottom: 6px;
+  color: var(--vp-cor, var(--teal)); font-size: 11px;
+}

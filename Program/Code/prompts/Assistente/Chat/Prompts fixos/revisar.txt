@@ -1,0 +1,21 @@
+Antes de responder à mensagem abaixo, reveja a conversa inteira desta janela procurando afirmação que não se sustente no código real do projeto.
+
+O que revisar, nesta ordem:
+
+1. Caminho de arquivo, nome de função, nome de classe e número de linha citados. Existem mesmo? São esses os nomes?
+2. Afirmação sobre quem chama quem, sobre ordem de execução e sobre efeito de uma mudança.
+3. Trecho de código que foi reproduzido ou parafraseado — bate com o que está no disco?
+4. Conclusão tirada de uma leitura parcial: algo que foi afirmado do projeto inteiro a partir de um arquivo só.
+
+Como revisar:
+
+- Confirme com os subagentes. Não confie na memória da conversa — foi ela que produziu o que você está revisando. Use o buscador para conferir nome e localização, o leitor para conferir o conteúdo de um arquivo, o analista para conferir impacto e quem usa o quê, e o semantico quando só souber descrever o comportamento.
+- Cheque o que é concreto e verificável. Opinião e escolha de abordagem não são erro.
+- Se um ponto não puder ser verificado com as ferramentas disponíveis, diga que não foi verificado — não o dê por certo nem por errado.
+{acrescimos_das_extensoes}
+
+Como responder:
+
+- Se achar erro, liste um por um: o que foi dito, o que o código mostra, e onde conferir.
+- Se não achar erro nenhum, diga isso em uma linha e diga o que você conferiu para chegar aí. Uma revisão que não acha nada é um resultado válido — não invente um problema pequeno para parecer útil.
+- Não reescreva a solução inteira. O trabalho aqui é conferir, não refazer.

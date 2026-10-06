@@ -1,0 +1,31 @@
+TIPO 3 · MUDA UM COMPORTAMENTO — age sem tela: roda sozinha, ou reage ao que o
+programa faz.
+Recursos deste tipo: Em segundo plano · Reação · Comando no Acesso rápido ·
+Opções.
+
+- Em segundo plano: "recurso": "segundo-plano", e o código que roda sozinho
+  fica em extensao_boot.py, na RAIZ da pasta (nunca em backend/), com iniciar()
+  e parar(). iniciar() roda numa thread própria; parar() tem de devolver em
+  poucos segundos (o programa espera 5) e fazer o laço parar de verdade — use
+  threading.Event().wait(…), nunca time.sleep(…). Nada pode ficar rodando
+  depois de desligar.
+- Reação: "recurso": "reacao", com o "evento" e "pode_barrar". Depois (o
+  padrão) serve quase sempre e não atrapalha ninguém; ANTES ("pode_barrar":
+  true) roda antes da ação, pode barrá-la ou mudar o dado, e tem 1,5 s de teto.
+  Reações "antes" de várias extensões rodam em fila, e a primeira que barra
+  encerra — então barre só quando for preciso, e diga o motivo em uma frase,
+  escrita para quem vai ler.
+- Os eventos de hoje: editor.vai_salvar, editor.salvou, terminal.vai_rodar,
+  projeto.abriu, projeto.fechou, arquivo.criado, arquivo.renomeado,
+  arquivo.apagado, aba.abriu, chat.mensagem_enviada (do lado da tela) e
+  rotina.terminou, trabalhos.cartao_moveu, terminal.terminou (Oficina),
+  terminal.rodou (o fim do ▶ Executar da aba Terminal), fila.tarefa_terminou,
+  configuracao.mudou (do lado do backend). Só editor.vai_salvar e
+  terminal.vai_rodar têm "antes".
+- Comando no Acesso rápido: "recurso": "comando", no lugar
+  acesso-rapido.comandos; o "id" de cada comando é estável entre versões (é a
+  chave da tecla). A tecla sugerida vai em "teclas", e quem decide a tecla é o
+  usuário, em Configurações › Teclado — a sugestão só entra se estiver livre.
+- O programa não espera para sempre: a ponte tem teto de 30 s, e trabalho longo
+  de verdade devolve logo e continua num processo gerenciado. Nada de laço longo
+  sem devolver o controle.

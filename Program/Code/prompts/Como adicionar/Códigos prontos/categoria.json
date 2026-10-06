@@ -1,0 +1,13 @@
+{
+  "ordem": 5,
+  "nome": "Códigos prontos",
+  "icone": "💻",
+  "destino": "Arquivos/Códigos prontos/",
+  "tabela": null,
+  "botao": {
+    "rotulo": "📋 Copiar prompt de código pronto",
+    "prompt": "Prompt.txt"
+  },
+  "nota": "Quando estiver pronto, ponha em `Arquivos/Códigos prontos/`.",
+  "apoio": null
+}

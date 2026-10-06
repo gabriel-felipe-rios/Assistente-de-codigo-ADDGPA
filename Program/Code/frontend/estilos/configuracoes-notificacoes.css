@@ -1,0 +1,79 @@
+/* ══════════════════════════ Configurações → Notificações ══
+   Arquivo próprio, e não mais um bloco no `configuracoes.css`: aquele já passa
+   das 500 linhas do teto da AMF. Aqui mora só o que é desta categoria — a
+   aparência da notificação em si está em `utils.css`, junto do resto dela. */
+
+/* ── A grade 3x3 de posição ──
+   A proporção de tela e o retângulo dentro de cada célula são o que faz a
+   grade PARECER a tela: nove quadrados vazios não dizem que aquilo é um lugar,
+   e o usuário teria de clicar para descobrir o que cada um significa. */
+.notif-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 190px;
+  aspect-ratio: 16 / 10;
+  padding: 6px;
+  background: rgba(var(--black-rgb),0.2);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: var(--radius);
+}
+.notif-grade-celula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px dashed rgba(var(--white-rgb),0.12);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t);
+}
+.notif-grade-celula:hover {
+  background: var(--surface-hover);
+  border-color: rgba(var(--white-rgb),0.28);
+}
+/* O retângulo é a notificação em miniatura. Ele encolhe a célula em vez de
+   preenchê-la para que a folga em volta leia como a borda da tela. */
+.notif-grade-celula span {
+  width: 60%;
+  height: 7px;
+  border-radius: 3px;
+  background: rgba(var(--white-rgb),0.14);
+  transition: background var(--t);
+}
+.notif-grade-celula.active {
+  border-style: solid;
+  border-color: var(--blue);
+  background: rgba(var(--blue-rgb),0.08);
+}
+.notif-grade-celula.active span { background: var(--blue); }
+
+/* ── As quinze origens ── */
+.notif-origens { display: flex; flex-direction: column; gap: 2px; }
+
+/* Subtítulo que quebra a lista pela tela a que a origem pertence. */
+.notif-origem-grupo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 14px 0 4px;
+}
+.notif-origem-grupo:first-child { padding-top: 0; }
+
+.notif-origem-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 5px 0;
+}
+.notif-origem-rotulo { font-size: 13px; color: var(--text); }
+
+/* Daqui sai só o aperto: o Toggle segmentado é o de `mapas.css`, e o que muda
+   é que aqui ele se repete quinze vezes numa coluna — no tamanho de lá, a
+   lista ficaria alta demais para caber na tela de uma vez. */
+.notif-origem-estados { flex-shrink: 0; }
+.notif-origem-estados .mapa-toggle-btn { padding: 3px 10px; font-size: 11.5px; }

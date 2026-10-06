@@ -1,0 +1,59 @@
+{
+  "Animação do código": {
+    "tela_principal": true,
+    "ligado": true,
+    "dentro_do_projeto": false
+  },
+  "Complexidade do código": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Dashboard do Projeto": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Plugin base": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Contraste de Tela": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Animação do código": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Contraste de Tela": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Complexidade do código": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Cenas do código": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Linha do tempo": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Linha do tempo": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Panorama de projetos": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Relatório do Projeto": {
+    "tela_principal": true,
+    "ligado": true
+  },
+  "Universais/Exportar visualizações": {
+    "tela_principal": true,
+    "ligado": true
+  }
+}

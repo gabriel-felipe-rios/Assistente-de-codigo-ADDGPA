@@ -1,0 +1,234 @@
+/* ═══ TRABALHOS → Oficina: o palco ═════════════════════════════════════════
+   O canvas, o fundo quadriculado, os fios, as caixas de grupo, a gaveta de
+   fluxos salvos e as duas barras flutuantes.
+
+   ⚠️ A ORDEM DOS @import DE `style.css` É A CASCATA, e ela foi preservada
+   bloco por bloco quando `trabalhos.css` foi dividido. Nada mudou de posição
+   relativa: quem trocar a ordem dos imports está trocando qual regra vence.
+
+   ⚠️ O FUNDO QUADRICULADO É DECORATIVO. Ele sinaliza "aqui a posição é livre";
+   não existe encaixe e não existe alinhamento automático.
+
+   ⚠️ O TRAÇO DOS FIOS NÃO ESCALA COM O ZOOM. `vector-effect: non-scaling-stroke`
+   não resolve aqui, porque quem amplia é uma CSS transform num ancestral HTML
+   e não o SVG — a espessura se divide pela variável de zoom.               */
+/* ═══ FASE 2 — Oficina, Linha do tempo, Métricas e Agentes ═════════════════ */
+
+/* ── A Oficina ── */
+.ofi-cabecalho {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; padding: 18px 22px 10px;
+}
+.ofi-cabecalho h2 { font-size: 20px; font-weight: 700; }
+.ofi-palco { flex: 1; position: relative; margin: 0 22px 18px; min-height: 0; }
+
+/* ⚠️ OS 22 px SÃO OS MESMOS DO `.ofi-cabecalho` E DO `.ofi-palco`, e a faixa
+   estava sem regra nenhuma: ela nascia colada na borda da janela, desalinhada
+   do título logo acima e do canvas logo abaixo. Se um dia o recuo da Oficina
+   mudar, os três mudam juntos. */
+.ofi-faixa {
+  padding: 0 22px 12px;
+  font-size: 12px; line-height: 1.5; color: var(--text-muted);
+}
+.ofi-faixa b { color: var(--text); }
+
+/* O fundo quadriculado é DECORATIVO — só sinaliza "aqui a posição é livre".
+   Não existe encaixe: um nó pode parar entre duas linhas, e isso é o certo.
+
+   ⚠️ ELE ACOMPANHA O PAN E O ZOOM, e o JS é que mexe nisso (`background-size`
+   pelo zoom, `background-position` pelo pan). Um quadriculado parado enquanto o
+   conteúdo se move dá a impressão de que o gesto não pegou: sem referência que
+   ande junto, arrastar o fundo parece não fazer nada. */
+.ofi-canvas {
+  position: absolute; inset: 0; overflow: hidden; cursor: default;
+  border: 1px solid rgba(var(--white-rgb), .08); border-radius: var(--radius);
+  background-color: rgba(var(--black-rgb), .22);
+  background-image:
+    linear-gradient(rgba(var(--white-rgb), .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--white-rgb), .045) 1px, transparent 1px);
+  /* ⚠️ O TAMANHO DA GRADE SEGUE O ZOOM, e a posição segue o pan. As três
+     variáveis são escritas por `ofiDesenhar`; os valores de reserva mantêm a
+     grade de 26 px se alguém pintar o canvas sem passar por ele. */
+  background-size: calc(26px * var(--ofi-k, 1)) calc(26px * var(--ofi-k, 1));
+  background-position: var(--ofi-px, 0px) var(--ofi-py, 0px);
+}
+/* transform-origin no canto: é o que faz a conversão tela→mundo de
+   ofiParaMundo ser uma divisão simples pelo zoom, sem termo de correção. */
+.ofi-mundo { position: absolute; inset: 0; transform-origin: 0 0; }
+/* ⚠️ A CAMADA DOS NÓS NÃO CAPTURA O PONTEIRO — só os nós dentro dela.
+   Ela é `inset: 0`, ou seja, cobre o canvas INTEIRO; com o ponteiro ligado (o
+   padrão), ela engolia todo clique que não caísse num cartão. Foi isso que fez
+   o rótulo do grupo e as setas — que moram nas camadas de baixo — nunca
+   receberem clique nenhum. Transparente não quer dizer atravessável. */
+.ofi-nos { position: absolute; inset: 0; pointer-events: none; }
+.ofi-no { pointer-events: auto; }
+
+/* ── Os fios (Fase 3) ──
+   ⚠️ O TRAÇO SE DIVIDE PELO ZOOM, e não usa `vector-effect: non-scaling-stroke`.
+   O efeito só neutraliza transform DO SVG; aqui quem amplia é uma CSS transform
+   num ancestral HTML (`.ofi-mundo`), e o traço escalaria junto — 1 px viraria
+   2 px no zoom 2×, e a linha engoliria o que ela só deveria apontar. `--ofi-k`
+   é o zoom, publicado pelo JS na própria camada que recebe o transform, no
+   mesmo padrão do `--bm-k` do mapa de Backups.
+
+   `overflow: visible` porque um nó arrastado para cima ou para a esquerda tem
+   coordenada negativa, e um SVG recorta no próprio viewport por padrão. */
+.ofi-fios {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  overflow: visible; pointer-events: none;
+}
+/* `stroke` responde ao ponteiro para o `<title>` virar dica; o resto do SVG
+   não, senão a seleção por retângulo não começaria em cima de uma linha. */
+.ofi-fio { pointer-events: stroke; fill: none; stroke: var(--cinza); }
+.ofi-fio-seta { fill: var(--cinza); pointer-events: none; }
+.ofi-seta-mao-unica   { fill: var(--blue); }
+.ofi-seta-ida-e-volta { fill: var(--teal); }
+
+/* A legenda dos quatro tipos é o traço, e ela é a mesma em toda a obra:
+   tracejada = ordem · sólida fina = dado num sentido · sólida grossa = dado nos
+   dois · pontilhada = leitura de fora, sem que as pontas saibam. */
+.ofi-fio-dependencia  { stroke-width: calc(1.6px / var(--ofi-k, 1)); stroke-dasharray: calc(7px / var(--ofi-k, 1)) calc(5px / var(--ofi-k, 1)); }
+.ofi-fio-mao-unica    { stroke-width: calc(1.6px / var(--ofi-k, 1)); stroke: var(--blue); }
+.ofi-fio-ida-e-volta  { stroke-width: calc(3.2px / var(--ofi-k, 1)); stroke: var(--teal); }
+
+/* ── As caixas de grupo (Fase 5) ──
+   ⚠️ A CAIXA NÃO CAPTURA O PONTEIRO. Ela cobre os nós que estão dentro dela, e
+   capturar o clique ali impediria selecionar por arraste no meio do grupo e
+   digitar no campo de um terminal agrupado. Só o RÓTULO recebe o ponteiro —
+   é ele a alça do grupo. */
+.ofi-grupos { position: absolute; inset: 0; pointer-events: none; }
+.ofi-grupo {
+  position: absolute; border-radius: var(--radius); pointer-events: none;
+  border: 1px dashed rgba(var(--white-rgb), .2);
+  background: rgba(var(--white-rgb), .028);
+}
+/* A caixa selecionada usa o MESMO contorno azul do nó selecionado — é a mesma
+   ideia de "é sobre isto que a barra de baixo age", e uma segunda linguagem de
+   seleção no mesmo canvas faria o usuário aprender duas. */
+.ofi-grupo.selecionado {
+  outline: 1px dashed var(--blue); outline-offset: 3px;
+  background: rgba(var(--blue-rgb), .05);
+}
+/* ⚠️ O PONTO DE COR É IRMÃO DO RÓTULO, e não filho. O rótulo vira
+   `contentEditable` no duplo clique para renomear, e um botão dentro de uma
+   área editável some na primeira tecla que o usuário digitar. */
+/* ⚠️ A ALTURA DAQUI ESTÁ REPETIDA EM `OFI_ALTURA_DO_ROTULO`, no JS — é ele que
+   levanta o topo da caixa para abrir espaço a esta faixa. Mexer no recheio ou
+   no tamanho da letra sem mexer lá faz o nome cobrir o topo dos nós. */
+.ofi-grupo-cab {
+  position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center;
+  gap: 8px; padding: 7px 12px; border-radius: var(--radius) var(--radius) 0 0;
+  background: rgba(var(--black-rgb), .55);
+}
+.ofi-grupo-cor {
+  width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; pointer-events: auto;
+  border: 1px solid rgba(var(--white-rgb), .25);
+}
+/* 12,5px, e não os 10,5 de antes: era o menor texto da Oficina, e ele ainda
+   encolhe junto com o canvas quando se tira o zoom. A cor sai de `--text-muted`
+   pelo mesmo motivo — é o nome do grupo, não uma legenda dele. */
+.ofi-grupo-rot {
+  flex: 1; min-width: 0; pointer-events: auto; cursor: grab;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+  color: var(--text);
+  /* Rótulo que não cabe é CORTADO, nunca com reticências — nome pela metade
+     com "…" ocupa espaço, chama atenção e não informa mais que o corte. */
+  overflow: hidden; text-overflow: clip; white-space: nowrap;
+}
+.ofi-grupo-rot:active { cursor: grabbing; }
+
+/* O ✕ da caixa. Discreto até o ponteiro chegar: ele desfaz um agrupamento
+   inteiro, e um vermelho permanente em cada grupo pesaria num canvas cheio. */
+.ofi-grupo-x {
+  pointer-events: auto; flex-shrink: 0; order: 9;
+  background: none; border: 0; padding: 0 2px; cursor: pointer;
+  font-size: 11px; line-height: 1; color: var(--text-muted); opacity: .55;
+  transition: color var(--t), opacity var(--t);
+}
+.ofi-grupo-x:hover { color: var(--coral-light); opacity: 1; }
+
+/* ── As alças de redimensionar a caixa do grupo ─────────────────────────────
+   Oito faixas invisíveis: as quatro bordas, que foi o pedido, e os quatro
+   cantos, que ninguém pede e todo mundo tenta usar.
+
+   ⚠️ ELAS CRESCEM PARA DENTRO, e não para fora. Para fora, a faixa de uma
+   caixa cobriria o cartão encostado nela do lado de fora, e o usuário pegaria a
+   moldura quando queria pegar o nó — sem nada na tela explicando por quê.
+
+   ⚠️ SÃO INVISÍVEIS DE PROPÓSITO. Quem diz que dá para pegar é o CURSOR, que é
+   a convenção de toda janela: oito quadradinhos desenhados em volta de cada
+   grupo virariam ruído num canvas que já tem alça de ligação e pega de
+   redimensionar em cada nó.
+
+   ⚠️ OS CANTOS VÊM DEPOIS DAS BORDAS NO ARQUIVO, e é o que os faz vencer no
+   empate: na quina as duas regras casam, e a última pintada é a que pega. */
+.ofi-grupo-alca { position: absolute; pointer-events: auto; }
+.ofi-grupo-alca-n { top: -5px; left: 0; right: 0; height: 10px; cursor: ns-resize; }
+.ofi-grupo-alca-s { bottom: -5px; left: 0; right: 0; height: 10px; cursor: ns-resize; }
+.ofi-grupo-alca-o { left: -5px; top: 0; bottom: 0; width: 10px; cursor: ew-resize; }
+.ofi-grupo-alca-l { right: -5px; top: 0; bottom: 0; width: 10px; cursor: ew-resize; }
+.ofi-grupo-alca-no { top: -5px; left: -5px; width: 14px; height: 14px; cursor: nwse-resize; }
+.ofi-grupo-alca-se { bottom: -5px; right: -5px; width: 14px; height: 14px; cursor: nwse-resize; }
+.ofi-grupo-alca-ne { top: -5px; right: -5px; width: 14px; height: 14px; cursor: nesw-resize; }
+.ofi-grupo-alca-so { bottom: -5px; left: -5px; width: 14px; height: 14px; cursor: nesw-resize; }
+
+/* A moldura acende quando o ponteiro está sobre uma alça: é a confirmação de
+   que o gesto é da caixa, e não do que está por baixo dela. */
+.ofi-grupo-alca:hover ~ .ofi-grupo-cab { background: rgba(var(--black-rgb), .72); }
+
+/* ── A gaveta de fluxos salvos (Fase 5) ── */
+.ofi-fluxos { list-style: none; margin: 4px 0 6px; padding: 0; max-height: 260px; overflow-y: auto; }
+.ofi-fluxo-l {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 11px; margin-bottom: 5px; border-radius: var(--radius);
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb), .07);
+}
+.ofi-fluxo-l b { font-size: 12.5px; }
+.ofi-fluxo-n, .ofi-fluxo-d { display: block; font-size: 11px; color: var(--text-muted); }
+.ofi-fluxo-b { display: flex; gap: 5px; flex-shrink: 0; }
+.ofi-fluxo-vazio {
+  padding: 12px; text-align: center; font-size: 12px;
+  color: var(--text-muted); font-style: italic;
+}
+
+/* A lista de ligações do modal de desconectar. */
+.ofi-lista-lig { margin: 8px 0 10px; padding-left: 18px; }
+.ofi-lista-lig li { margin-bottom: 3px; }
+
+/* A linha que explica por que o terminal está parado. Sem ela, "aguardando"
+   é um nó que não faz nada e não diz por quê. */
+.ofi-term-espera {
+  padding: 5px 9px; font-size: 10.5px; line-height: 1.5; cursor: help;
+  color: var(--amber); background: rgba(var(--amber-rgb), .1);
+  border-bottom: 1px solid rgba(var(--white-rgb), .08);
+}
+
+.ofi-retangulo {
+  position: absolute; z-index: 5; pointer-events: none;
+  border: 1px dashed var(--blue); background: rgba(var(--blue-rgb), .1); border-radius: 3px;
+}
+.ofi-retangulo.hidden { display: none; }
+
+/* As duas barras flutuam SOBRE o canvas: ocupar linha própria roubaria altura
+   de onde ela mais falta, que é a área de trabalho.
+
+   ⚠️ UMA EM CIMA, OUTRA EMBAIXO, e não as duas na mesma linha. Com algo
+   selecionado a barra contextual tem oito botões, e dividindo a linha do topo
+   ela cobria o fim da barra fixa — o botão "Bloqueios" aparecia cortado ao
+   meio. Embaixo e centrada, ela também fica perto de onde o cursor acabou de
+   selecionar. */
+.ofi-barra, .ofi-barra-ctx {
+  position: absolute; z-index: 10; display: flex; align-items: center; gap: 6px;
+  padding: 5px 8px; border-radius: 8px;
+  background: rgba(var(--black-rgb), .82); border: 1px solid rgba(var(--white-rgb), .1);
+  backdrop-filter: blur(6px);
+}
+.ofi-barra { top: 10px; left: 10px; flex-wrap: wrap; max-width: calc(100% - 20px); }
+.ofi-barra-ctx {
+  bottom: 12px; left: 50%; transform: translateX(-50%);
+  max-width: calc(100% - 20px); flex-wrap: wrap; justify-content: center;
+  font-size: 11.5px; color: var(--text-muted);
+}
+.ofi-barra-ctx.hidden { display: none; }
+.ofi-sep { width: 1px; height: 16px; background: rgba(var(--white-rgb), .14); margin: 0 2px; }
+.ofi-zoom-n { font-size: 11px; color: var(--text-muted); min-width: 34px; text-align: center; }

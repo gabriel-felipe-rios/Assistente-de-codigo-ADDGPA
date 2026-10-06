@@ -1,0 +1,14 @@
+{
+  "cartoes": [
+    {
+      "titulo": "Ao rodar",
+      "dica": "A saída sai sempre na aba Terminal — é lá que estão a saída ao vivo, o Parar e o \"Explicar este erro\".",
+      "campos": [
+        { "chave": "ir_para_terminal", "rotulo": "Trocar para a aba Terminal ao rodar", "tipo": "interruptor", "padrao": true,
+          "nota": "Desligado, o script roda e você troca de aba quando quiser." },
+        { "chave": "desindentar", "rotulo": "Desindentar o trecho antes de rodar", "tipo": "interruptor", "padrao": true,
+          "nota": "Um trecho copiado de dentro de uma função vem recuado, e em Python isso é IndentationError. Tira o recuo comum a todas as linhas, e só ele." }
+      ]
+    }
+  ]
+}

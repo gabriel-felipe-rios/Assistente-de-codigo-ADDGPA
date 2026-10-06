@@ -1,0 +1,270 @@
+/* ── Projetos abertos ao mesmo tempo, em abas (barra do topo) ────────────────
+   Vive dentro do `.topbar` compartilhado (fora das duas `.screen` — ver
+   index.html), então continua visível tanto na grade de Projetos quanto
+   dentro de um projeto aberto. Uma aba por projeto em `openProjects`
+   (app.js); quem desenha é `renderOpenProjectTabs()` (projetos-abertos.js).
+
+   `overflow-x: auto` em vez de quebrar linha: o topbar tem altura fixa, e
+   4-5 projetos abertos ainda cabem rolando antes de precisar de um desenho
+   mais elaborado. */
+.open-projects-bar {
+  display: flex; gap: 4px; overflow-x: auto; flex: 1; min-width: 0;
+}
+.open-project-tab {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(var(--white-rgb),0.05); border: 1px solid transparent;
+  border-radius: 6px; padding: 6px 8px 6px 12px; cursor: pointer;
+  color: var(--text-muted); font-size: 13px; font-weight: 500;
+  white-space: nowrap; flex-shrink: 0; position: relative;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+.open-project-tab:hover { color: var(--text); background: rgba(var(--white-rgb),0.09); }
+.open-project-tab.active {
+  color: var(--text); background: rgba(var(--blue-rgb),0.14);
+  border-color: rgba(var(--blue-rgb),0.4);
+}
+.open-project-tab-nome { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+.open-project-tab-fechar {
+  display: flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 4px; font-size: 14px; line-height: 1;
+  color: var(--text-muted); flex-shrink: 0;
+  transition: color var(--t), background var(--t);
+}
+.open-project-tab-fechar:hover { color: var(--text); background: rgba(var(--white-rgb),0.15); }
+
+/* Bolinha de "rodando" da aba de projeto — mesmo desenho de `.tab-btn.processando`
+   logo abaixo (mesma cor, mesmo pulso), só que aqui é por PROJETO ABERTO, não
+   por aba interna. Empurrada para a esquerda do nome (não `::after` solto),
+   porque o × já ocupa o canto direito do chip. */
+.open-project-tab.processando .open-project-tab-nome::before,
+.open-project-tab.bloqueado .open-project-tab-nome::before {
+  content: ''; display: inline-block; margin-right: 6px;
+  width: 7px; height: 7px; border-radius: 50%;
+  vertical-align: middle;
+}
+.open-project-tab.processando .open-project-tab-nome::before {
+  background: var(--blue); box-shadow: 0 0 8px var(--blue);
+  animation: aba-pulse 1.2s ease-in-out infinite;
+}
+
+/* Este projeto tem trabalho na mão e está parado esperando OUTRA aba soltar a
+   janela do LM Studio (a `TRAVA_IA` é global — ver trava_ia.py).
+
+   Mesma cor e mesmo nome do estado `bloqueado` da sub-aba Visualizar
+   (`--indigo`, em agentes-automacao.css): é o mesmo fato visto de outro lugar,
+   e uma cor diferente aqui faria parecer outra coisa.
+
+   ⚠️ NÃO PULSA, e é justamente isso que separa as duas bolinhas de relance:
+   pulsando = está acontecendo agora, parada = está na fila. Sem o pulso como
+   eixo, sobraria só a diferença de matiz num ponto de 7px. */
+.open-project-tab.bloqueado .open-project-tab-nome::before {
+  background: var(--indigo); box-shadow: 0 0 8px rgba(var(--indigo-rgb),0.55);
+}
+
+/* ── Project body ── */
+.project-body { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+/* ── Tabs principais ── */
+.tabs-bar {
+  display: flex; gap: 2px; padding: 12px 24px 0;
+  border-bottom: 2px solid rgba(var(--white-rgb),0.07); flex-shrink: 0;
+}
+.tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 14px; font-weight: 600; padding: 9px 18px;
+  cursor: pointer; border-radius: 6px 6px 0 0; position: relative; bottom: -2px;
+  transition: color var(--t), background var(--t);
+}
+.tab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.05); }
+.tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); background: rgba(var(--blue-rgb),0.08); }
+
+/* ── "Tem coisa rodando aqui dentro" ───────────────────────────────────────
+   Bolinha azul pulsante no canto da aba, enquanto há trabalho acontecendo lá
+   dentro: o ciclo de rotinas em Automação, o chat gerando resposta em
+   Assistente. Quem acende e apaga é `modulos/abas-processando.js`.
+
+   ⚠️ CLASSE SEPARADA DE `.active`, e não é gosto: `bindProjectScreen` faz
+   `classList.remove('active')` em TODAS as abas a cada troca, e
+   `resetToFirstTab` repete. Reaproveitar `active` faria a marca sumir no
+   primeiro clique em qualquer aba.
+
+   ⚠️ Não precisa de `position: relative` novo — o `.tab-btn` já é posicionado
+   (por causa do `bottom: -2px`), e é por isso que a bolinha não empurra nada:
+   ela sai do fluxo e não muda a largura do botão nem a posição dos vizinhos.
+
+   Azul pela convenção que o programa já fixou (ver `agentes-automacao.css`):
+   azul pulsando = acontecendo agora · verde = terminou · roxo = na fila ·
+   âmbar = terminou faltando pedaço. Verde aqui diria "terminou".
+
+   É de propósito a mesma aparência de `.ac-dot-running`, a bolinha das linhas
+   de Acionamentos: quem já lê aquela não precisa aprender esta. */
+/* ⚠️ À ESQUERDA, e não à direita como era. Todas as outras bolinhas do
+   programa ficam à esquerda do que descrevem — inclusive a da tira de abas de
+   projeto (`.open-project-tab`, logo acima), que nem pode ir para a direita
+   porque o × ocupa aquele canto. Esta era a única diferente.
+
+   `left: 6px` cabe dentro do respiro esquerdo do botão (`padding: 9px 18px`)
+   sem encostar no rótulo, e como a bolinha é `position: absolute` ela continua
+   fora do fluxo: a aba não muda de largura quando ela aparece. */
+.tab-btn.processando::after {
+  content: '';
+  position: absolute; top: 5px; left: 6px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blue); box-shadow: 0 0 8px var(--blue);
+  animation: aba-pulse 1.2s ease-in-out infinite;
+}
+/* Gêmeo de `ac-pulse` (agentes-automacao.css), com os mesmos valores. Cada
+   feature declara o seu keyframe de pulso — é a convenção de fato do projeto,
+   que já tem seis quase iguais espalhados. */
+@keyframes aba-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+.tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.tab-content.active { display: flex; }
+
+/* ── Sub-abas ── */
+.subtabs-bar {
+  display: flex; gap: 2px; padding: 10px 24px 0;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05); flex-shrink: 0;
+}
+.subtab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.subtab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.subtab-btn.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+.subtab-content { display: none; flex: 1; padding: 20px 24px; overflow-y: auto; flex-direction: column; gap: 20px; }
+.subtab-content.active { display: flex; }
+
+/* ── Aba Análise: sub-abas internas ── */
+.analise-tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.analise-tab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.analise-tab-btn.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+.analise-tab-content { display: none; flex: 1; padding: 20px 24px; overflow-y: auto; flex-direction: column; gap: 20px; overflow: hidden; }
+.analise-tab-content.active { display: flex; }
+
+/* As três telas master-detail com árvore (Mapa de I/O, Relações, Tree-sitter)
+   vão de borda a borda, como a aba Documentação. O `padding: 20px 24px` acima
+   é certo para as telas de conteúdo corrido (LSP, Índice de Símbolos,
+   Duplicados), mas num layout de painéis com bordas próprias ele empurra a
+   primeira coluna 24px para dentro — e era essa a diferença horizontal que o
+   usuário via ao comparar a mesma árvore nas duas abas.
+   O `gap` some junto: quem separa a barra de busca dos painéis é a borda da
+   própria barra (`.bsa-barra`), não um vão. */
+.analise-tab-content--arvore { padding: 0; gap: 0; }
+
+/* ── Placeholder ── */
+.placeholder-text {
+  color: var(--text-muted); font-size: 14px; text-align: center;
+  padding: 60px 20px; line-height: 1.7;
+}
+.placeholder-text strong { color: var(--text); }
+
+/* ── Stats (Resumo indexado / Resumo completo) ──────────────────────────────
+   Era um grid de três cards empilhados, que gastava altura à toa numa tela cujo
+   conteúdo de verdade é a árvore. Virou uma faixa horizontal: rótulo antes do
+   valor nas três células (a ordem tem que ser a mesma nas três — antes as
+   linguagens vinham ao contrário das outras duas) e divisórias verticais. */
+.stats-strip {
+  display: flex; align-items: stretch; gap: 0;
+  background: var(--surface); border-radius: var(--radius);
+  padding: 10px 4px; flex-shrink: 0;
+}
+.stat-cell { display: flex; align-items: center; gap: 10px; padding: 2px 18px; min-width: 0; }
+.stat-cell + .stat-cell { border-left: 1px solid rgba(var(--white-rgb),0.07); }
+.stat-cell--grow { flex: 1; min-width: 0; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--blue); line-height: 1.1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.stat-vazio { font-size: 13px; color: var(--text-muted); }
+
+/* As linguagens eram um texto corrido separado por vírgula — ilegível assim que
+   passavam de duas. Cada uma virou uma pílula com a contagem. */
+.lang-chips { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.lang-chip {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  background: rgba(var(--white-rgb),0.06); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 99px; padding: 3px 10px; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.lang-chip b { color: var(--text); font-weight: 700; }
+
+/* Painel de extensões — o dropdown informativo do chat, com teto de altura:
+   um projeto com dependências passa fácil de trinta extensões diferentes. */
+.resumo-ext-panel { max-height: 60vh; overflow-y: auto; min-width: 300px; }
+.resumo-ext-total {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 2px 8px 8px; border-bottom: 1px solid rgba(var(--white-rgb),0.07);
+  margin-bottom: 6px;
+}
+.resumo-ext-total b { color: var(--text); font-size: 13px; }
+.resumo-ext-nome { font-family: 'Cascadia Code','Consolas',monospace; font-size: 12px; }
+
+/* ── Painel da árvore do Resumo ──────────────────────────────────────────────
+   O fundo e o raio ficam no painel (barra + árvore juntas), não na árvore, para
+   a barra de botões estar dentro da mesma superfície — igual à Documentação. */
+.resumo-arvore-painel {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); border-radius: var(--radius); min-height: 120px;
+}
+/* Só este elemento rola, e só na vertical. As colunas ficam no filho, de altura
+   automática — se elas morassem aqui, a altura fixa do scroller as faria
+   transbordar para a direita em vez de o conteúdo crescer para baixo. */
+.resumo-arvore-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 12px; }
+
+/* Slider de profundidade: sem ele, o "Resumo completo" de um projeto com
+   `node_modules` tenta desenhar dezenas de milhares de linhas de uma vez. */
+.resumo-profundidade {
+  display: flex; align-items: center; gap: 8px;
+  margin-right: 4px; cursor: pointer; user-select: none;
+}
+.resumo-profundidade-rotulo {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted); white-space: nowrap;
+}
+.resumo-profundidade-valor {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  min-width: 14px; text-align: center; font-variant-numeric: tabular-nums;
+}
+.resumo-depth-slider { width: 110px; accent-color: var(--blue); cursor: pointer; }
+.resumo-depth-slider:disabled { opacity: 0.4; cursor: default; }
+
+/* Liga/desliga a quebra em colunas. Desmarcado, a árvore volta a ser uma
+   coluna só — que é como ela sempre foi. */
+.resumo-opcao {
+  display: flex; align-items: center; gap: 6px;
+  margin-right: 10px; cursor: pointer; user-select: none;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted); white-space: nowrap;
+}
+.resumo-opcao input { accent-color: var(--blue); cursor: pointer; }
+
+/* ── Tela Projetos: abas principais ── */
+.main-tabs-bar {
+  display: flex; padding: 0 20px;
+  background: var(--surface-dark);
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06); flex-shrink: 0;
+}
+.main-tab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 14px; font-weight: 500; padding: 10px 20px; cursor: pointer;
+  border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+  transition: color var(--t), border-color var(--t);
+}
+.main-tab-btn:hover { color: var(--text); }
+.main-tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+.projects-tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.projects-tab-content.active { display: flex; }
+

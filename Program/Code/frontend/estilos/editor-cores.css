@@ -1,0 +1,90 @@
+/* ══════════════════════════ EDITOR — CORES DA SINTAXE ══
+   O mapa `.token.*` (as classes que o Prism gera) → `var(--editor-token-*)`.
+
+   O Prism vem com temas prontos em `Program/External/libraries/prism-master/
+   themes/`, e nenhum deles é carregado: eles trazem hex cravado no CSS, e a
+   convenção do projeto é que cor mora em token. `prism-tomorrow.css` foi o
+   ponto de partida dos valores — que agora vivem em `estilos/tema/
+   tokens-fixos.css`, num bloco irmão do bloco do terminal, com o motivo de
+   não acompanharem o tema escrito lá.
+
+   Os nomes de classe são do Prism e não se traduzem: `.token.keyword` é o que
+   o `prism-core.js` escreve no HTML. O que se traduz é o valor.
+
+   ⚠️ CADA REGRA VALE PARA `.ed-pre` E `.ed-minimapa`. O minimapa
+   (editor-superficie.js::atualizarMinimapa) é um CLONE do HTML já colorido do
+   `.ed-pre`, mas vive FORA dele (sibling de `.ed-pilha`, nunca dentro — ver o
+   aviso no topo de editor-superficie.css sobre a métrica travada). Regra
+   escrita só para `.ed-pre .token.X` deixa o clone do minimapa monocromático
+   — foi exatamente isso que aconteceu antes desta segunda âncora existir. */
+
+.ed-pre .token.comment, .ed-minimapa .token.comment,
+.ed-pre .token.prolog, .ed-minimapa .token.prolog,
+.ed-pre .token.doctype, .ed-minimapa .token.doctype,
+.ed-pre .token.cdata, .ed-minimapa .token.cdata
+  { color: var(--editor-token-comentario); font-style: italic; }
+
+.ed-pre .token.string, .ed-minimapa .token.string,
+.ed-pre .token.char, .ed-minimapa .token.char,
+.ed-pre .token.attr-value, .ed-minimapa .token.attr-value,
+.ed-pre .token.regex, .ed-minimapa .token.regex
+  { color: var(--editor-token-texto); }
+
+.ed-pre .token.keyword, .ed-minimapa .token.keyword,
+.ed-pre .token.atrule, .ed-minimapa .token.atrule,
+.ed-pre .token.rule, .ed-minimapa .token.rule,
+.ed-pre .token.important, .ed-minimapa .token.important,
+.ed-pre .token.selector, .ed-minimapa .token.selector
+  { color: var(--editor-token-palavra); }
+
+.ed-pre .token.function, .ed-minimapa .token.function,
+.ed-pre .token.function-name, .ed-minimapa .token.function-name,
+.ed-pre .token.method, .ed-minimapa .token.method
+  { color: var(--editor-token-funcao); }
+
+.ed-pre .token.number, .ed-minimapa .token.number,
+.ed-pre .token.boolean, .ed-minimapa .token.boolean,
+.ed-pre .token.constant, .ed-minimapa .token.constant,
+.ed-pre .token.symbol, .ed-minimapa .token.symbol,
+.ed-pre .token.unit, .ed-minimapa .token.unit
+  { color: var(--editor-token-numero); }
+
+.ed-pre .token.class-name, .ed-minimapa .token.class-name,
+.ed-pre .token.builtin, .ed-minimapa .token.builtin,
+.ed-pre .token.namespace, .ed-minimapa .token.namespace
+  { color: var(--editor-token-classe); }
+
+.ed-pre .token.operator, .ed-minimapa .token.operator,
+.ed-pre .token.entity, .ed-minimapa .token.entity,
+.ed-pre .token.url, .ed-minimapa .token.url
+  { color: var(--editor-token-operador); }
+
+.ed-pre .token.variable, .ed-minimapa .token.variable,
+.ed-pre .token.parameter, .ed-minimapa .token.parameter,
+.ed-pre .token.property, .ed-minimapa .token.property
+  { color: var(--editor-token-variavel); }
+
+.ed-pre .token.punctuation, .ed-minimapa .token.punctuation
+  { color: var(--editor-token-pontuacao); }
+
+.ed-pre .token.attr-name, .ed-minimapa .token.attr-name,
+.ed-pre .token.decorator, .ed-minimapa .token.decorator,
+.ed-pre .token.annotation, .ed-minimapa .token.annotation
+  { color: var(--editor-token-atributo); }
+
+.ed-pre .token.tag, .ed-minimapa .token.tag
+  { color: var(--editor-token-tag); }
+
+.ed-pre .token.inserted, .ed-minimapa .token.inserted { color: var(--editor-token-inserido); }
+.ed-pre .token.deleted, .ed-minimapa .token.deleted   { color: var(--editor-token-removido); }
+
+/* ⚠️ NENHUMA regra aqui pode mexer em métrica NO `.ed-pre`. `font-style:
+   italic` no comentário é o limite do que é seguro ali — itálico não muda o
+   avanço horizontal numa fonte monoespaçada. `font-weight: bold`, `padding`
+   ou `letter-spacing` mudariam, e o texto do `pre` sairia de baixo do cursor
+   do textarea. O motivo completo está em `editor-superficie.css`. O
+   `.ed-minimapa` não tem essa restrição (não é irmão do textarea), mas herda
+   a mesma regra por simplicidade — não há ganho em divergir aqui. */
+.ed-pre .token.bold, .ed-minimapa .token.bold,
+.ed-pre .token.italic, .ed-minimapa .token.italic
+  { font-weight: inherit; font-style: inherit; }

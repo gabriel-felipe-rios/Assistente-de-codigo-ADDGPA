@@ -1,0 +1,26 @@
+{
+  "nome": "Geométrica marcante",
+  "descricao": "Sem serifa geométrica, título pesado e apertado contra o corpo leve. O contraste entre os dois é o efeito.",
+  "instrucao": "Aplique só família, peso, proporção da escala e entrelinha. O tamanho-base do corpo e a densidade do espaçamento vêm do ESTILO, não daqui — uma tipografia nunca deve engordar um layout que o estilo definiu como denso.",
+  "tipografia": {
+    "familias": {
+      "titulo": "\"Poppins\", \"Futura\", \"Century Gothic\", sans-serif",
+      "texto": "\"Poppins\", \"Futura\", \"Century Gothic\", sans-serif",
+      "mono": "ui-monospace, Consolas, monospace"
+    },
+    "pesos": {
+      "titulo": 700,
+      "texto": 400,
+      "enfase": 600
+    },
+    "escala": {
+      "proporcao": 1.414,
+      "observacao": "Passo grande: o título domina o bloco e o corpo recua."
+    },
+    "entrelinha": {
+      "titulo": 1.1,
+      "texto": 1.55,
+      "compacto": 1.35
+    }
+  }
+}

@@ -1,0 +1,6 @@
+• norm.padronizador — Sabe a identidade visual, os componentes, o layout das telas e os comportamentos de UI deste projeto.
+  Use SEMPRE antes de escrever ou alterar qualquer cor, espaçamento, fonte, raio, componente ou tela — mesmo que o usuário não peça "siga o padrão".
+  Ele devolve o token exato a usar; cor e medida inventadas são o defeito mais comum e mais visível.
+  Não pergunte a ele onde o arquivo mora (é o norm.enderecador) nem como a coisa se chama (é o norm.terminologo).
+  Exemplo:
+  {"chamadas": [{"subagente": "norm.padronizador", "pergunta": "que cor e espaçamento eu uso num botão de remover?"}]}

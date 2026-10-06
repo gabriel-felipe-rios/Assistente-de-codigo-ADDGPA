@@ -1,0 +1,85 @@
+/* ═══ TRABALHOS → Oficina: o nó de anotações do agente ═════════════════════
+   Um cartão DERIVADO da pasta `Anotações/<nó>/`, pendurado embaixo do
+   terminal que o gerou.
+
+   ⚠️ ELE NÃO É PARTE DO NÓ DE TERMINAL, e por isso não está em
+   `trabalhos-oficina-nos.css`: é um nó próprio, posicionado por geometria em
+   cima do dono. É o que permite arrastar o terminal sem arrastar o histórico
+   dele.                                                                    */
+/* ── O nó de anotações do agente ───────────────────────────────
+   Um cartão DERIVADO da pasta `Anotações/<nó>/`, pendurado embaixo do terminal
+   a que pertence. SÓ LEITURA: borda tracejada e cadeado no cabeçalho, porque
+   quem escreve ali é o agente — nada aqui pode ter `cursor: text` nem borda de
+   campo, que seriam promessa falsa.
+   ⚠️ ELE NÃO É `.ofi-no`, DE PROPÓSITO. Ver o aviso em `ofiNoDeAnotacoes`, no
+   `trabalhos-oficina.js`: com aquela classe ele viraria arrastável e ganharia
+   um botão de excluir que não exclui nada. Por isso o `pointer-events` volta a
+   `auto` aqui — `.ofi-nos` o desliga na camada inteira.
+   ⚠️ `box-sizing: border-box` E O `+ 2px` NÃO SÃO ENFEITE. O `.ofi-shell` é
+   content-box: a `width` dele é a caixa de conteúdo, e a borda de 1px de cada
+   lado fica FORA — ele ocupa 382px na tela. Sem estas duas linhas, este cartão
+   ficava 18px mais largo que o terminal (a padding somava por fora) e a linha
+   tracejada, que é `left: 50%`, apontava 9px à direita do centro dele. */
+.ofi-anotno {
+  position: absolute; pointer-events: auto;
+  box-sizing: border-box;
+  width: calc(var(--ofi-shell-w, 380px) + 2px);
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 9px 7px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px dashed rgba(var(--white-rgb), .2);
+  box-shadow: 0 6px 20px rgba(var(--black-rgb), .4);
+}
+
+/* A linha até o agente. ⚠️ NÃO É UMA LIGAÇÃO: ela não mora no `Layout.json`,
+   não é desenhada por `ofiDesenharFios` e NÃO TEM PONTA DE SETA — é assim que
+   se distingue de uma ligação de dependência, que também é tracejada mas aponta.
+   Como pseudo-elemento do próprio cartão ela nunca desalinha, e não custa nada.
+   ⚠️ A ALTURA ESPELHA `OFI_RESPIRO_DA_ANOTACAO`, no JS. Divergindo, sobra ou
+   falta um pedaço de linha entre os dois cartões. */
+.ofi-anotno::before {
+  content: ''; position: absolute; left: 50%; bottom: 100%;
+  width: 0; height: 18px;
+  border-left: 1px dashed rgba(var(--white-rgb), .28);
+}
+
+.ofi-anotno-cab { display: flex; align-items: center; gap: 6px; }
+.ofi-anotno-t {
+  font-size: 11.5px; font-weight: 600; color: var(--text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ofi-anotno-cab .ofi-cadeado { margin-left: auto; flex-shrink: 0; }
+
+/* Os mesmos valores de `.quem-pode-ler-select` (`utils.css`) — o programa não
+   tem estilo global para `select`, e quem não escreve a própria regra fica com
+   o widget nativo claro no meio de uma tela escura. */
+.ofi-anotno-sel {
+  font-size: 11px; font-family: inherit; max-width: 100%;
+  background: var(--surface-dark); color: var(--text-muted);
+  border: 1px solid rgba(var(--white-rgb), .14); border-radius: 5px;
+  padding: 2px 6px; cursor: pointer;
+  transition: color var(--t), border-color var(--t);
+}
+.ofi-anotno-sel:hover { background: var(--surface-hover); }
+
+.ofi-anotno-c {
+  padding: 8px; border-radius: 5px;
+  background: rgba(var(--black-rgb), .22); color: var(--text-muted);
+  font-size: 11.5px; line-height: 1.6;
+  max-height: 220px; overflow-y: auto; user-select: text;
+}
+.ofi-anotno-pe { font-size: 10px; color: var(--text-muted); opacity: .85; }
+
+/* A barra de rolagem do corpo, ESCURECIDA — exceção à global de `utils.css`.
+   Lá o polegar é `var(--surface)`, que é quase exatamente o fundo deste corpo
+   (`--surface` escurecido em 22%): a barra existia e não se via, e o usuário não
+   tinha como saber que aquele texto rolava. Escura sobre escuro-claro é um
+   sulco, e sulco se enxerga. ⚠️ SÓ AQUI DENTRO: a global vale para o programa
+   todo, e mudar lá mexeria em toda tela com rolagem. */
+.ofi-anotno-c::-webkit-scrollbar-thumb {
+  background: rgba(var(--black-rgb), .55);
+}
+.ofi-anotno-c::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--black-rgb), .75);
+}

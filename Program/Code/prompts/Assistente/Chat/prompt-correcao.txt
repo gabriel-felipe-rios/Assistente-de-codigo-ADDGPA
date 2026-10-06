@@ -1,0 +1,16 @@
+Sua última resposta continha uma chamada de subagente com formato inválido e não pôde ser executada.
+
+ERRO DETECTADO:
+{descricao_erro}
+
+O formato correto é:
+{"chamadas": [{"subagente": "<nome>", "pergunta": "<pergunta específica>"}]}
+
+Subagentes válidos: {subagentes_ativos}
+
+Regras do formato:
+- A chave externa deve ser exatamente "chamadas" (lista).
+- Cada item deve ter exatamente as chaves "subagente" e "pergunta", ambas strings.
+- Máximo {max_chamadas_por_vez} chamadas na lista.
+
+Tente novamente. Responda SOMENTE com o JSON da chamada — sem texto antes ou depois, sem markdown, sem ```.

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Tabela densa -->
+<!-- Barra de filtros -> tabela de linhas finas com seleção múltipla -> barra de ações do lote no rodapé -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Tabela densa</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column}
+.topbar{height:34px;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.filtros{height:34px;background:var(--superficie);border-bottom:1px solid var(--superficie-hover);display:flex;align-items:center;gap:6px;padding:0 12px;flex-shrink:0}
+.chip{padding:2px 9px;border-radius:10px;border:1px solid var(--superficie-hover);color:var(--texto-secundario);font-size:10.5px}
+.chip.on{border-color:var(--primaria);color:var(--primaria)}
+.rolagem{flex:1;min-height:0;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{position:sticky;top:0;background:var(--superficie-escura);color:var(--texto-secundario);text-align:left;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:6px 9px;border-bottom:1px solid var(--superficie-hover)}
+td{padding:4px 9px;border-bottom:1px solid var(--superficie-hover)}
+tr.sel td{background:var(--superficie-hover)}
+.mk{width:11px;height:11px;border:1px solid var(--texto-secundario);border-radius:3px;display:inline-block}
+.mk.on{background:var(--primaria);border-color:var(--primaria)}
+.tag{font-size:10px;border-radius:4px;padding:1px 6px}
+.ok{background:var(--positiva);color:var(--fundo)}
+.err{background:var(--negativa);color:var(--fundo)}
+.wait{border:1px solid var(--texto-secundario);color:var(--texto-secundario)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.lote{height:38px;background:var(--superficie-escura);border-top:1px solid var(--superficie-hover);display:flex;align-items:center;gap:9px;padding:0 12px;flex-shrink:0}
+</style></head><body>
+<div class="topbar"><span style="font-weight:700">Lançamentos</span><button class="bt sec">Exportar CSV</button></div>
+<div class="filtros"><span class="rot">Filtros:</span><span class="chip on">Agosto</span><span class="chip">Pagos</span><span class="chip">Com erro</span><span class="chip">Acima de R$ 500</span></div>
+<div class="rolagem">
+<table>
+  <thead><tr><th style="width:26px"><span class="mk on"></span></th><th>Documento</th><th>Cliente</th><th>Vencimento</th><th>Situação</th><th class="num">Valor</th></tr></thead>
+  <tbody>
+    <tr class="sel"><td><span class="mk on"></span></td><td>NF 88 214</td><td>Marina Alves</td><td>02/08</td><td><span class="tag ok">Pago</span></td><td class="num">1.240,00</td></tr>
+    <tr class="sel"><td><span class="mk on"></span></td><td>NF 88 215</td><td>Rafael Nunes</td><td>04/08</td><td><span class="tag ok">Pago</span></td><td class="num">318,90</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 216</td><td>Construtora Sul</td><td>07/08</td><td><span class="tag wait">Aberto</span></td><td class="num">7.905,50</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 217</td><td>Ana Prado</td><td>09/08</td><td><span class="tag err">Recusado</span></td><td class="num">129,00</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 218</td><td>Loja Central</td><td>12/08</td><td><span class="tag wait">Aberto</span></td><td class="num">2.410,75</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 219</td><td>Bruno Lima</td><td>14/08</td><td><span class="tag ok">Pago</span></td><td class="num">86,40</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 220</td><td>Cooperativa Norte</td><td>18/08</td><td><span class="tag wait">Aberto</span></td><td class="num">15.320,00</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 221</td><td>Helena Costa</td><td>21/08</td><td><span class="tag err">Recusado</span></td><td class="num">640,20</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 222</td><td>Mercado Vila</td><td>25/08</td><td><span class="tag wait">Aberto</span></td><td class="num">1.078,00</td></tr>
+    <tr><td><span class="mk"></span></td><td>NF 88 223</td><td>Paulo Freire</td><td>28/08</td><td><span class="tag ok">Pago</span></td><td class="num">255,60</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="lote"><span class="rot">2 selecionados</span><button class="bt pos">Conciliar</button><button class="bt sec">Baixar boletos</button><button class="bt neg">Cancelar lote</button></div>
+</body></html>

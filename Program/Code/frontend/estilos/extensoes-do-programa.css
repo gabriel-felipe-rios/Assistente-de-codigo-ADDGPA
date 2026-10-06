@@ -1,0 +1,462 @@
+/* ═══ EXTENSÕES DO PROGRAMA ═══════════════════════════════════════════════
+   Três coisas, e só três: o nível de cima do trilho de Configurações
+   (Programa | Extensões), a lista da categoria "Extensões", e o destaque do
+   que veio de extensão.
+
+   ⚠️ Arquivo próprio, e não um bloco em `configuracoes.css` — aquele já passa
+   das 500 linhas do teto da AMF, e foi por isso que
+   `configuracoes-notificacoes.css` nasceu.
+
+   ⚠️ Nada de valor hardcoded: toda cor sai de `var(--…)`, e quem define os
+   tokens é o tema (Padrões de interface › Convenções).                    */
+
+/* ══════════════════════ O nível de cima do trilho ══
+   Toggle segmentado (`.mapa-toggle`, de `mapas.css`) — o componente já
+   registrado para "duas ou três opções do mesmo eixo". O que este arquivo
+   acrescenta é só a acomodação dele dentro do trilho: largura cheia (o trilho
+   tem 220px fixos, e uma pílula `inline-flex` ficaria encolhida à esquerda) e
+   o respiro que separa o nível de cima da lista de categorias. */
+.config-lados {
+  display: flex;
+  margin: 6px 0 10px;
+}
+.config-lados .mapa-toggle-btn {
+  flex: 1;
+  text-align: center;
+}
+
+/* Os botões do lado Extensões. Container próprio, e não filhos diretos do
+   <nav> — é o que mantém "Ordem das abas" enxergando só as categorias do
+   programa. Ver o comentário em `config-template.js`. */
+.config-trilho-extensoes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.config-trilho-vazio {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding: 6px 11px;
+}
+
+/* ══════════════════════ A lista da categoria "Extensões" ══
+   A LINHA reaproveita `.plugin-item` e irmãs (`configuracoes-plugins.css`):
+   é a mesma forma — alça, nome, interruptor —, e duas cópias divergiriam em
+   medida no primeiro dia em que alguém mexesse numa delas. O que é próprio
+   daqui é o que a extensão tem e o plugin não: ícone, erro de manifesto e a
+   declaração de escrita fora da pasta. */
+.xtprog-icone {
+  width: 20px; height: 20px; flex-shrink: 0; object-fit: contain;
+}
+
+/* A descrição, abaixo da legenda: o que a extensão faz, numa frase. Mesmo
+   tom da dica de cartão — é texto de apoio, não título. */
+.xtprog-descricao {
+  margin-top: 4px;
+  font-size: 12.5px; line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* ══════════════════════ A página de uma extensão (lado Extensões) ══
+   Quatro cartões, e todos `.config-cartao`: o que este bloco acrescenta é só
+   o desenho de dentro dos dois primeiros — o cabeçalho "Sobre" e a ficha
+   "O que ela acrescenta". A grade de comandos é `.tecla-grade`, de
+   `configuracoes-teclado.css`, sem uma regra nova. */
+.xt-sobre-cabeca { display: flex; align-items: flex-start; gap: 14px; }
+.xt-sobre-icone {
+  width: 40px; height: 40px; flex-shrink: 0; object-fit: contain;
+}
+/* Sem `icone.svg`: o glifo da categoria numa caixa do tom da superfície. */
+.xt-sobre-glifo {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--text-muted);
+  border-radius: var(--radius); background: rgba(var(--white-rgb), 0.05);
+}
+.xt-sobre-texto { min-width: 0; }
+.xt-sobre-nome {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  font-size: 16px; font-weight: 700; color: var(--text);
+}
+.xt-sobre-versao { font-size: 11.5px; font-weight: 400; color: var(--text-muted); }
+.xt-sobre-descricao {
+  margin-top: 4px; font-size: 13px; line-height: 1.6; color: var(--text);
+  max-width: 640px;
+}
+.xt-sobre-sem { color: var(--text-muted); font-style: italic; }
+
+/* A extensão desligada (D47): Faixa de aviso com ação (Padrões de interface ›
+   Componentes), no topo do cartão Sobre. Âmbar é pendência, não erro. Texto em
+   `--text`, e não `--amber-text` (esse é para SOBRE fundo âmbar cheio). */
+.xt-faixa-desligada {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 9px 13px; margin-bottom: 12px; border-radius: 6px;
+  background: rgba(var(--amber-rgb), 0.1);
+  border: 1px solid rgba(var(--amber-rgb), 0.3);
+}
+.xt-faixa-desligada-ic     { color: var(--amber); font-size: 14px; }
+.xt-faixa-desligada-texto  { flex: 1; font-size: 12.5px; color: var(--text); }
+.xt-faixa-desligada-texto strong { color: var(--amber); }
+.xt-sobre-acoes {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+
+/* A ficha: rótulo à esquerda, valor à direita — uma linha por coisa que o
+   manifesto declara. `<code>` no mesmo desenho de `.xtprog-poder code`. */
+.xt-ficha {
+  display: grid; grid-template-columns: 160px 1fr; gap: 8px 14px;
+  font-size: 12.5px; align-items: baseline;
+}
+.xt-ficha-rotulo { color: var(--text-muted); }
+.xt-ficha-valor { color: var(--text); line-height: 1.7; min-width: 0; overflow-wrap: anywhere; }
+.xt-ficha-valor code {
+  font-size: 11.5px; padding: 1px 5px; border-radius: 4px;
+  background: rgba(var(--white-rgb), 0.06); color: var(--text);
+}
+/* A guardiã e a escrita fora da pasta saltam, na cor de alerta — as duas são
+   o que a extensão pode fazer CONTRA o que o usuário espera. */
+.xt-ficha-guardia, .xt-ficha-guardia code { color: var(--amber); }
+.xt-ficha-erro { color: var(--red); }
+
+/* «Subagentes e o que cada um lê» (fase 07): um bloco por subagente, em
+   grade que vira uma coluna na janela estreita — o desenho da prévia
+   aprovada. */
+.xt-sub {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+}
+.xt-sub-item {
+  background: var(--surface-dark); border-radius: var(--radius); padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--text-muted);
+}
+.xt-sub-item b { color: var(--text); font-size: 13.5px; }
+.xt-sub-item code {
+  font-size: 11.5px; padding: 1px 5px; border-radius: 4px;
+  background: rgba(var(--white-rgb), 0.06); color: var(--text);
+}
+.xt-sub-id { font-size: 11.5px; }
+
+/* Um tipo: o nome por extenso, e o número pequeno ao lado — o número é o que
+   está no manifesto, e é por ele que se procura no contrato. */
+.xt-tipo {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 2px 8px; margin: 2px 4px 2px 0; border-radius: 10px;
+  background: rgba(var(--white-rgb), 0.06); font-size: 12px;
+}
+.xt-tipo-n { font-size: 10.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) {
+  .xt-ficha { grid-template-columns: 1fr; gap: 2px 0; }
+  .xt-ficha-rotulo { margin-top: 8px; }
+}
+
+/* O erro do manifesto, na linha da extensão. Mesma cor e mesma medida de
+   `.config-erro`, para o programa não ter dois jeitos de desenhar a mesma
+   coisa. */
+.xtprog-erros {
+  margin-top: 6px;
+  font-size: 12px; line-height: 1.5;
+  color: var(--red);
+  background: rgba(var(--red-rgb), 0.12);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+/* O que a extensão DECLARA gravar fora da própria pasta (D22). Não é aviso de
+   erro — é informação —, então âmbar e não vermelho. */
+.xtprog-fora {
+  margin-top: 5px;
+  font-size: 11.5px; line-height: 1.5;
+  color: var(--amber);
+}
+.xtprog-fora code {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11px;
+}
+
+/* Interruptor de uma extensão que o programa não sabe carregar (manifesto
+   quebrado). Continua VISÍVEL — sumir em silêncio é o pior resultado —, mas
+   não clicável. */
+.toggle-pill.desabilitado {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* As categorias (subpastas puras). Espelho de `.plugins-pasta-*`, com nome
+   próprio pelo mesmo motivo que aquelas têm: mudar o recuo de uma não pode
+   arrastar a outra junto. */
+.xtprog-pastas-nivel { display: flex; flex-direction: column; margin-bottom: 4px; }
+.xtprog-itens-nivel  { display: flex; flex-direction: column; }
+.xtprog-pasta.dragging { opacity: 0.4; }
+.xtprog-pasta-titulo {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 4px 6px;
+}
+.xtprog-pasta-handle {
+  cursor: grab; color: var(--text-muted); font-size: 16px;
+  width: 20px; text-align: center; user-select: none; flex-shrink: 0;
+}
+.xtprog-pasta.dragging .xtprog-pasta-handle { cursor: grabbing; }
+.xtprog-pasta-nome { font-size: 13px; font-weight: 600; color: var(--text); }
+.xtprog-pasta-corpo { margin-left: 14px; padding-left: 12px; }
+
+/* ══════════════════════ Os campos da tela de uma extensão ══
+   `.config-field-row` já estiliza `input[type="number"]`; o texto e o select
+   são novos porque nenhuma categoria do programa os usava dentro dele. Mesma
+   medida e mesma borda do numérico — a tela de uma extensão tem de ser
+   indistinguível de uma categoria do programa. */
+.xt-campo-texto,
+.xt-campo-select {
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), 0.07);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 8px 12px; font-size: 14px; font-family: inherit;
+  transition: border-color var(--t);
+}
+.xt-campo-texto:focus,
+.xt-campo-select:focus { outline: none; border-color: var(--blue); }
+
+.xt-tela-corpo { display: flex; flex-direction: column; gap: 18px; }
+
+/* ══════════════════════ M6, tipo 25 — presets de modelo de extensão ══
+   Uma linha por preset: nome à esquerda, "Aplicar" à direita. Mesma medida
+   das linhas de `.plugin-item`, para as duas listas de "coisa trazida de
+   fora" se lerem igual. */
+.modelo-presets { display: flex; flex-direction: column; }
+.modelo-preset {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 11px 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.modelo-preset:last-child { border-bottom: none; }
+.modelo-preset-nome { font-size: 13.5px; color: var(--text); }
+
+/* ══════════════════════ "Destacar extensões" (D2) ══
+   Quatro regras, e é tudo o que o destaque custa: não há isolamento de CSS a
+   vencer, porque a extensão desenha no mesmo DOM que o programa.
+
+   ⚠️ Quem põe `data-origem="extensao"` é o PROGRAMA, em todo container que
+   ele entrega a uma extensão — nunca a extensão. Se a marca dependesse dela,
+   a que esquecesse ficaria invisível justamente para quem ligou o destaque
+   para achá-la.
+
+   ⚠️ **A COR sai de `--xt-destaque-rgb`, que `destaque.js` põe no `<body>` com
+   o NOME DO TOKEN dentro** (`var(--purple-rgb)`), nunca com o valor resolvido.
+   É o que faz trocar de tema repintar o destaque junto — um `rgb()` calculado
+   em JavaScript ficaria com a cor do tema anterior. Roxo é o padrão porque o
+   programa já usa azul para "acontecendo agora", verde para "terminou" e âmbar
+   para "faltando pedaço"; roxo é a cor que sobra sem significado de estado.
+
+   ⚠️ **Cada regra vale para dois seletores**, e o segundo é a PRÉVIA do cartão
+   de Configurações. A prévia acende com o destaque desligado — senão escolher
+   cor e formato seria escolher no escuro. Repetir o seletor é mais barato do
+   que uma classe intermediária que os dois tivessem de carregar. */
+/* O valor de partida, até `destaque.js` pôr o escolhido no `<body>`. Sem ele,
+   a prévia do cartão nasceria transparente no primeiro segundo do programa —
+   `rgba(, 0.06)` não é cor, é regra descartada. */
+:root { --xt-destaque-rgb: var(--purple-rgb); }
+
+body[data-xt-destaque="tracejado"] [data-origem="extensao"],
+.xtprog-previa[data-xt-tipo="tracejado"] {
+  background: rgba(var(--xt-destaque-rgb), 0.06);
+  outline: 1px dashed rgba(var(--xt-destaque-rgb), 0.35);
+  outline-offset: 2px;
+}
+
+body[data-xt-destaque="solido"] [data-origem="extensao"],
+.xtprog-previa[data-xt-tipo="solido"] {
+  background: rgba(var(--xt-destaque-rgb), 0.06);
+  outline: 1px solid rgba(var(--xt-destaque-rgb), 0.55);
+  outline-offset: 2px;
+}
+
+/* O mais discreto: nenhuma linha, só a mancha. Para quem quer saber de onde
+   veio o painel sem ganhar uma moldura em volta de meia tela. */
+body[data-xt-destaque="fundo"] [data-origem="extensao"],
+.xtprog-previa[data-xt-tipo="fundo"] {
+  background: rgba(var(--xt-destaque-rgb), 0.12);
+}
+
+/* O mais gritante, e o único que não usa `outline`: uma barra na lateral
+   esquerda, no molde de `.taborder-subtab-area`. Some no meio de uma tela
+   cheia muito menos que um contorno fino. */
+body[data-xt-destaque="barra"] [data-origem="extensao"],
+.xtprog-previa[data-xt-tipo="barra"] {
+  background: rgba(var(--xt-destaque-rgb), 0.08);
+  border-left: 3px solid rgba(var(--xt-destaque-rgb), 0.85);
+  padding-left: 10px;
+}
+
+/* ── O destaque num ITEM DE MENU ──
+   As quatro regras acima nasceram para um painel: uma caixa de bom tamanho,
+   com espaço em volta. Num item de menu de contexto elas não cabem do mesmo
+   jeito, por duas razões:
+
+   · `outline-offset: 2px` põe o contorno 2px FORA do item, e o menu inteiro
+     tem 4px de padding — dois itens de extensão seguidos ficariam com os
+     contornos se encostando, e o de cima encostaria na borda do menu;
+   · o `padding-left: 10px` da barra empurra o rótulo para a direita, e o item
+     de extensão sai do alinhamento dos itens nativos logo acima — o texto
+     "pula" justamente onde o destaque queria só apontar.
+
+   Aqui o contorno vira PARA DENTRO e a barra não mexe no recuo: o destaque
+   passa a ler como "esta linha", que é o que ele quer dizer numa lista, em vez
+   de "esta caixa".
+
+   ⚠️ Nada de `!important`: este seletor já é mais específico que os de cima
+   (dois níveis contra um), e é isso que o faz vencer.
+
+   ⚠️ O popup do autocomplete (`.ed-ac`) NÃO entra aqui: ele é uma caixa
+   flutuante, com espaço em volta, e a marca está nele inteiro — não em cada
+   linha. Para ele o tratamento de painel está certo. */
+body[data-xt-destaque] .menu-ctx [data-origem="extensao"] {
+  outline-offset: -1px;
+  padding-left: 9px;
+}
+
+/* A barra de Acesso rápido é o segundo caso de lista apertada, e vale a mesma
+   regra: numa lista o destaque muda de FORMA, não de significado — contorno
+   para dentro, sem o recuo extra que separaria a linha das vizinhas. */
+body[data-xt-destaque] .acr-lista [data-origem="extensao"] {
+  outline-offset: -1px;
+}
+
+/* ── As amostras de cor ──
+   Bolinhas, e não uma lista suspensa de nomes: "Âmbar" e "Turquesa" só querem
+   dizer alguma coisa depois de vistas, e o que se escolhe aqui É a aparência.
+   A cor de cada uma entra por `--amostra-rgb`, posta no `style` da bolinha com
+   o nome do token — mesmo motivo do `--xt-destaque-rgb` acima. */
+.xtprog-cores { display: flex; gap: 8px; flex-wrap: wrap; padding: 2px 0; }
+.xtprog-cor {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgb(var(--amostra-rgb));
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px rgba(var(--white-rgb), 0.12);
+  cursor: pointer; padding: 0; flex-shrink: 0;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.xtprog-cor:hover { transform: scale(1.12); }
+/* O anel de "esta é a escolhida" é do TEXTO, e não da própria cor: um anel da
+   mesma cor da bolinha desapareceria dentro dela. */
+.xtprog-cor.ativa {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+/* ── A prévia ──
+   Sem `data-origem="extensao"` de propósito: ela não veio de extensão nenhuma,
+   e marcá-la faria o destaque acender duas vezes em cima dela quando ligado. */
+.xtprog-previa {
+  font-size: 12.5px; color: var(--text-muted); line-height: 1.6;
+  padding: 12px 14px; border-radius: var(--radius);
+  background: rgba(var(--xt-destaque-rgb), 0.06);
+}
+
+/* ═══════════════════════════ M2 · OS PONTOS DE ENCAIXE (Obra 2) ══
+   Um ponto de encaixe é um lugar do programa que uma extensão pode desenhar
+   dentro. Enquanto nenhuma o faz, ele precisa ser INVISÍVEL — não um espaço
+   em branco, não uma borda, não um pixel de `gap`.
+
+   ⚠️ É por isso que `:empty` está aqui e não é detalhe: a aba Terminal de
+   quem nunca instalou extensão nenhuma tem de continuar exatamente como era.
+   Um ponto que reserva altura "para quando alguém usar" é o programa cobrando
+   de todo mundo o preço de um recurso que quase ninguém liga. */
+.xt-ponto:empty { display: none; }
+.xt-ponto {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 10px 14px 0;
+  /* G9 · O painel de extensão NUNCA toma a aba: passa de 40% da altura e
+     rola por dentro. Sem isto, uma extensão alta zerava a saída do Terminal. */
+  flex: 0 1 auto; min-height: 0; max-height: 40%; overflow-y: auto;
+}
+
+/* G2 · O ponto na BARRA do Terminal é horizontal, como o do rodapé do
+   cartão do Quadro: uma caixa em coluna ali quebraria a barra. */
+.xt-ponto-barra:empty { display: none; }
+.xt-ponto-barra { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.xt-ponto-barra > .xt-encaixe { display: inline-flex; align-items: center; gap: 6px; }
+
+/* A caixa de UMA extensão dentro de um ponto. Sem cor, sem borda e sem
+   espaçamento próprio: o que a extensão desenha tem de parecer parte da tela
+   em que entrou, e é o "Destacar extensões" — e só ele — que a diferencia
+   quando o usuário pede. */
+.xt-encaixe { min-width: 0; }
+
+/* No rodapé do cartão do Quadro o ponto é HORIZONTAL: ele mora dentro de
+   `.tr-cartao-acoes`, ao lado de "editar" e "excluir", e uma caixa em coluna
+   ali empurraria o rodapé do cartão para baixo. */
+.tr-cartao-acoes .xt-encaixe { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Fase 11 · O ponto EM LINHA — `editor.rodape`, dentro do rodapé do Editor.
+   O `.xt-ponto` padrão é coluna com `padding` e altura máxima em %: dentro
+   de uma linha de 11,5 px ele empurraria o rodapé para baixo. Aqui ele é um
+   pedaço da linha, e o que não couber é cortado, nunca quebrado. */
+.xt-ponto--linha {
+  display: inline-flex; flex-direction: row; align-items: center;
+  padding: 0; gap: 8px; white-space: nowrap; overflow: hidden;
+  max-height: none; min-width: 0;
+}
+.xt-ponto--linha > .xt-encaixe { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Fase 11 · O ponto da OFICINA (`oficina.painel`) flutua sobre o palco, logo
+   abaixo da barra da Oficina — as duas estão fora do `.ofi-mundo`, a camada
+   que dá zoom e pan. Ele não pode ser um bloco comum: o palco é
+   `position: relative` e o canvas cobre tudo com `inset: 0`, então um bloco
+   comum ficaria POR BAIXO do canvas. A superfície é a mesma da barra (é o
+   container do programa, não a caixa da extensão), e o `top` é escrito por
+   `xtPintarEncaixeDaOficina`, porque a barra quebra linha e muda de altura. */
+.ofi-palco > .xt-ponto {
+  position: absolute; z-index: 10; left: 10px; top: 52px;
+  max-width: calc(100% - 20px); max-height: 40%;
+  padding: 8px 10px; border-radius: 8px;
+  background: rgba(var(--black-rgb), .82); border: 1px solid rgba(var(--white-rgb), .1);
+  backdrop-filter: blur(6px);
+}
+
+
+/* ═══════════════ O QUE CADA EXTENSÃO FAZ NA SUA TELA (Obra 2 e 3) ══
+   Uma linha por poder, abaixo do nome, no mesmo tom da legenda: informação de
+   apoio, e não título. */
+.xtprog-poder {
+  font-size: 11.5px; color: var(--text-muted); line-height: 1.6;
+  margin-top: 3px;
+}
+.xtprog-poder code {
+  font-size: 11px; padding: 1px 5px; border-radius: 4px;
+  background: rgba(var(--white-rgb), 0.06); color: var(--text);
+}
+
+/* 🔴 A GUARDIÃ SALTA, e é o único lugar desta tela que usa a cor de alerta.
+   Barrar o Ctrl+S é a coisa mais invasiva que uma extensão pode fazer aqui;
+   pintá-la igual a "observa" seria dizer que as duas são a mesma coisa. */
+.xtprog-poder-guardia { color: var(--amber); }
+.xtprog-poder-guardia code {
+  background: rgba(var(--amber-rgb), 0.12); color: var(--amber);
+}
+
+/* ── O catálogo de pontos e eventos ──
+   Duas colunas de rótulo+valor, e não uma tabela: são listas curtas, e uma
+   tabela com cabeçalho pesaria mais que o conteúdo. */
+.xtprog-catalogo { display: flex; flex-direction: column; gap: 14px; }
+.xtprog-cat-grupo-titulo {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.xtprog-cat-linha {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 5px 0; border-top: 1px solid rgba(var(--white-rgb), 0.06);
+  font-size: 12px; line-height: 1.55;
+}
+.xtprog-cat-linha:first-of-type { border-top: 0; }
+.xtprog-cat-nome {
+  font-family: var(--mono, monospace); font-size: 11.5px;
+  color: var(--text); flex: 0 0 auto; min-width: 170px;
+}
+.xtprog-cat-onde { color: var(--text-muted); flex: 1 1 auto; min-width: 0; }
+/* Quem já está encaixado ali aparece ao lado — é o que responde "esse ponto
+   está ocupado?" sem obrigar a cruzar as duas listas com o olho. */
+.xtprog-cat-quem { color: var(--purple); }
+.xtprog-cat-guardia { color: var(--amber); }

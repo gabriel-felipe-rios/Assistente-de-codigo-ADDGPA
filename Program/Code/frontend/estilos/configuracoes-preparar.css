@@ -1,0 +1,200 @@
+/* ═══ CONFIGURAÇÕES → Preparar projeto ═════════════════════════════════════
+   Os presets, as duas listas de pasta em árvore, e "o que este preset copia
+   da biblioteca".
+
+   ⚠️ A LISTA RECUADA COM CAIXA NO GRUPO desenha a MESMA árvore de grupos da
+   biblioteca — o recuo é o grupo, e a caixa marca o item. O que o preset
+   guarda é o caminho inteiro, nunca o rótulo: dois itens de mesmo nome em
+   grupos diferentes são dois itens distintos.                               */
+/* ── Preparar projeto: presets e as duas listas de pasta ──────────────────────
+   As pílulas seguem o molde das de "Ordem das abas"; a diferença é que estas
+   selecionam em vez de arrastar. As duas marcas de cada linha de pasta usam a
+   cor da sub-aba para onde mandam a pasta: vermelho é Remover, roxo é Contexto
+   sem leitura — a mesma pista de cor que o painel Preparar dá. */
+.cpr-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.cpr-pill { background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.06);
+  border-radius: 20px; padding: 7px 14px; font-size: 14px; font-weight: 500; font-family: inherit;
+  color: var(--text); white-space: nowrap; cursor: pointer; }
+.cpr-pill:hover { background: var(--surface-hover); border-color: rgba(var(--blue-rgb),0.3); }
+.cpr-pill.sel { border-color: rgba(var(--blue-rgb),0.55); background: rgba(var(--blue-rgb),0.12); }
+.cpr-pill-novo { color: var(--text-muted); border-style: dashed; }
+.cpr-pill-acoes { display: flex; gap: 8px; }
+
+.cpr-editando { font-size: 12px; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: .5px; padding: 2px 2px 0; }
+.cpr-editando b { color: var(--blue); }
+.cpr-nome-input { background: var(--surface-dark); border: 1px solid var(--blue);
+  border-radius: 4px; color: var(--text); font-family: inherit; font-size: 12px;
+  font-weight: 700; text-transform: none; letter-spacing: 0; padding: 2px 6px; }
+
+/* ── As duas listas de pasta, agora em árvore ──
+   ⛔ A árvore é `criarArvorePastas` (`arvore-pastas.js`), a compartilhada — e o
+   que mora aqui é só a DECORAÇÃO que entra depois do desenho, sobre o
+   `data-caminho` de cada linha. Convenção *"Árvore de pastas é UMA só"*. */
+.cpr-pastas { display: flex; flex-direction: column; gap: 9px; }
+.cpr-pastas .arvp-linha-pasta { gap: 8px; }
+.cpr-pasta-extras { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.cpr-pasta-extras button { background: var(--red); border: none; color: #fff;
+  width: 20px; height: 20px; border-radius: 4px; cursor: pointer; line-height: 1; }
+
+/* ⚠️ NÓ INTERMEDIÁRIO, criado só para conter as de dentro (D28). Tracejado e
+   apagado porque ele NÃO é uma linha de verdade: cadastrar `backend/modulos`
+   continua cadastrando UMA pasta, e por isso ele não tem as duas marcas nem o
+   ×. Dar-lhe controles o faria virar uma segunda linha que ninguém pediu. */
+.cpr-pasta-fantasma { opacity: .62; border: 1px dashed rgba(var(--white-rgb),0.14);
+  border-radius: 5px; }
+.cpr-pasta-nota { font-size: 11px; color: var(--text-muted); font-style: italic;
+  margin-left: auto; white-space: nowrap; }
+
+.cpr-pasta-l { display: flex; flex-direction: column; gap: 5px; }
+.cpr-pasta { display: flex; align-items: center; gap: 8px; background: var(--surface-dark);
+  border-radius: var(--radius); padding: 8px 12px; font-family: 'Cascadia Code','Consolas',monospace;
+  font-size: 12px; color: var(--teal); flex-wrap: wrap; }
+.cpr-pasta > span { flex: 1; min-width: 120px; word-break: break-all; }
+.cpr-pasta button { margin-left: auto; background: var(--red); border: none; color: #fff;
+  border-radius: 5px; width: 24px; height: 24px; cursor: pointer; font-size: 12px; flex-shrink: 0; }
+.cpr-rm, .cpr-ctx { display: flex; align-items: center; gap: 6px; font-family: inherit;
+  font-size: 12px; color: var(--text-muted); white-space: nowrap; cursor: pointer; }
+.cpr-rm input { width: 14px; height: 14px; accent-color: var(--red); }
+.cpr-ctx input { width: 14px; height: 14px; accent-color: var(--purple); }
+/* A descrição só existe com "Contexto sem leitura" marcado — ela É o conteúdo
+   do item de contexto, e por isso a borda roxa: pertence àquela marca. */
+.cpr-desc { margin-left: 14px; background: var(--surface);
+  border: 1px solid rgba(var(--purple-rgb),0.35); border-radius: var(--radius);
+  color: var(--text); padding: 7px 11px; font-size: 12.5px; font-family: inherit; }
+
+/* ⛔ Aqui viviam `.cpr-conteudo` e `.cpr-conteudo-alerta`, o textarea onde o
+   texto do CLAUDE.md era digitado. Saíram em 2026-09-02: o texto virou um ITEM
+   DA BIBLIOTECA, em `Arquivos/Instruções base/`, e o início rápido só escolhe
+   qual deles vai. Configuração deixou de ser lugar de conteúdo editável.
+
+   ── O espelho só-leitura dos destinos do assistente ──
+   Reusa `.cfa-linha` inteira, da categoria Assistentes externos: é a MESMA
+   grade, com um `<span>` no lugar do `<input>`. O valor fica monoespaçado
+   porque é caminho, como do outro lado. */
+.cpr-espelho-valor {
+  font-family: 'Cascadia Code','Consolas',monospace;
+  font-size: 13px; color: var(--text); padding: 6px 0;
+  word-break: break-all;
+}
+.cpr-espelho-valor i { color: var(--text-muted); font-style: normal; }
+
+/* ── "O que este preset copia da biblioteca" ──
+   Barra de sub-abas + lista de caixas. O desenho da barra é o de
+   `Componentes/Barra de sub-abas.md` (sublinhado teal, 13px/500, cantos só em
+   cima) — classe própria porque `.subtab-btn` é navegação de segundo nível
+   registrada em `tab-order.js`, e esta troca CONTEÚDO dentro de um cartão. */
+.cpr-bib-abas {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05); margin-bottom: 12px;
+}
+.cpr-bib-aba {
+  display: flex; align-items: center; gap: 7px;
+  background: transparent; border: none; color: var(--text-muted);
+  font-family: inherit; font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.cpr-bib-aba:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.cpr-bib-aba.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+/* A contagem só ganha cor quando há algo marcado: "0/6" é informação neutra,
+   "4/6" é o que o Preparar vai copiar. Sem isso as quatro abas parecem iguais. */
+.cpr-bib-cnt {
+  font-size: 11px; font-variant-numeric: tabular-nums;
+  color: var(--text-muted); background: rgba(var(--white-rgb),0.05);
+  border-radius: 9px; padding: 1px 7px;
+}
+.cpr-bib-cnt.on { color: var(--teal); background: rgba(var(--teal-rgb),0.14); }
+
+/* Nível 2 — a origem. As sub-abas em si REUSAM `.arq-inner-tabs` /
+   `.arq-inner-tab` (`arquivos.css`): é a mesma separação Do programa / Gerais da
+   aba Arquivos, com os mesmos rótulos, e dois desenhos para a mesma coisa
+   custaria mais que a classe compartilhada. O que mora aqui é só a fileira que
+   põe os dois botões de ação ao lado delas.
+
+   ⚠️ O `margin-bottom: 12px` de `.arq-inner-tabs` é zerado aqui e passa para a
+   fileira. Sem isso o `align-items: center` centralizaria os botões contra a
+   altura das sub-abas MAIS a margem, e eles subiriam 6px acima do lugar. */
+.cpr-bib-barra {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 8px 12px; margin-bottom: 12px;
+}
+.cpr-bib-barra .arq-inner-tabs { margin-bottom: 0; }
+.cpr-bib-acoes { display: flex; gap: 8px; }
+
+.cpr-bib-lista { display: flex; flex-direction: column; gap: 1px; }
+.cpr-bib-item > span { flex: 1; min-width: 0; word-break: break-word; }
+
+/* ── A lista recuada com caixa no grupo ──
+   O agrupamento da biblioteca (`Skills/Arquitetura modular/...`) aparecia como
+   caminho inteiro em cada linha, e oito variantes da mesma skill enchiam a
+   lista de prefixo repetido. Agora o grupo é UMA linha, com a própria caixa, e
+   os itens ficam recuados debaixo dela.
+
+   ⚠️ `name` continua sendo a identidade gravada — só a exibição mudou. A linha
+   do item mostra o `rotulo`, que é a folha do caminho. */
+.cpr-bib-grupo { display: flex; flex-direction: column; gap: 1px; }
+.cpr-bib-filhos { display: flex; flex-direction: column; gap: 1px; }
+.cpr-bib-item-filho { padding-left: 26px; }
+
+/* ⛔ A LINHA DO GRUPO NÃO É UM `.config-check`, e não tem caixa: **grupo é uma
+   PASTA, não um item**. Ela não existe no destino — a cópia achata o
+   agrupamento —, então marcá-la prometeria copiar o que não é copiável. É uma
+   linha de cabeçalho: dobra, nome, e quantos dos filhos estão marcados. */
+.cpr-bib-grupo-l {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 8px; border-radius: var(--radius);
+}
+.cpr-bib-grupo-nome {
+  flex: 1; min-width: 0; word-break: break-word;
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+
+/* A seta de dobra. Botão de verdade (e não um `<span>` clicável) para chegar
+   pelo teclado como os outros controles da lista. */
+.cpr-bib-dobra {
+  background: transparent; border: none; color: var(--text-muted);
+  font-family: inherit; font-size: 11px; line-height: 1;
+  padding: 2px 4px; cursor: pointer; border-radius: 4px;
+  transition: color var(--t), background var(--t);
+}
+.cpr-bib-dobra:hover { color: var(--text); background: rgba(var(--white-rgb),0.06); }
+
+/* ⛔ Aqui havia um selo escrito "grupo" ao lado do nome. Saiu: com a linha já
+   sem caixa, em maiúsculas e apagada, ela não se confunde mais com um item —
+   e o selo virava uma terceira coisa para ler numa linha que só separa. */
+
+/* De que grupo o item é — só aparece quando a busca o mostra com o grupo
+   fechado. Sem isso o resultado apareceria sem contexto nenhum. */
+.cpr-bib-de-grupo {
+  font-size: 11px; color: var(--text-muted);
+  white-space: nowrap; margin-left: auto;
+}
+
+/* ⛔ Não devolver um selo de origem à direita de cada linha. Ele existiu por
+   um dia (2026-08-25) e saiu no mesmo dia: com a lista já separada em
+   Do programa / Gerais, o selo repetia em cada linha o que a sub-aba aberta já
+   diz — e o usuário achou que poluía. */
+
+/* Campo sem rótulo próprio: quem o nomeia é o título do cartão. */
+.cpr-campo-solto { max-width: 420px; }
+.cpr-campo-solto input,
+.cpr-campo-solto select { width: 100%; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.07); border-radius: var(--radius); color: var(--text);
+  padding: 8px 12px; font-size: 14px; font-family: 'Cascadia Code','Consolas',monospace; }
+.cpr-campo-solto select { font-family: inherit; cursor: pointer; }
+.cpr-campo-solto select:focus { outline: none; border-color: rgba(var(--blue-rgb),0.55); }
+
+/* 🔴 A LISTA ABERTA DO `<select>` NÃO HERDA O FUNDO DO CAMPO. Sem esta regra o
+   sistema desenha as opções com o fundo CLARO padrão dele, e num tema escuro
+   sai texto claro sobre fundo claro — ilegível. É o mesmo conserto que
+   `.agente-select option` e `.chat-agent-select option` já faziam; todo
+   `<select>` novo do programa precisa dele. */
+.cpr-campo-solto select option { background: var(--surface-dark); color: var(--text); }
+
+.cpr-add { display: flex; gap: 10px; align-items: center; }
+.cpr-add input { flex: 1; max-width: 420px; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.07); border-radius: var(--radius); color: var(--text);
+  padding: 8px 12px; font-size: 13px; font-family: 'Cascadia Code','Consolas',monospace; }

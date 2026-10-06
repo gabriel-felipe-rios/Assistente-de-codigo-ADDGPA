@@ -1,0 +1,79 @@
+/* ═══════════════════ Aba Arquivos — sub-aba "Como adicionar" ══
+   Uma sub-aba por categoria (Skills … Extensões). Cada vista é um cartão com
+   cabeçalho, explicação, a tabela dos tipos OU um botão, a nota e, se houver,
+   o material de apoio. O texto vem de `Program/Code/prompts/Como adicionar/`,
+   pelo backend — aqui só o desenho.
+
+   Reusa `.ext-tabela` (configuracoes-extensoes.css), `.config-nota`
+   (configuracoes.css) e `.btn` + variantes (tema/base.css). Nenhuma cor nova:
+   tudo sai dos tokens, então a aba acompanha os cinco temas sem ser tocada. */
+
+.cad-corpo { display: flex; flex-direction: column; gap: 18px; max-width: 900px; }
+
+/* ── A barra de sub-abas das categorias ──
+   Desenho da Barra de sub-abas (sublinhado --teal, 13px/500, cantos só em
+   cima, flex-wrap), com classe PRÓPRIA e sem `data-taborder-group`: é seletor
+   de conteúdo dentro da sub-aba, não navegação — como o `.cpr-bib-aba`. */
+.cad-abas {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05);
+}
+.cad-aba {
+  background: transparent; border: none; color: var(--text-muted);
+  font-family: inherit; font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.cad-aba:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.cad-aba.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+/* ── Uma vista por categoria ── */
+.cad-vista { display: flex; flex-direction: column; gap: 14px; }
+
+.cad-guia {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid rgba(var(--white-rgb),0.05); padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 11px;
+}
+.cad-guia-cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cad-guia-ic { font-size: 18px; flex-shrink: 0; }
+.cad-guia-nome { font-size: 15px; font-weight: 700; }
+.cad-secao-caminho {
+  font-size: 11.5px; color: var(--purple);
+  background: rgba(var(--black-rgb),0.3); padding: 2px 7px; border-radius: 4px;
+}
+.cad-guia-oque { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.cad-guia-oque strong, .cad-tipos strong, .cad-montar-txt strong { color: var(--text); }
+.cad-guia-oque code, .cad-montar-txt code {
+  background: rgba(var(--black-rgb),0.3); padding: 1px 5px; border-radius: 3px; font-size: 11.5px;
+}
+.cad-guia-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+/* A categoria cujo `categoria.json` não se leu: o erro fica na sub-aba dela. */
+.cad-erro { font-size: 12.5px; color: var(--red); line-height: 1.6; }
+
+/* ── A tabela dos tipos ── */
+.cad-tipos td { vertical-align: middle; }
+.cad-col-btn { width: 150px; text-align: right; white-space: nowrap; }
+.cad-col-marca { width: 34px; text-align: center; }
+.cad-col-marca input { accent-color: var(--teal); width: 15px; height: 15px; cursor: pointer; }
+.cad-tipo-pasta {
+  font-size: 11px; color: var(--text-muted); font-family: Consolas, monospace;
+  margin-left: 6px; white-space: nowrap;
+}
+.cad-usa { font-size: 11.5px; color: var(--text-muted); }
+
+/* ── Extensões: a faixa que monta o prompt dos tipos marcados ── */
+.cad-montar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 14px; border-radius: var(--radius);
+  background: rgba(var(--teal-rgb),0.08); border: 1px solid rgba(var(--teal-rgb),0.25);
+}
+.cad-montar-txt { flex: 1; min-width: 240px; font-size: 12.5px; color: var(--text-muted); }
+.cad-montar .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Material de apoio / os recursos ── */
+.cad-apoio { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.cad-apoio-tit {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text-muted);
+}

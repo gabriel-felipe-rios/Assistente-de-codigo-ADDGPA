@@ -1,0 +1,51 @@
+Preciso de uma PALETA para a biblioteca de aparência do meu assistente de código.
+
+QUE CLIMA: [descreva aqui — ex.: escura, sóbria, com acento âmbar]
+
+Entregue UM arquivo .json com esta forma exata:
+
+  {
+    "nome": "<Nome da paleta>",
+    "descricao": "<uma frase dizendo o clima dela>",
+    "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+    "cores": { ... }
+  }
+
+O BLOCO "cores" TEM 16 CHAVES, SEMPRE — nem uma a mais, nem uma a menos.
+
+Seis papéis fixos, cada um { "hex", "uso" }:
+  fundo               Fundo principal da aplicação
+  superficie          Cards, painéis, sidebars — elementos sobre o fundo
+  superficie_hover    Hover de elementos com cor superficie
+  superficie_escura   Topbar, barra de abas — contraste para criar hierarquia
+  texto               Todo texto principal
+  texto_secundario    Texto de suporte: datas, metadados, placeholders
+
+Cinco acentos, cada um com o seu _hover — 10 chaves. Cada uma leva
+{ "hex", "apelido", "uso" }:
+  primaria     e primaria_hover      Ação primária, foco, borda de seleção ativa
+  positiva     e positiva_hover      Confirmação, destaque positivo, sucesso
+  negativa     e negativa_hover      Deletar, rejeitar, erro
+  especial     e especial_hover      Destaque especial, aba ativa de modo especial
+  utilitaria   e utilitaria_hover    Exportar, copiar, ações secundárias
+
+REGRAS DO FORMATO
+
+1. O acento é nomeado pelo PAPEL, nunca pela cor. Não existe chave "lilas" nem
+   "magenta" — o nome bonito da cor vai no campo "apelido", ao lado do papel.
+   O papel é o que o modelo procura; o apelido é só para eu reconhecer.
+
+2. O campo "uso" de cada chave diz ONDE aquela cor entra. Mantenha os textos
+   acima, ou reescreva-os mais específicos — mas nunca deixe vazio.
+
+3. O "hover" de cada acento é a mesma cor um passo mais escura ou mais viva, não
+   uma cor diferente.
+
+4. O campo "descricao" é o que aparece no cartão da tela. Uma frase.
+
+5. A tag NÃO vai dentro do arquivo. Ela mora só no tags.json, na raiz de
+   Arquivos/Estilos e cores/, e eu atribuo pela própria tela depois. Não crie
+   campo "tags" no JSON nem meta no HTML.
+
+ONDE VOU SALVAR
+  Arquivos/Estilos e cores/Cores/<Nome da paleta>.json

@@ -1,0 +1,20 @@
+{
+  "max_paralelo_subagentes": 4,
+  "max_rodadas_ferramentas": 3,
+  "max_rodadas_ferramentas_verificador": 5,
+  "max_ferramentas_rodada": 4,
+  "max_tentativas_correcao": 2,
+  "teto_ler_arquivo_tokens": 15000,
+  "teto_parte_tokens": 6000,
+  "busca_semantica_excerpt_tokens": 50,
+  "teto_resposta_subagente_tokens": 2000,
+  "embedding_truncar_tokens": 512,
+  "grep_max_kb": 500,
+  "grep_corte_linha_chars": 120,
+  "grep_max_ocorrencias": 50,
+  "grep_max_arquivos": 20,
+  "busca_semantica_top_k": 8,
+  "relacoes_max_itens": 40,
+  "listar_pasta_primeiro_nivel": 20,
+  "listar_pasta_max_itens": 100
+}

@@ -1,0 +1,78 @@
+/* ── MAPA DE I/O ── */
+
+/* O Mapa de I/O reaproveita o esqueleto do LSP (`.lsp-layout`/`.lsp-diag-panel`),
+   mas a coluna esquerda dele é OUTRA coisa: no LSP é uma lista plana de
+   diagnósticos, aqui é a árvore de pastas do código. Por isso a largura é
+   sobrescrita só dentro de `#mio-content` — mexer em `.lsp-diag-panel` direto
+   alargaria também a aba LSP, que está certa como está.
+   O espaço sai do painel de código (`.ts-code-panel`, `flex: 1`), que é quem
+   tem folga; o painel do meio (operações) continua em 300px. */
+#mio-content .lsp-diag-panel { flex-basis: var(--painel-arvore-largo); }
+
+/* O painel do MEIO (operacoes) tambem e mais largo aqui do que no Tree-sitter,
+   que compartilha a classe. Dois motivos, e o segundo apareceu depois:
+
+   1. A barra de copiar mora neste cabecalho, e sao TRES botoes ("Caminho",
+      "Caminho + trecho", "Caminho + codigo") mais o nome do arquivo. Em 300px
+      nao cabia: o nome sumia e o terceiro botao ficava fora da area visivel.
+   2. A chamada de cada operacao (`shutil.rmtree(os.path.joi…`) cortava justo no
+      argumento, que e a parte que interessa ler.
+
+   Escopado em `#mio-content` de proposito: `.ts-sym-panel` e a lista de simbolos
+   do Tree-sitter, que ficou de fora desta mudanca e nao tem barra nenhuma. */
+#mio-content .ts-sym-panel { flex-basis: 500px; }
+
+/* ⚠️ Nem 500px poe o nome do arquivo e os TRES botoes na mesma linha — isso
+   pediria ~650px, e ai o painel de codigo (que e o que se le) ficaria estreito
+   demais numa janela de 1280. Entao o cabecalho quebra: nome em cima, botoes
+   embaixo. E a diferenca visivel em relacao a Relacoes, onde o painel de detalhe
+   e `flex: 1` e os dois botoes cabem ao lado do nome.
+   Se um dia se quiser as duas telas identicas numa linha so, o caminho e tirar
+   um botao daqui — nao alargar mais o painel. */
+
+/* ⛔ `.mio-stat` saiu junto com a faixa "62 de 271 arquivos com I/O", que ficava
+   acima da árvore. Duas razões, as duas do usuário: nenhuma das outras telas de
+   árvore tem uma faixa dessas (era a única, e destoava), e a contagem já existe
+   na bolha de cada pasta da própria árvore — contar duas vezes na mesma coluna
+   não acrescenta nada.
+   O `total_files` que a faixa mostrava continua vindo de `scan_file_io`; só
+   deixou de ser desenhado. */
+/* `.mio-file-item` saiu com a árvore antiga — a linha ativa agora é `.arvp-ativo`
+   (componente arvore-pastas.js). */
+
+.mio-filter-btn {
+  font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(var(--white-rgb),0.1);
+  background: transparent; color: var(--text-muted); cursor: pointer; transition: background var(--t), color var(--t);
+  white-space: nowrap;
+}
+.mio-filter-btn:hover  { background: rgba(var(--white-rgb),0.06); color: var(--text); }
+.mio-filter-btn.active { background: rgba(var(--blue-rgb),0.15); color: var(--blue); border-color: rgba(var(--blue-rgb),0.3); }
+
+.mio-entry-list { flex: 1; overflow-y: auto; }
+
+.mio-entry-row {
+  display: flex; align-items: flex-start; gap: 8px; padding: 9px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04); cursor: pointer; transition: background var(--t);
+}
+.mio-entry-row:hover  { background: rgba(var(--white-rgb),0.05); }
+.mio-entry-row.active { background: rgba(var(--blue-rgb),0.1); border-left: 3px solid var(--blue); }
+
+.mio-type-badge {
+  font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+  flex-shrink: 0; margin-top: 2px; white-space: nowrap;
+}
+.mio-type-read_file   { background: rgba(var(--blue-rgb),0.15);  color: var(--blue); }
+.mio-type-write_file  { background: rgba(var(--green-rgb),0.15);  color: var(--green); }
+.mio-type-read_dir    { background: rgba(var(--purple-rgb),0.15);  color: var(--purple); }
+.mio-type-create_dir  { background: rgba(var(--amber-rgb),0.15);  color: var(--amber); }
+.mio-type-delete_file { background: rgba(var(--red-rgb),0.15);   color: var(--red); }
+.mio-type-delete_dir  { background: rgba(var(--red-hover-rgb),0.15);   color: var(--red-hover); }
+.mio-type-delete      { background: rgba(var(--red-rgb),0.1);    color: var(--red); }
+.mio-type-check_file  { background: rgba(var(--cinza-rgb),0.15); color: var(--cinza); }
+.mio-type-check_dir   { background: rgba(var(--cinza-escuro-rgb),0.15); color: var(--cinza-escuro); }
+.mio-type-check_path  { background: rgba(var(--cinza-azulado-rgb),0.15); color: var(--cinza-azulado); }
+
+.mio-entry-body  { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.mio-entry-call  { font-size: 11px; font-family: monospace; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mio-entry-meta  { display: flex; align-items: center; gap: 6px; }
+.mio-path-arg    { font-size: 11px; font-family: monospace; color: var(--green); }

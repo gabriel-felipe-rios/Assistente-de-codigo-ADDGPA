@@ -1,0 +1,27 @@
+{
+  "ordem": 1,
+  "nome": "Skills",
+  "icone": "📄",
+  "destino": "Arquivos/Skills/",
+  "tabela": {
+    "colunas": [
+      "Forma",
+      "Como fica"
+    ],
+    "linhas": [
+      {
+        "nome": "Um arquivo só",
+        "texto": "a pasta tem só o principal",
+        "prompt": "Prompt · Um arquivo só.txt"
+      },
+      {
+        "nome": "Principal e apoio",
+        "texto": "o principal é o índice: diz quando abrir cada arquivo de apoio que está junto na pasta",
+        "prompt": "Prompt · Principal e apoio.txt"
+      }
+    ]
+  },
+  "botao": null,
+  "nota": "O principal é o `.md` com o mesmo nome da pasta (regra de Configurações › Arquivos). Quando estiver pronto, ponha a pasta em `Arquivos/Skills/`.",
+  "apoio": null
+}

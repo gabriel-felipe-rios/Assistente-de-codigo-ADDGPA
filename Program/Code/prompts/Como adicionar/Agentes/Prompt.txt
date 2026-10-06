@@ -1,0 +1,45 @@
+Preciso de um AGENTE (subagente) para a biblioteca do meu assistente de código.
+
+O QUE O AGENTE DEVE FAZER: [descreva aqui — o papel dele, e quando o orquestrador deve chamá-lo]
+
+Entregue UM arquivo .md, solto, com esta forma:
+
+  <nome-do-agente>.md
+
+    ---
+    name: <nome-do-agente>
+    description: <o que ele faz e QUANDO usar>
+    tools: <as ferramentas que ele pode usar, separadas por vírgula>
+    model: <inherit, ou o modelo>
+    ---
+
+    <o prompt do agente>
+
+REGRAS DO FORMATO
+
+1. É UM arquivo, não uma pasta. Nesta categoria o item é o próprio .md; uma
+   subpasta de Arquivos/Agentes/ é só uma gaveta para organizar, e nunca vira
+   item.
+
+2. NÃO há Descrição.md, e não deve haver. A descrição mora no "description:"
+   do cabeçalho — é esse campo que o assistente externo lê para decidir sozinho
+   se aciona o subagente. Diga o que ele faz e QUANDO usar (e, se valer, quando
+   NÃO usar).
+
+3. "tools:" vazio NÃO quer dizer "nenhuma": quer dizer que o agente herda todas
+   as ferramentas. Para limitar, liste só as que ele precisa.
+
+4. "name:" é o mesmo nome do arquivo, sem o .md, em minúsculas e com hífen —
+   como no exemplo que vem com o programa, Arquivos/Agentes/subagente-1.md.
+
+5. A subpasta onde eu guardar o arquivo (Agentes/Claude/, por exemplo) é
+   organização, não destino: para onde o agente vai ao ligar num projeto quem
+   decide é o assistente do projeto.
+
+6. O corpo, depois do cabeçalho, é o prompt que o agente recebe: dirigido a
+   ele, no imperativo — o papel, como trabalhar e como devolver o resultado.
+
+ONDE VOU SALVAR
+  Arquivos/Agentes/<nome-do-agente>.md
+
+Me entregue o conteúdo de cada arquivo, dizendo o nome de cada um.

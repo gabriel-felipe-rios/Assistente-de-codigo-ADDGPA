@@ -1,0 +1,13 @@
+{
+  "ordem": 7,
+  "nome": "Agentes",
+  "icone": "🤖",
+  "destino": "Arquivos/Agentes/",
+  "tabela": null,
+  "botao": {
+    "rotulo": "📋 Copiar prompt de agente",
+    "prompt": "Prompt.txt"
+  },
+  "nota": "Quando estiver pronto, ponha em `Arquivos/Agentes/`.",
+  "apoio": null
+}

@@ -1,0 +1,4 @@
+• leitor — Lê um arquivo específico e responde uma pergunta precisa sobre ele. Informe o caminho do arquivo na pergunta.
+  Use para: "Como funciona o streaming em chat.py?", "O que faz a função X nesse arquivo?"
+  Exemplo:
+  {"chamadas": [{"subagente": "leitor", "pergunta": "Como funciona o streaming em Program/Code/backend/modulos/chat.py?"}]}

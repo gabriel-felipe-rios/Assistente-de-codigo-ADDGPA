@@ -1,0 +1,131 @@
+/* ══════════════════════════════════════════════════════════ ABA: EDITOR ══
+   O layout da aba. As métricas da superfície de edição moram em
+   `editor-superficie.css`, as cores da sintaxe em `editor-cores.css` e a
+   divisória em `divisoria.css` — os três são carregados por `style.css`.
+
+   ⚠️ ESTE CABEÇALHO JÁ MATOU A REGRA `.ed-layout` LOGO ABAIXO, e sem dar erro
+   nenhum. Ele tinha DOIS abre-comentário (um na linha de título, outro no
+   bloco do racha) e DOIS fecha-comentário. Comentário CSS NÃO ANINHA: o
+   segundo abre-comentário é texto comum, e o primeiro fecha-comentário
+   terminava o bloco no meio do cabeçalho. A prosa seguinte virava CSS vivo, e
+   o parser a consumia como prelúdio de seletor até achar a primeira chave —
+   a da própria `.ed-layout`, que ia junto para o lixo. Sem ela a aba ficava
+   sem `display:flex`, sem `height:100%` e sem `overflow:hidden`: passava a
+   ser dimensionada pelo conteúdo, o rodapé de status subia para o meio da
+   tela e, com um arquivo grande aberto, sumia por baixo dela. Relatado pelo
+   usuário em 04/09/2026.
+
+   Se for mexer aqui: UM abre-comentário no começo, UM fecha-comentário no
+   fim, e nenhum dos dois escrito por extenso no meio do texto — foi assim que
+   a correção quebrou de novo, na primeira tentativa.
+
+   ── Este arquivo era 517 linhas, e virou cinco ──
+   Pelo teto de 500 da AMF, na ordem em que os blocos estavam — em CSS a ordem
+   é a regra de desempate:
+
+     editor.css             a árvore e o cartão da bolinha
+     editor-paineis.css     os dois painéis, as abas e a barra do arquivo
+     editor-busca.css       Ctrl+F, Ctrl+Shift+F e o minimapa
+     editor-status.css      o rodapé de status e o painel vazio
+     editor-historico.css   o Histórico local e o cartão do Assistente
+
+   ⚠️ A ABERTURA RÁPIDA (Ctrl+P) NÃO ESTÁ MAIS AQUI, nem em `editor-busca.css`.
+   Ela deixou de ser da aba Editor e virou a barra de Acesso rápido, com
+   desenho próprio em `estilos/acesso-rapido.css` (`.acr`/`.acr-*`) — o selo de
+   porcentagem dos resultados semânticos, que morava neste arquivo, foi junto:
+   um widget que abre em qualquer aba não pode depender do CSS de uma delas.
+
+   As linhas da árvore continuam reusando `.arvp-*` (arvore-pastas.css). Só o
+   que é próprio desta aba está aqui. */
+
+.ed-layout { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+
+/* Corpo: árvore | divisória | área dos painéis */
+.ed-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+/* ── Painel da árvore ── */
+.ed-arvore-painel {
+  /* O painel de resultados da busca se sobrepõe à árvore, e é ancorado aqui. */
+  position: relative;
+  width: var(--painel-arvore-largo);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 180px;
+}
+.ed-arvore-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
+}
+.ed-arvore-titulo {
+  flex: 1; min-width: 0;
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ed-arvore-acoes { display: flex; gap: 2px; flex-shrink: 0; }
+/* `.btn-icon` traz `margin-left: auto` para o caso de uso dele em utils.css;
+   aqui quem empurra é o título com `flex: 1`, e a margem descolaria os três. */
+.ed-arvore-acoes .btn-icon { margin-left: 0; width: 28px; height: 28px; font-size: 14px; }
+.ed-arvore-acoes .btn-icon.ativo {
+  color: var(--text); border-color: var(--teal); background: rgba(var(--teal-rgb), 0.16);
+}
+
+.ed-arvore { flex: 1; overflow: auto; padding: 4px 0; position: relative; }
+
+/* A linha reusa `.arvp-linha`; só o que é próprio daqui fica abaixo. */
+.ed-linha-inativa { opacity: 0.45; cursor: default; }
+.ed-linha-inativa:hover { background: transparent; color: var(--text-muted); }
+
+/* A bolinha ⓘ, irmã de `.arvp-contagem`. Fica sempre visível, ao lado da
+   contagem: escondê-la no hover economizaria 20px e esconderia a existência
+   do recurso de quem nunca passou o mouse ali. */
+.ed-info {
+  flex-shrink: 0; margin-left: 4px;
+  font-size: 10.5px; line-height: 1.5;
+  color: var(--text-muted);
+  background: rgba(var(--white-rgb), 0.07);
+  border-radius: 8px; padding: 0 6px; cursor: pointer;
+}
+.ed-info:hover { background: rgba(var(--teal-rgb), 0.28); color: var(--text); }
+
+/* Contagem que estourou o orçamento de varredura. Mesmo desenho da exata, com
+   o `+` no texto — o `title` diz o resto. Ver editor_arvore.py. */
+.arvp-contagem.ed-parcial { color: var(--amber); }
+
+.ed-vazio { padding: 14px 12px; font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+/* ── Cartão da bolinha ⓘ ── */
+.ed-cartao {
+  position: absolute; z-index: 40; width: 258px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.45);
+  padding: 12px 14px;
+}
+.ed-cartao-titulo {
+  font-size: 12.5px; font-weight: 700; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ed-cartao-caminho {
+  font-size: 10.5px; color: var(--text-muted); margin-bottom: 10px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ed-cartao-linha {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11.5px; color: var(--text-muted); padding: 2px 0;
+}
+.ed-cartao-linha b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ed-cartao-ext { width: 74px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; }
+.ed-cartao-barra {
+  flex: 1; height: 5px; border-radius: 3px;
+  background: rgba(var(--white-rgb), 0.08); overflow: hidden;
+}
+.ed-cartao-barra i { display: block; height: 100%; border-radius: 3px; background: var(--teal); }
+.ed-cartao-sep { height: 1px; background: rgba(var(--white-rgb), 0.08); margin: 9px 0; }
+.ed-cartao-aviso { font-size: 10.5px; color: var(--amber); margin-top: 8px; }
+
+

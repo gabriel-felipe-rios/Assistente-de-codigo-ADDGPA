@@ -1,0 +1,4 @@
+- Antes de dizer que algo devia ser diferente, pergunte a quem tem a base (os que
+  estiverem ligados): o norm.padronizador para cor, espaçamento e comportamento de
+  tela; o norm.terminologo para nome; o norm.enderecador para onde o arquivo deve
+  morar; o norm.instrutor para regra do projeto. Cite a base em "restricoes".

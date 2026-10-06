@@ -1,0 +1,18 @@
+{
+  "nome": "Canvas das telas",
+  "versao": "1",
+  "descricao": "Uma aba Telas: cada tela do site viva num canvas, e a ligação do elemento que leva até ela.",
+  "prefixo": "ct",
+  "tipos": ["1", "3"],
+  "acrescenta": [
+    { "recurso": "tela", "id": "ct.telas", "lugar": "aba.nova", "rotulo": "Telas",
+      "icone": "◇", "arquivo": "frontend/telas/ct-aba.js" },
+    { "recurso": "reacao", "id": "ct.ao-trocar-aba", "evento": "aba.abriu",
+      "arquivo": "frontend/eventos/ct-aba-abriu.js" },
+    { "recurso": "reacao", "id": "ct.ao-fechar-projeto", "evento": "projeto.fechou",
+      "arquivo": "frontend/eventos/ct-projeto-fechou.js" },
+    { "recurso": "reacao", "id": "ct.ao-salvar", "evento": "editor.salvou",
+      "arquivo": "frontend/eventos/ct-salvou.js" }
+  ],
+  "escreve_fora": []
+}

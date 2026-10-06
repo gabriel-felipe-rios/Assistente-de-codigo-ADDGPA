@@ -1,0 +1,21 @@
+{
+  "editor_botao_salvar": true,
+  "editor_botao_historico": true,
+  "editor_botao_buscar": true,
+  "editor_botao_desfazer": true,
+  "editor_fonte_px": 12.5,
+  "editor_entrelinha": 1.65,
+  "editor_tabulacao": 4,
+  "editor_quebrar_linha": false,
+  "editor_teto_linhas_cor": 3000,
+  "editor_hist_ligado": true,
+  "editor_hist_entradas": 20,
+  "editor_hist_dias": 30,
+  "editor_hist_mb": 100,
+  "editor_hist_so_se_mudou": true,
+  "editor_hist_diff": true,
+  "editor_minimapa": true,
+  "editor_breadcrumb": true,
+  "editor_caminho_barra": true,
+  "editor_lint_sintaxe": true
+}

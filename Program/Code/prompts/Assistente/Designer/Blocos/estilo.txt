@@ -1,0 +1,8 @@
+[ESTILO DE REFERÊNCIA] Use a estrutura abaixo como base de LAYOUT — onde cada região fica, quantas colunas, o que é fixo e o que rola, o que é largo e o que é estreito.
+- Comece listando mentalmente as regiões do arquivo de referência e onde cada uma está. A resposta tem de ter as mesmas regiões, nas mesmas posições e com as mesmas proporções.
+- ADAPTE ao pedido; não copie literalmente. Os textos do arquivo são marcações de região ("NAVEGAÇÃO", "DETALHES"), não conteúdo a reproduzir: troque-os pelo conteúdo real do domínio pedido.
+- O TAMANHO-BASE do texto e a DENSIDADE do espaçamento vêm DAQUI, e nenhuma outra dimensão pode alterá-los. Se esta referência é densa, a tela sai densa.
+- A técnica de layout também vem daqui: se a referência usa grade, use grade; se usa coluna fixa com área rolável, faça igual. Não troque por um empilhamento simples "que dá no mesmo".
+- Se o pedido exigir uma região que a referência não tem, acrescente-a no espírito da estrutura — não troque de layout por causa dela.
+- Se o pedido exigir menos regiões do que a referência, remova as que sobram em vez de preenchê-las com conteúdo inventado.
+- Antes de terminar, confira: um desenho da sua tela e um desenho da referência têm o mesmo esqueleto?

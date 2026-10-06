@@ -1,0 +1,60 @@
+/* ═══ CONFIGURAÇÕES → Acesso rápido ═══════════════════════════════════════
+   ⛔ O MÍNIMO POSSÍVEL, e é regra registrada em
+   `Componentes/Cartão de configurações.md`: *"não escrever CSS para um cartão
+   novo… se parecer que precisa de estilo novo, é sinal de que ele está sendo
+   montado errado"*.
+
+   Os quatro cartões desta categoria não têm uma linha aqui: são
+   `.config-cartao`, `.config-field-row` e `.config-nota`, que já existem. A
+   grade 3×3 é a de Notificações (`configuracoes-notificacoes.css`), o toggle de
+   tamanho é o Toggle segmentado compartilhado (`mapas.css`), as linhas de modo
+   são as de Plugins (`configuracoes-plugins.css`) e o Interruptor é o de
+   `utils.css`. O que sobra — e só o que sobra — está abaixo.
+
+   ⚠️ NENHUMA COR NOVA. Tudo por token declarado em `estilos/tema/`, que é o
+   único lugar que declara token; este arquivo não declara `:root`.           */
+
+/* ── A legenda das medidas ── A frase que diz, em números, o que o toggle de
+   tamanho acabou de escolher. Os números vêm do JS (`_ACR_CFG_MEDIDAS`), que é
+   o gêmeo das classes `.acr--pequena/media/grande` de `acesso-rapido.css`. */
+.acr-medidas {
+  margin: 6px 0 0; font-size: 11.5px; color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── A prévia ── Uma moldura na proporção da janela, com um retângulo no lugar
+   escolhido. Não é a barra de verdade: abri-la por cima desta tela taparia
+   justamente os controles que se está mexendo. */
+.acr-previa {
+  position: relative; margin-top: 10px;
+  width: 100%; max-width: 320px; aspect-ratio: 16 / 10;
+  border: 1px solid rgba(var(--white-rgb), 0.12); border-radius: 6px;
+  background: var(--surface-dark); overflow: hidden;
+}
+.acr-previa span {
+  position: absolute; display: block; height: 14px; border-radius: 3px;
+  background: var(--teal); opacity: 0.85;
+}
+/* A largura do retângulo acompanha os três tamanhos, na mesma proporção que
+   eles têm na janela real. */
+.acr-previa--pequena span { width: 34%; }
+.acr-previa--media   span { width: 42%; }
+.acr-previa--grande  span { width: 58%; }
+
+/* As nove posições, no mesmo sistema `<vertical>-<horizontal>` da barra. */
+.acr-previa--superior-esquerda span { top: 12%; left: 6%; }
+.acr-previa--superior-centro   span { top: 12%; left: 50%; transform: translateX(-50%); }
+.acr-previa--superior-direita  span { top: 12%; right: 6%; }
+.acr-previa--meio-esquerda     span { top: 50%; left: 6%; transform: translateY(-50%); }
+.acr-previa--meio-centro       span { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.acr-previa--meio-direita      span { top: 50%; right: 6%; transform: translateY(-50%); }
+.acr-previa--inferior-esquerda span { bottom: 12%; left: 6%; }
+.acr-previa--inferior-centro   span { bottom: 12%; left: 50%; transform: translateX(-50%); }
+.acr-previa--inferior-direita  span { bottom: 12%; right: 6%; }
+
+/* ⚠️ A GRADE DAS TECLAS NÃO ESTÁ MAIS AQUI. Ela morava neste arquivo porque
+   esta categoria veio antes da categoria "Teclado"; agora a Teclado existe, e o
+   bloco `.tecla-*` foi para `estilos/configuracoes-teclado.css`, que é a casa
+   dele. As duas categorias mostram a MESMA grade, lida do mesmo registro —
+   escrever a segunda seria fazer a tecla que a tela mostra deixar de ser a
+   tecla que dispara.                                                         */

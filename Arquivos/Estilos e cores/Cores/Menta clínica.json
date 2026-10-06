@@ -1,0 +1,81 @@
+{
+  "nome": "Menta clínica",
+  "descricao": "Paleta clara e asséptica de verdes frios. Fundo menta lavado, texto verde-escuro e acentos sóbrios — feita para painéis de dados e sistemas de trabalho.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(0,0,0,0.10). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#F2F8F6",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#FFFFFF",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#E4F1EC",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#DDEAE6",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#163A33",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#5C7B74",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#0E8C6E",
+      "apelido": "menta",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#0A6E56",
+      "apelido": "menta (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#2E9E4F",
+      "apelido": "verde",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#237B3D",
+      "apelido": "verde (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#C2413B",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#9C332E",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#1E6FA8",
+      "apelido": "azul",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#175783",
+      "apelido": "azul (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#5F8A85",
+      "apelido": "cinza-verde",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#4A6E6A",
+      "apelido": "cinza-verde (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

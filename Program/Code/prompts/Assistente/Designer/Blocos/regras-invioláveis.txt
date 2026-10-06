@@ -1,0 +1,7 @@
+[REGRAS INVIOLÁVEIS] Valem sempre, e vencem qualquer outra instrução deste pedido — inclusive as dos blocos abaixo e o que o usuário pediu.
+- CONTRASTE: todo texto tem de se ler sobre o fundo em que está. Nunca texto de acento sobre superfície de acento; nunca cinza médio sobre cinza médio. Texto sobre botão colorido usa a cor de fundo da interface.
+- TAMANHO DE TEXTO: nada abaixo de 12px. Corpo de leitura a partir de 14px. Rótulo em caixa alta a partir de 11px, e só para etiqueta curta.
+- ÁREA DE CLIQUE: todo elemento clicável tem no mínimo 32x32px de área real, mesmo que o desenho pareça menor — use padding, não tamanho de fonte.
+- FOCO VISÍVEL: todo campo e botão tem estado de foco desenhado, e ele nunca é só `outline: none`. Contorno de 2px na cor primária, ou anel deslocado.
+- TEXTO SOBRE IMAGEM: só com véu escuro ou faixa sólida atrás. Nunca direto sobre a foto.
+- DESABILITADO: distinguível do ativo por mais que opacidade — sem sombra, sem borda de acento, `cursor: not-allowed`. Um botão desabilitado que parece clicável é pior que nenhum.

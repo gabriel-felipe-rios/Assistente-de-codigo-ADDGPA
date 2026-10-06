@@ -1,0 +1,22 @@
+Sua última resposta não veio no formato esperado e não pôde ser usada.
+
+ERRO DETECTADO:
+{descricao_erro}
+
+Para CHAMAR UMA FERRAMENTA, o formato é:
+{"ferramentas": [{"nome": "<nome>", "parametros": {<parametros>}}]}
+
+Ferramentas válidas: {ferramentas_validas}
+
+Para a RESPOSTA FINAL, o formato é:
+{"aprovado": true, "motivo": "...", "problemas": [], "conferidos": [1, 2]}
+
+Regras do formato:
+- "aprovado" é exatamente true ou false (booleano, sem aspas).
+- "motivo" é obrigatório, sempre.
+- "problemas" é uma lista; cada item tem "item" (número), "tipo" e "detalhe". Aprovando, mande lista vazia.
+- "tipo" é um destes três, e nenhum outro: "trecho_nao_encontrado", "contraria_decisao", "sem_lastro".
+- "conferidos" é uma lista de números de item.
+- Na resposta final não use a chave "ferramentas" — ela é só para chamar ferramenta.
+
+Tente novamente. Responda SOMENTE com o JSON — sem texto antes ou depois, sem markdown, sem ```.

@@ -1,0 +1,58 @@
+{
+  "cartoes": [
+    {
+      "titulo": "O servidor",
+      "dica": "Sobe quando você escolhe Servidor local na aba Terminal e aperta ▶ Executar. Cai ao desligar a extensão ou fechar o programa.",
+      "campos": [
+        {
+          "chave": "porta",
+          "rotulo": "Porta",
+          "tipo": "numero",
+          "padrao": 5500,
+          "min": 1024,
+          "max": 65535,
+          "passo": 1,
+          "nota": "Vale no próximo ▶ Executar. A porta é só deste servidor: se outro programa já a usa, o servidor não sobe e a linha do Terminal diz qual porta — o programa não tenta a porta seguinte, de propósito."
+        }
+      ]
+    },
+    {
+      "titulo": "A janela do navegador",
+      "dica": "O tamanho em que a página abre no navegador. Dá para trocar na hora, na linha do servidor.",
+      "campos": [
+        {
+          "chave": "tamanho",
+          "rotulo": "Janela inicial",
+          "tipo": "escolha",
+          "padrao": "computador",
+          "opcoes": [
+            { "valor": "celular", "rotulo": "Celular · 375 × 812" },
+            { "valor": "tablet", "rotulo": "Tablet · 768 × 1024" },
+            { "valor": "computador", "rotulo": "Computador · 1280 × 800" },
+            { "valor": "livre", "rotulo": "Livre" }
+          ]
+        },
+        {
+          "chave": "largura_livre",
+          "rotulo": "Largura livre (px)",
+          "tipo": "numero",
+          "padrao": 900,
+          "min": 240,
+          "max": 3840,
+          "passo": 10,
+          "nota": "Só vale quando a janela é \"Livre\"."
+        },
+        {
+          "chave": "altura_livre",
+          "rotulo": "Altura livre (px)",
+          "tipo": "numero",
+          "padrao": 800,
+          "min": 240,
+          "max": 2160,
+          "passo": 10,
+          "nota": "Só vale quando a janela é \"Livre\"."
+        }
+      ]
+    }
+  ]
+}

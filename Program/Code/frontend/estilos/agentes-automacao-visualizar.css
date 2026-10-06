@@ -1,0 +1,351 @@
+/* ═══ AUTOMAÇÃO → Visualizar acionamentos: o desenho do ciclo ══════════════
+   O «freio com tronco» (variação C, D11/D23): caixas de grupo com os cards
+   dentro, em fluxo (flex), e as setas num SVG por cima, medidas do DOM em
+   `visualizar-acionamentos-desenho.js`. À direita, o painel com dois cards
+   lado a lado — «Situação» e «Legenda» —, mesmo fundo e texto branco (D12).
+
+   ⚠️ A CADEIA DESENHADA VEM DO BACKEND (`get_dependencias_acionamentos`), e não
+   de uma segunda lista aqui. Duas cadeias divergem na primeira rotina nova, e o
+   desenho passaria a prometer uma ordem que o ciclo não segue.
+
+   ⚠️ Texto do painel em `--text`, NUNCA `--text-muted` (D12: «texto branco,
+   não cinza»). Só token, nunca hex solto. */
+
+/* ── O layout: desenho à esquerda, painel à direita ──
+   O PALCO tem o tamanho natural dos dois (max-content) e é escalado inteiro
+   por `zoom` em `_visCaber` — desenho e painel crescem e encolhem juntos. */
+.vis-layout { flex: 1; min-height: 0; padding: 14px 26px 28px; overflow: auto; }
+.vis-palco {
+  display: grid; grid-template-columns: max-content max-content; column-gap: 22px;
+  align-items: start; width: max-content;
+}
+.vis-scroll { grid-column: 1; grid-row: 1; }
+.vis-painel {
+  grid-column: 2; grid-row: 1; display: flex; flex-direction: row; align-items: flex-start;
+  gap: 16px;
+}
+
+/* ── Os dois cards do painel: mesmo fundo, mesmo título, texto branco ── */
+.vis-situacao, .vis-legenda {
+  display: flex; flex-direction: column;
+  background: linear-gradient(180deg, rgba(var(--white-rgb),0.055), rgba(var(--white-rgb),0.02));
+  border: 1px solid rgba(var(--white-rgb),0.08); border-radius: var(--radius);
+  padding: 12px 16px 14px; color: var(--text);
+}
+.vis-situacao { width: 270px; }
+.vis-legenda  { width: 250px; gap: 14px; font-size: 11.5px; }
+.vis-painel-tit {
+  display: block; font-size: 9.5px; letter-spacing: 1.4px; text-transform: uppercase;
+  font-weight: 800; color: var(--text);
+  padding-bottom: 8px; border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+}
+
+.vis-metrica {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 10px 0; border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+}
+.vis-metrica-num { font-size: 18px; font-weight: 700; line-height: 1.15; }
+.vis-de { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.vis-metrica-rot {
+  font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text); opacity: 0.85;
+}
+.vis-metrica-ok .vis-metrica-num { color: var(--green); }
+.vis-metrica-vez .vis-metrica-num {
+  font-size: 13.5px; padding-top: 4px; color: var(--blue);
+  /* O nome de um projeto pode ser longo. O texto completo fica no `title` —
+     ver `_visResumoVez`. */
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Esperando OUTRO projeto soltar a janela do LM Studio: índigo, a mesma cor do
+   estado `bloqueado` no desenho. O azul dizia "processando" — que é
+   exatamente o que NÃO está acontecendo. */
+.vis-metrica-vez .vis-metrica-num.bloqueado { color: var(--indigo); }
+
+/* A espera de cada grupo: tag, estado + o que segura, o tempo, e a barra. */
+.vis-esp {
+  position: relative; display: grid; grid-template-columns: 28px 1fr auto;
+  align-items: center; column-gap: 9px; padding: 8px 0 9px;
+}
+.vis-esp + .vis-esp { border-top: 1px dashed rgba(var(--white-rgb),0.08); }
+.vis-esp-tag {
+  font-size: 10.5px; font-weight: 800; text-align: center; padding: 3px 0; border-radius: 6px;
+  background: rgba(var(--white-rgb),0.10); color: var(--text);
+}
+.vis-esp-txt { display: flex; flex-direction: column; min-width: 0; }
+.vis-esp-est { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.vis-esp-motivo {
+  font-size: 10.5px; color: var(--text); opacity: 0.8; line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.vis-esp-tempo { font-size: 12px; font-weight: 800; color: var(--text); }
+.vis-esp-tempo.ok    { color: var(--green); }
+.vis-esp-tempo.run   { color: var(--blue); animation: vis-pulse 1.1s infinite; }
+.vis-esp-tempo.conta { font-size: 17px; color: var(--purple); font-variant-numeric: tabular-nums; }
+.vis-esp-tempo.fila  { font-size: 11px; color: var(--amber); }
+.vis-esp-barra {
+  grid-column: 1 / -1; height: 3px; margin-top: 7px; border-radius: 2px;
+  background: rgba(var(--white-rgb),0.08); overflow: hidden;
+}
+.vis-esp-barra i { display: block; height: 100%; width: 0; background: var(--purple); transition: width 1s linear; }
+
+.vis-acoes { padding-top: 12px; }
+.vis-chip {
+  background: rgba(var(--white-rgb),0.07); border: 1px solid rgba(var(--white-rgb),0.10);
+  color: var(--text); font-size: 12px; font-weight: 600;
+  padding: 7px 13px; border-radius: 20px; cursor: pointer;
+  font-family: inherit; transition: background var(--t), color var(--t), border-color var(--t);
+}
+.vis-chip:hover { background: rgba(var(--white-rgb),0.12); }
+.vis-chip.ativo {
+  background: rgba(var(--green-rgb),0.18); border-color: rgba(var(--green-rgb),0.45); color: var(--mint);
+}
+
+/* ── Legenda ──
+   Leituras independentes: a CHAVE (vai rodar?), o ESTADO (o que aconteceu na
+   última passagem?), a SETA, o MOUSE e as ETAPAS. Selo sem legenda é
+   decoração — por isso o selo de etapas tem a linha dele aqui. */
+.vis-legenda-grupo { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+.vis-legenda-lbl {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); opacity: 0.85;
+}
+.vis-legenda-item { display: inline-flex; align-items: center; gap: 7px; color: var(--text); }
+/* Amostra do contorno: o mesmo desenho da borda do card, em miniatura. */
+.vis-amostra {
+  width: 20px; height: 12px; border-radius: 3px; flex-shrink: 0;
+  border: 1px solid rgba(var(--white-rgb),0.28);
+  background: linear-gradient(180deg, var(--surface), rgba(var(--white-rgb),0.02));
+}
+.vis-amostra.off {
+  background: transparent; border-style: dashed; border-color: rgba(var(--cinza-rgb),0.55);
+}
+.vis-amostra.grp {
+  width: 24px; height: 14px; background: rgba(var(--white-rgb),0.03); border-color: rgba(var(--white-rgb),0.18);
+}
+.vis-traco { width: 22px; height: 0; border-top: 2px solid rgba(var(--white-rgb),0.40); position: relative; margin-right: 4px; flex-shrink: 0; }
+.vis-traco::after {
+  content: ''; position: absolute; right: -2px; top: -5px;
+  border-left: 9px solid rgba(var(--white-rgb),0.40);
+  border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+}
+.vis-cor-antes, .vis-cor-depois { width: 14px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.vis-cor-antes  { box-shadow: 0 0 0 2px var(--blue); }
+.vis-cor-depois { box-shadow: 0 0 0 2px var(--yellow); }
+
+/* ── O desenho: caixas de grupo, cards dentro, setas num SVG por cima ── */
+.vis-desenho { position: relative; padding: 4px 30px 10px 4px; width: max-content; }
+.vis-desenho > svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.vis-lin { display: flex; align-items: center; gap: 44px; }
+.vis-lin-topo { align-items: flex-start; }
+.vis-col { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+
+.vis-grp {
+  position: relative; border-radius: 12px; padding: 48px 16px 16px 30px;
+  background: rgba(var(--white-rgb),0.025); border: 1px solid rgba(var(--white-rgb),0.10);
+}
+/* Um card que recebe seta por baixo (o tronco da Documentação Técnica entrando
+   no Resumo de Pastas) precisa de respiro embaixo da caixa. */
+.vis-grp.recebe-baixo { padding-bottom: 36px; }
+/* Começa alinhado aos cards (30px), e não no canto: entre a borda e os cards
+   passa a calha das setas, e o rótulo encostava nela. */
+.vis-grp-rot {
+  position: absolute; left: 30px; top: 14px; font-size: 11.5px; letter-spacing: 1.2px;
+  text-transform: uppercase; font-weight: 700; color: var(--text); white-space: nowrap;
+}
+.vis-grp-rot b { color: var(--text); font-weight: 800; margin-right: 6px; }
+.vis-grp-rot .tempo {
+  color: var(--sky-light); letter-spacing: 0.4px; text-transform: none; font-weight: 600;
+  font-size: 12px; margin-left: 6px;
+}
+/* A base e o freio: as mesmas cores das seções de Acionamentos. */
+.vis-grp.base  { background: rgba(var(--teal-rgb),0.05);   border-color: rgba(var(--teal-rgb),0.32); }
+.vis-grp.freio { background: rgba(var(--purple-rgb),0.05); border-color: rgba(var(--purple-rgb),0.30); }
+/* Subcaixa sem nome: duas ou mais rotinas com o mesmo único requisito. */
+.vis-sub {
+  position: relative; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 10px;
+  background: rgba(var(--white-rgb),0.03); border: 1px solid rgba(var(--white-rgb),0.10);
+}
+
+/* ── O card de uma rotina ── */
+.vis-no {
+  position: relative; display: flex; align-items: center; gap: 9px;
+  width: 350px; min-height: 52px; padding: 8px 12px; box-sizing: border-box;
+  background: linear-gradient(180deg, var(--surface), rgba(var(--white-rgb),0.02));
+  border: 1px solid rgba(var(--white-rgb),0.09); border-radius: var(--radius);
+  cursor: default;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, opacity .12s;
+}
+.vis-no-ico { font-size: 16px; flex-shrink: 0; }
+/* D7, D12: a fase embaixo do nome — «41 de 118 · parte 2 de 3» em azul,
+   «tentativa 2 de 3 · 8 s» em âmbar. Nunca quebra: o card é largo o
+   bastante para ela. */
+.vis-no-fase {
+  font-size: 10.5px; color: var(--sky-light); font-family: 'Consolas', monospace;
+  line-height: 1.35; white-space: nowrap;
+}
+.vis-no-fase.tentativa { color: var(--amber); }
+/* D19: T2 e T3 (as rotinas com IA, onde a fase aparece) um pouco maiores,
+   nos cards e na caixa do grupo. O T1 fica como está. */
+#vis-x-t2, #vis-x-t3 { padding: 54px 22px 22px 30px; }
+#vis-x-t2 .vis-no, #vis-x-t3 .vis-no { width: 390px; min-height: 68px; padding: 10px 14px; }
+.vis-no-txt { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.vis-no-nome { font-size: 13.5px; font-weight: 600; line-height: 1.3; white-space: nowrap; }
+.vis-no-badge {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 9px; margin-left: auto; white-space: nowrap; flex-shrink: 0;
+  background: rgba(var(--white-rgb),0.10); color: var(--text-muted);
+}
+/* O selo de etapas: bolinha pequena, branca, à direita (D23, D30).
+   1 = roda de uma vez; 2 = em partes, e depois a costura. */
+.vis-etapas {
+  width: 17px; height: 17px; border-radius: 50%; flex-shrink: 0; box-sizing: border-box;
+  display: inline-grid; place-items: center; font-size: 10px; font-weight: 800; line-height: 1;
+  border: 1.5px solid rgba(var(--white-rgb),0.45); color: var(--text); background: rgba(var(--white-rgb),0.06);
+}
+.vis-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(var(--white-rgb),0.22); transition: background 0.3s;
+}
+
+/* ── Os estados de um card ── */
+.vis-no.run {
+  border-color: var(--blue);
+  background: linear-gradient(180deg, rgba(var(--blue-rgb),0.22), rgba(var(--blue-rgb),0.10));
+  box-shadow: 0 0 0 1px rgba(var(--blue-rgb),0.35);
+}
+.vis-no.run .vis-no-badge { background: rgba(var(--blue-rgb),0.32); color: var(--sky-light); }
+.vis-dot.run { background: var(--blue); animation: vis-pulse 1.1s infinite; }
+@keyframes vis-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Dispensada — o Detector olhou e não pediu esta rotina.
+   ⚠️ Teal, e NÃO âmbar. Âmbar no programa inteiro quer dizer "faltou alguma
+   coisa"; dispensada é o contrário — o ciclo trabalhou, concluiu que não havia
+   o que fazer, e poupou uma chamada de LLM. Com âmbar, um ciclo perfeito sobre
+   um projeto em dia pareceria um ciclo cheio de pendências.
+   Mesma cor do bloco "A base", que é a outra coisa desta tela que existe para
+   dizer "isto está certo assim, não é escolha nem defeito". */
+.vis-no.dispensado {
+  border-color: rgba(var(--teal-rgb),0.45);
+  background: linear-gradient(180deg, rgba(var(--teal-rgb),0.10), rgba(var(--teal-rgb),0.04));
+}
+.vis-no.dispensado .vis-no-badge { background: rgba(var(--teal-rgb),0.22); color: var(--teal); }
+.vis-dot.dispensado { background: var(--teal); opacity: 0.75; }
+
+.vis-no.done {
+  border-color: rgba(var(--green-rgb),0.6);
+  background: linear-gradient(180deg, rgba(var(--green-rgb),0.17), rgba(var(--green-rgb),0.07));
+}
+.vis-no.done .vis-no-badge { background: rgba(var(--green-rgb),0.28); color: var(--mint); }
+.vis-dot.done { background: var(--green); }
+
+/* Está na fila do ciclo e ainda não chegou a vez. Roxo, sem pulsar: pulsar é o
+   sinal de "está acontecendo agora", e aqui nada está acontecendo — a caixa
+   está avisando sobre o futuro. Mesma cor do selo `.agente-badge-esperando`
+   nos cards da sub-aba Rotinas, e pelo mesmo motivo que ele não é âmbar:
+   âmbar já quer dizer "terminou faltando pedaço". */
+.vis-no.esperando {
+  border-color: rgba(var(--purple-rgb),0.5);
+  background: rgba(var(--purple-rgb),0.10);
+}
+.vis-no.esperando .vis-no-badge { background: rgba(var(--purple-rgb),0.28); color: var(--purple); }
+.vis-dot.esperando { background: var(--purple); }
+
+/* Está parada porque a janela do LM Studio está ocupada por OUTRA ABA DE
+   PROJETO. A `TRAVA_IA` é global de propósito (é a mesma janela), então isto
+   não é defeito — mas sem estado próprio a tela ficava idêntica a "não tem
+   nada ligado aqui", e ler isso como bug era inevitável.
+
+   ⚠️ É O SEGUNDO ROXO, e isso é a regra — não uma cor qualquer que sobrou.
+   As duas esperas ficam lado a lado na mesma legenda e são a mesma ideia:
+   `esperando` é a fila do ciclo DESTE projeto (`--purple`, roxo-magenta),
+   `bloqueado` é a fila da janela do LM Studio, que é uma só para o programa
+   (`--indigo`, roxo-azulado). Tons vizinhos dizem "isto é parente daquilo";
+   uma cor de outra família diria que são coisas sem relação.
+
+   ⚠️ NÃO PODE SER CIANO NEM AZUL — foi o que esta regra tinha antes, e estava
+   errado: `.vis-dot.run` (processando) já é azul, e dois azuis na mesma
+   legenda, um pulsando e outro não, é a distinção mais difícil de fazer de
+   relance. O `--indigo` é distinto do `--purple` E do `--blue` (que aqui puxa
+   para o ciano, #3498DB) nos três temas.
+
+   ⚠️ NÃO PULSA. Pulsar é o sinal de "está acontecendo agora" (`.vis-dot.run`),
+   e aqui não está acontecendo nada: a caixa está esperando a vez. */
+.vis-no.bloqueado {
+  border-color: rgba(var(--indigo-rgb),0.55);
+  background: rgba(var(--indigo-rgb),0.12);
+}
+.vis-no.bloqueado .vis-no-badge { background: rgba(var(--indigo-rgb),0.30); color: var(--indigo); }
+.vis-dot.bloqueado { background: var(--indigo); }
+
+/* Terminou, e nem tudo saiu. Âmbar entre o verde e o vermelho: o trabalho está
+   lá, e falta um pedaço. Mesma regra do selo dos cards (.agente-badge-parcial). */
+.vis-no.parcial {
+  border-color: rgba(var(--amber-rgb),0.45);
+  background: rgba(var(--amber-rgb),0.09);
+}
+.vis-no.parcial .vis-no-badge { background: rgba(var(--amber-rgb),0.28); color: var(--amber); }
+.vis-dot.parcial { background: var(--amber); }
+
+/* Terminou sem gerar nada. */
+.vis-no.erro {
+  border-color: rgba(var(--red-rgb),0.45);
+  background: rgba(var(--red-rgb),0.09);
+}
+.vis-no.erro .vis-no-badge { background: rgba(var(--red-rgb),0.25); color: var(--red); }
+.vis-dot.erro { background: var(--red); }
+
+/* Desligado é um estado LEGÍVEL, não um apagamento. A regra antiga era
+   `opacity: 0.42`, e como o backend zera os acionamentos a cada abertura de
+   projeto, ela escondia quase todas as caixas no estado normal — daí a leitura
+   de que "faltavam agentes". Contorno tracejado, ponto vazado e selo próprio
+   dizem a mesma coisa sem tirar o contraste de leitura. */
+.vis-no.off {
+  background: transparent; box-shadow: none;
+  border-style: dashed; border-color: rgba(var(--cinza-rgb),0.40);
+}
+.vis-no.off .vis-no-nome { color: var(--text-muted); font-weight: 500; }
+.vis-no.off .vis-no-ico { filter: grayscale(1); }
+.vis-no.off .vis-no-badge { background: rgba(var(--cinza-rgb),0.13); color: var(--cinza); }
+.vis-dot.off { background: transparent; border: 1.5px solid rgba(var(--cinza-rgb),0.6); }
+
+/* ── Setas ── */
+.vis-liga { fill: none; stroke: rgba(var(--white-rgb),0.40); stroke-width: 2; transition: opacity .12s; }
+.vis-liga.lit { stroke: rgba(var(--green-rgb),0.75); }
+.vis-liga.off { stroke: rgba(var(--cinza-rgb),0.40); stroke-dasharray: 5 5; }
+/* A ponta é opaca e encosta no card; a linha termina na base dela. */
+.vis-pt { fill: rgba(var(--white-rgb),0.40); }
+.vis-pt-lit { fill: rgba(var(--green-rgb),0.75); }
+.vis-pt-off { fill: rgba(var(--cinza-rgb),0.5); }
+/* A bolinha nasce invisível: só aparece quando `_visDispararBola` a inicia. */
+.vis-bola { fill: var(--blue); opacity: 0; }
+
+/* ── Passar o mouse num card (D11) ──
+   Um passo para trás em AZUL (o que ele espera) e um para a frente em AMARELO
+   (quem espera por ele); o resto esmaece. */
+.foco .vis-no { opacity: 0.22; }
+.foco .vis-no.eu, .foco .vis-no.antes, .foco .vis-no.depois,
+.foco .vis-grp.antes .vis-no, .foco .vis-grp.depois .vis-no,
+.foco .vis-sub.antes .vis-no, .foco .vis-sub.depois .vis-no { opacity: 1; }
+.foco .vis-no.eu { box-shadow: 0 0 0 2px var(--text); }
+.foco .antes  { box-shadow: 0 0 0 2px var(--blue) !important; }
+.foco .depois { box-shadow: 0 0 0 2px var(--yellow) !important; }
+.foco .vis-liga { opacity: 0.12; }
+.foco .vis-liga.caminho { opacity: 1; stroke-width: 2.6; }
+
+/* A `.ac-botoes-legenda` saiu em 22/08/2026 junto do <p> que ela vestia: era a
+   mesma frase do `title` dos três botões, escrita duas vezes e ocupando a
+   faixa inteira de forma permanente. O `title` já aparece com o mouse no botão
+   que a pessoa está pensando em clicar. */
+
+/* Faixa de retomada — o ciclo anterior parou no meio. Âmbar, e não vermelho:
+   não houve erro, houve interrupção, e o trabalho que já saiu continua bom. */
+.ac-retomar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 13px;
+  background: rgba(var(--amber-rgb), 0.1);
+  border: 1px solid rgba(var(--amber-rgb), 0.3);
+  border-radius: 6px;
+}
+.ac-retomar-ic     { color: var(--amber); font-size: 14px; }
+.ac-retomar-texto  { flex: 1; font-size: 12.5px; color: var(--text); }
+.ac-retomar-texto strong { color: var(--amber); }

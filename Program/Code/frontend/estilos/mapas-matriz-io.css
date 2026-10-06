@@ -1,0 +1,176 @@
+/* ══════════════════════════════════ MAPAS: MATRIZ DE I/O ══ */
+
+/* Arquivo próprio, e não mais um bloco em `mapas.css` (382 linhas): a sub-aba
+   tem tabela com árvore, painel lateral e legenda — três componentes, não um
+   ajuste. Mesmo precedente de `mapas-ligacoes.css`.
+
+   ⚠️ As cores das operações são as MESMAS de `mapaio.css` (`.mio-type-*`), de
+   propósito: quem aprendeu que verde é escrita na aba Análise reconhece aqui.
+   Não são reaproveitadas por `@extend` porque lá são fundo de selo e aqui são
+   fundo de célula, com opacidade diferente. */
+
+/* ⚠️ O PAINEL É ANCORADO À DIREITA, e a grade é quem estica.
+   Antes a grade era do tamanho do conteúdo e o painel vinha logo depois: trocar
+   de Resumida (5 colunas) para Detalhada (10) mudava a largura da tabela e o
+   painel ANDAVA junto, indo e voltando na tela a cada troca de modo. Agora a
+   grade é `flex: 1` e o painel é `flex-shrink: 0`, então ele fica parado no
+   canto direito e a tabela ocupa tudo o que sobra. */
+.mio-matriz-mesa {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  width: 100%;
+}
+#mio-matriz-grade {
+  flex: 1;
+  min-width: 0;      /* deixa o flex encolher em vez de empurrar o painel */
+  overflow-x: auto;  /* projeto muito fundo rola aqui dentro, não na página */
+}
+
+/* ── A grade ── */
+/* `width: 100%` + a 1ª coluna com `width: 100%` = a tabela vai até o painel, e a
+   folga que sobra cai toda na COLUNA DO CAMINHO, que é onde ela serve para
+   alguma coisa. As colunas de número ficam do tamanho que precisam, e — o que
+   importa — do MESMO tamanho nos dois modos. */
+.miom-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+.miom-table th, .miom-table td {
+  border: 1px solid rgba(var(--white-rgb), 0.05);
+  white-space: nowrap;
+}
+
+.miom-canto {
+  text-align: left; padding: 9px 12px;
+  color: var(--text-muted); font-weight: 600; font-size: 12px;
+  background: rgba(var(--white-rgb), 0.03);
+  width: 100%;       /* absorve a folga — as demais colunas ficam no tamanho delas */
+  min-width: 260px;
+}
+
+.miom-col-header {
+  padding: 8px 10px; text-align: center; font-weight: 600; font-size: 12px;
+  color: var(--text-muted); background: rgba(var(--white-rgb), 0.04);
+}
+.miom-col-ico { display: block; font-size: 17px; line-height: 1.35; }
+.miom-col-rot { display: block; font-size: 11px; font-weight: 500; }
+.miom-col-total { color: var(--text); }
+
+/* ── Linhas: a árvore de pastas ── */
+.miom-row-header {
+  text-align: left; padding: 7px 12px;
+  color: var(--text-muted); font-weight: 400;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.miom-linha-pasta .miom-row-header {
+  color: var(--text); font-weight: 600;
+  background: rgba(var(--white-rgb), 0.035);
+}
+.miom-clicavel { cursor: pointer; }
+.miom-clicavel:hover { background: var(--surface-hover); color: var(--text); }
+/* Largura fixa para o nome não dançar entre linha com seta e linha sem. */
+.miom-seta {
+  display: inline-block; width: 14px;
+  color: var(--text-muted); font-size: 10px;
+}
+
+/* ── Células ── */
+/* `min-width`, e não `width`: a tabela é `width: 100%`, então a largura final
+   sai do reparto — o mínimo só garante que a coluna caiba num total de 4 dígitos
+   e fique igual nos dois modos. */
+.miom-cel {
+  min-width: 62px; height: 30px; text-align: center;
+  color: rgba(var(--white-rgb), 0.16); font-size: 13px;
+}
+.miom-cel.miom-tem { color: var(--text); font-weight: 700; cursor: pointer; }
+.miom-cel.miom-tem:hover { outline: 1px solid rgba(var(--white-rgb), 0.35); outline-offset: -1px; }
+.miom-cel.miom-sel { outline: 2px solid rgba(var(--white-rgb), 0.7); outline-offset: -2px; }
+.miom-cel-total {
+  color: var(--text-muted); font-weight: 600;
+  background: rgba(var(--white-rgb), 0.03);
+}
+.miom-linha-pasta .miom-cel-total { color: var(--text); }
+
+/* ── As 5 famílias de operação ──
+   Mesma família de cor de `mapaio.css`: azul lê, verde escreve, âmbar cria,
+   vermelho deleta, cinza verifica. */
+.miom-fam-le       { background: rgba(var(--blue-rgb),  0.16); }
+.miom-fam-escreve  { background: rgba(var(--green-rgb), 0.16); }
+.miom-fam-cria     { background: rgba(var(--amber-rgb), 0.18); }
+.miom-fam-deleta   { background: rgba(var(--red-rgb),   0.18); }
+.miom-fam-verifica { background: rgba(var(--cinza-rgb), 0.14); }
+.miom-col-header.miom-fam-le       { color: var(--blue); }
+.miom-col-header.miom-fam-escreve  { color: var(--green); }
+.miom-col-header.miom-fam-cria     { color: var(--amber); }
+.miom-col-header.miom-fam-deleta   { color: var(--red); }
+.miom-col-header.miom-fam-verifica { color: var(--cinza); }
+
+/* ── Painel lateral: as operações por trás do número ── */
+/* `flex-shrink: 0` + largura fixa: é isto que prende o painel no canto direito.
+   Ele não muda de tamanho nem de lugar quando o modo troca — quem se ajusta é
+   a grade, do outro lado. */
+.mio-matriz-painel {
+  width: 340px; flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  position: sticky; top: 0;
+  max-height: 72vh; overflow-y: auto;
+}
+.mio-matriz-painel-vazio { color: var(--text-muted); font-size: 13px; }
+
+.miom-painel-cab {
+  display: flex; flex-direction: column; gap: 6px;
+  padding-bottom: 10px; margin-bottom: 6px;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.1);
+}
+.miom-painel-onde {
+  font-size: 12px; font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text); word-break: break-all;
+}
+.miom-painel-op {
+  align-self: flex-start;
+  font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px;
+  color: var(--text);
+}
+
+.miom-op {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.05);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.miom-op:last-child { border-bottom: 0; }
+.miom-op-arq {
+  font-size: 12px; font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text-muted); word-break: break-all;
+}
+/* O alvo é a EXPRESSÃO do argumento, não o caminho no disco — esse não existe
+   no código. Verde por ser o mesmo papel do `.mio-path-arg` da aba Análise. */
+.miom-op-alvo {
+  font-size: 12px; font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: var(--green); word-break: break-all;
+}
+.miom-op-call {
+  font-size: 11.5px; font-family: 'Cascadia Code', 'Consolas', monospace;
+  color: rgba(var(--white-rgb), 0.45);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.miom-op-corte {
+  padding: 10px 0 0; font-size: 12px; color: var(--amber);
+}
+
+/* ── Legenda ── */
+.mio-matriz-legenda {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 8px 24px; flex-shrink: 0;
+  border-top: 1px solid rgba(var(--white-rgb), 0.06);
+  background: var(--surface-dark);
+  min-height: 33px;
+}
+.miom-leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+.miom-leg-cor { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.miom-leg-nota { margin-left: auto; font-size: 12px; color: var(--text-muted); }

@@ -1,0 +1,263 @@
+/* ══════════════════════════════════════════════════════ ABA: DOCUMENTAÇÃO ══ */
+
+.doc-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Sub-abas de fonte ──
+   Mesmo padrão visual das sub-abas do Chat (chat.css) — sublinhado teal no
+   ativo. Substituíram o combobox Arquivo/Pasta, que só cobria duas das sete
+   fontes de documentação que o projeto gera. */
+.doc-subtabs-bar {
+  display: flex; gap: 2px; padding: 10px 14px 0; flex-wrap: wrap;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.05); flex-shrink: 0;
+}
+.doc-subtab-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  cursor: pointer; border-radius: 5px 5px 0 0; position: relative; bottom: -1px;
+  transition: color var(--t), background var(--t);
+}
+.doc-subtab-btn:hover { color: var(--text); background: rgba(var(--white-rgb),0.04); }
+.doc-subtab-btn.active { color: var(--teal); border-bottom: 2px solid var(--teal); }
+
+/* ⚠️ A barra de busca NÃO mora mais aqui. As regras `.doc-search-*` /
+   `.doc-mode-*` viraram o componente `estilos/busca-arvore.css` (`.bsa-*`)
+   quando as três telas de árvore da aba Análise passaram a precisar da mesma
+   barra. Copiar as regras para lá teria funcionado no primeiro dia; o pedido
+   era que ficassem iguais, e cópia não fica igual por muito tempo. */
+
+/* ── Corpo principal ── */
+.doc-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Árvore ── */
+.doc-tree-panel {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(var(--white-rgb),0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Fontes hierarquicas (Documentacao tecnica, Resumo de pastas,
+   Comentarios, e as arvores de niveis do Pipeline e do Indice de navegacao)
+   precisam de mais coluna: a arvore chega a seis niveis de indentacao e, em
+   260px, o nome some antes de comecar. O Glossario (oito topicos soltos) e a
+   Bibliotecas nao tem nivel nenhum e ficam na largura padrao. Ver
+   `painelLargo` em _DOC_FONTES (documentacao.js). */
+.doc-tree-panel--largo { width: var(--painel-arvore-largo); }
+
+.doc-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+  flex-shrink: 0;
+}
+
+.doc-tree-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.doc-tree-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.doc-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+/* ⚠️ As classes `.doc-folder*` saíram junto com a árvore própria desta aba:
+   a árvore agora é o componente compartilhado `arvore-pastas.js` / `.arvp-*`
+   (ver Padrões de interface → Componentes → Árvore de pastas).
+   `.doc-file*` saiu em 2026-09: Glossário, Índice de navegação e Pipeline
+   viraram a árvore de níveis (documentacao-arvores.js), que usa as mesmas
+   classes `.arvp-*` e a marca `.doc-arv-linha` — sem regra própria aqui. */
+
+/* O id citado no texto de um item do Pipeline (A3, B12, C40): link que abre
+   aquele item. `--blue` é o token de link (Identidade visual). */
+.doc-link-id {
+  color: var(--blue);
+  text-decoration: none;
+  cursor: pointer;
+}
+.doc-link-id:hover { text-decoration: underline; }
+
+/* Contagem à direita do nó — em quantos arquivos aquela biblioteca é importada.
+   Só a fonte Bibliotecas produz nomes com ` (N)` no fim; nas outras seis o
+   `_docSepararContagem` não casa e nada muda. Ver documentacao.js. */
+.doc-count {
+  margin-left: auto; padding-left: 8px;
+  font-size: 11px; color: var(--text-muted); flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Painel direito ── */
+.doc-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.doc-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.doc-placeholder.hidden { display: none; }
+
+/* ── Resultados semânticos ── */
+.doc-search-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+.doc-search-results.hidden { display: none; }
+
+.doc-search-result {
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.04);
+}
+.doc-search-result:hover { background: rgba(var(--white-rgb),0.04); }
+
+.doc-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.doc-result-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.doc-result-score {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.doc-result-excerpt {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+/* ── Viewer ── */
+.doc-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.doc-viewer.hidden { display: none; }
+
+.doc-viewer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.08);
+  flex-shrink: 0;
+}
+
+.doc-viewer-filename {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  /* Três botões de copiar dividem a barra com o nome: é o nome que cede
+     espaço, cortado com reticências, não os botões. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tokens + nome: o bloco inteiro é o que cede espaço aos botões, e dentro dele
+   só o nome encolhe — o número nunca é cortado. */
+.doc-viewer-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.doc-viewer-tokens {
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-viewer-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ⚠️ Não há regra de `:disabled` aqui de propósito: os botões de copiar que não
+   se aplicam à fonte aberta ficam ESCONDIDOS (`.hidden`), não apagados. Ver
+   `_docSyncBotoesCopiar` em documentacao.js. */
+
+.doc-viewer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 22px;
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.doc-viewer-content h1,
+.doc-viewer-content h2,
+.doc-viewer-content h3 {
+  color: var(--text);
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.doc-viewer-content p { color: var(--text); margin: 0.5em 0; }
+.doc-viewer-content code {
+  background: rgba(var(--white-rgb),0.08);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+
+/* ── Estados genéricos ── */
+.doc-empty {
+  padding: 24px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* O combobox de escopo (Arquivo/Pasta) que ficava aqui foi removido: a barra
+   de sub-abas de fonte (.doc-subtabs-bar) faz o mesmo trabalho para as sete
+   fontes, e visível. O cabeçalho da árvore voltou a usar .doc-tree-title, que
+   já estava declarada acima e tinha ficado sem uso. */

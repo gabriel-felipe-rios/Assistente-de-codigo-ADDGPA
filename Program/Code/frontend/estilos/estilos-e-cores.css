@@ -1,0 +1,161 @@
+/* ═════════════════ Aba Arquivos · categoria "Estilos e cores" ══
+   A biblioteca global de aparência: cinco dimensões, tags como pasta e
+   miniaturas. Arquivo próprio porque `arquivos.css` já é o CSS de outra
+   categoria inteira, e as duas não compartilham nada além de `.import-card`.
+
+   As pílulas das dimensões NÃO têm regra aqui: elas reusam `.arq-inner-tabs` /
+   `.arq-inner-tab` de `arquivos.css`, o mesmo grupo de "Do programa / Geral". */
+
+/* A linha de topo é a `.arq-topo` de `arquivos.css` — a mesma das outras cinco
+   categorias. Aqui fica só o grupo de ações, que tem um botão a mais. */
+.ec-acoes { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ── A barra de tags, que funciona como pasta ──────────────────────────────
+   Escolher uma tag troca o conteúdo da lista inteira, como entrar numa pasta —
+   por isso o desenho é de pílula com contagem, e não de filtro marcável. Em
+   Animações esta barra não existe: aquela dimensão se agrupa por pasta de
+   evento de verdade, e ter as duas coisas na mesma tela seria duas pastas
+   competindo. */
+.ec-tagbar {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 10px 0 2px;
+}
+.ec-tagbar-rot {
+  font-size: 11px; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 700; margin-right: 2px;
+}
+.ec-tagpasta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1);
+  color: var(--text-muted); font-size: 12px; padding: 4px 11px;
+  border-radius: 13px; cursor: pointer;
+  transition: color var(--t), border-color var(--t), background var(--t);
+}
+.ec-tagpasta:hover { color: var(--text); border-color: rgba(var(--white-rgb),0.2); }
+.ec-tagpasta.active {
+  color: var(--purple); border-color: var(--purple);
+  background: rgba(var(--purple-rgb),0.1); font-weight: 600;
+}
+.ec-tagpasta-cnt { font-size: 10.5px; opacity: 0.75; }
+
+.ec-lista { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+/* ── O card grande de escolha visual ───────────────────────────────────────
+   Herda `.import-card` e troca o ícone de 18px por uma miniatura de verdade:
+   cartão de texto não serve para escolher aparência. */
+.ec-card .import-left { align-items: center; gap: 14px; cursor: default; }
+
+/* ⚠️ NÃO centralize esta caixa por flex. O quadro de dentro tem 400px de largura
+   e é encolhido por `transform`, que NÃO muda a caixa de layout do elemento —
+   centralizar põe essa caixa de 400px em `left: (120-400)/2 = -140px`, e só então
+   a escala encolhe A PARTIR dali. O resultado renderizado cai inteiro fora dos
+   120px, que recortam, e a miniatura aparece VAZIA. Foi assim que Estilos e
+   Animações ficaram em branco na biblioteca e deslocados no Designer.
+   A caixa é o sistema de coordenadas; quem quer centro se centraliza sozinho. */
+.ec-mini {
+  width: 120px; height: 78px; flex-shrink: 0; overflow: hidden;
+  border-radius: 6px; border: 1px solid rgba(var(--white-rgb),0.1);
+  background: var(--designer-thumb-bg);
+  position: relative;
+  /* A escala do quadro. Quem reusa esta miniatura noutro tamanho troca só isto:
+     a largura e a altura do quadro saem daqui por divisão, e a conta fecha
+     sozinha. Aqui: 120/0.3 = 400 e 78/0.3 = 260, a janela que os arquivos
+     assumem. */
+  --mini-escala: 0.3;
+}
+.ec-mini-falhou {
+  font-size: 11px; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* O HTML do item renderizado de verdade e encolhido por `transform` — 400×260
+   virando 120×78. `position:absolute` no canto: é o que casa com
+   `transform-origin: 0 0`. `pointer-events: none` porque a miniatura é para
+   olhar — sem isso o clique cai dentro do documento do iframe e o card não
+   recebe nada. */
+.ec-mini-quadro {
+  position: absolute; left: 0; top: 0; border: 0;
+  /* `transform: scale` NÃO encolhe a caixa de layout — por isso a largura é
+     dividida pela escala, e não igual à da caixa. É a mesma correção já
+     registrada em Padrões de interface para zoom por transform. */
+  width: calc(100% / var(--mini-escala));
+  height: calc(100% / var(--mini-escala));
+  transform: scale(var(--mini-escala)); transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.ec-mini-faixa { display: flex; width: 100%; height: 100%; }
+.ec-mini-faixa i { flex: 1; display: block; }
+
+/* O `css` de uma textura é escrito nas variáveis da BIBLIOTECA (`--primaria`,
+   `--superficie`…), que não existem nesta página — sem esta ponte o material
+   renderiza sem cor nenhuma e a amostra vira um retângulo vazio.
+   Apontar cada uma para um token do tema, em vez de fixar hexadecimal, faz a
+   amostra acompanhar o tema do programa: no Papel ela clareia junto. */
+.ec-mini-material {
+  position: absolute; inset: 0;
+  --fundo:             var(--bg);
+  --superficie:        var(--surface);
+  --superficie-hover:  var(--surface-hover);
+  --superficie-escura: var(--surface-dark);
+  --texto:             var(--text);
+  --texto-secundario:  var(--text-muted);
+  --primaria:          var(--purple);
+  --positiva:          var(--green);
+  --negativa:          var(--red);
+  --especial:          var(--indigo);
+  --utilitaria:        var(--blue);
+}
+
+.ec-mini-especime {
+  position: absolute; inset: 0;
+  font-size: 34px; line-height: 1; color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Os selos de tag no nome do item ───────────────────────────────────────*/
+.ec-tags { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+.ec-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.02em;
+  color: var(--text-muted); background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 9px; padding: 1px 7px;
+}
+
+/* ── Animações: um bloco por pasta de evento ───────────────────────────────*/
+.ec-grupo {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: var(--radius); padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ec-grupo-cab { display: flex; align-items: center; gap: 10px; }
+.ec-grupo-nome { font-size: 14px; font-weight: 600; flex: 1; }
+.ec-grupo-cnt {
+  font-size: 11px; color: var(--text-muted);
+  background: var(--surface); border-radius: 10px; padding: 2px 9px;
+}
+/* A primeira linha útil do `Explicação.md`: onde aquele movimento se aplica. */
+.ec-grupo-onde { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.ec-grupo-itens { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── Gerenciador de tags (dentro do modal padrão) ──────────────────────────*/
+.ec-taglista { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 4px; }
+.ec-taglinha { display: flex; align-items: center; gap: 8px; }
+.ec-tagnome {
+  flex: 1; min-width: 0; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb),0.1); border-radius: 6px;
+  color: var(--text); font-family: inherit; font-size: 13px; padding: 5px 9px;
+}
+.ec-tagusos { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.ec-tagvazio { font-size: 13px; color: var(--text-muted); padding: 6px 2px; }
+.ec-tagnova { display: flex; gap: 8px; align-items: center; }
+.ec-tagnova input { flex: 1; min-width: 0; }
+
+.ec-tagopcoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+.ec-tagopcao {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12.5px; color: var(--text-muted);
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb),0.1);
+  border-radius: 13px; padding: 4px 11px; cursor: pointer;
+}
+.ec-tagopcao:hover { color: var(--text); }

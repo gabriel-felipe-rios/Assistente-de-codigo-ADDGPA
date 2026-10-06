@@ -1,0 +1,16 @@
+{
+  "nome": "Grão e ruído",
+  "descricao": "Ruído fino sobreposto ao fundo, quase imperceptível de perto. Tira o aspecto liso demais de superfícies grandes.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "fundo da página",
+    "cabeçalhos grandes",
+    "áreas vazias"
+  ],
+  "nao_use_em": [
+    "texto",
+    "ícones",
+    "elementos pequenos — o grão vira sujeira abaixo de 40 px"
+  ],
+  "css": "background-color: var(--fundo);\nbackground-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='120' height='120' filter='url(%23r)' opacity='0.035'/></svg>\");"
+}

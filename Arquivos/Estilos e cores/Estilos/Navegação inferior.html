@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Navegação inferior -->
+<!-- Coluna estreita centralizada: header compacto -> conteúdo rolável em cards -> barra de abas fixa embaixo -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Navegação inferior</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;justify-content:center;background:var(--superficie-escura)}
+.tela{width:330px;background:var(--fundo);display:flex;flex-direction:column;height:100vh;border-left:1px solid var(--superficie-hover);border-right:1px solid var(--superficie-hover)}
+.header{height:46px;background:var(--superficie-escura);display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0}
+.header .t{font-weight:700;font-size:14px}
+.conteudo{flex:1;min-height:0;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
+.card{background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;padding:11px 12px;display:flex;flex-direction:column;gap:3px}
+.card .t{font-weight:600;font-size:12.5px}
+.card .s{color:var(--texto-secundario);font-size:11px}
+.abas{height:54px;background:var(--superficie-escura);border-top:1px solid var(--superficie-hover);display:flex;flex-shrink:0}
+.aba{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--texto-secundario);font-size:10px}
+.aba .i{font-size:16px}
+.aba.on{color:var(--primaria)}
+</style></head><body>
+<div class="tela">
+  <div class="header"><span class="t">Início</span><button class="bt sec">Filtrar</button></div>
+  <div class="conteudo">
+    <div class="rot">Hoje</div>
+    <div class="card"><span class="t">Entrega a caminho</span><span class="s">Chega entre 14h e 16h</span></div>
+    <div class="card"><span class="t">Fatura de agosto</span><span class="s">R$ 214,90 — vence em 3 dias</span></div>
+    <div class="rot" style="margin-top:4px">Esta semana</div>
+    <div class="card"><span class="t">Consulta marcada</span><span class="s">Quinta, 09h30</span></div>
+    <div class="card"><span class="t">Plano renovado</span><span class="s">Válido até agosto do ano que vem</span></div>
+    <div class="card"><span class="t">Cupom disponível</span><span class="s">15% na próxima compra</span></div>
+  </div>
+  <div class="abas">
+    <div class="aba on"><span class="i">⌂</span>Início</div>
+    <div class="aba"><span class="i">▤</span>Pedidos</div>
+    <div class="aba"><span class="i">♡</span>Salvos</div>
+    <div class="aba"><span class="i">☰</span>Perfil</div>
+  </div>
+</div>
+</body></html>

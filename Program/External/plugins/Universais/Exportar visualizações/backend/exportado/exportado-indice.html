@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@@TITULO@@</title>
+  <style>
+@@CSS@@
+  </style>
+</head>
+<body>
+<div id="exm-raiz">
+  <div class="tab-content active" id="tab-mapas">
+    <div class="subtabs-bar">
+@@ABAS@@
+    </div>
+    <iframe id="exm-quadro" title="Mapa" style="flex:1;border:0;width:100%;min-height:0"></iframe>
+  </div>
+</div>
+
+<script>
+(function() {
+  const botoes = document.querySelectorAll('.mapas-tab-btn[data-arquivo]');
+  const quadro = document.getElementById('exm-quadro');
+
+  botoes.forEach(btn => {
+    btn.addEventListener('click', function() {
+      botoes.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      quadro.src = this.dataset.arquivo;
+    });
+  });
+
+  // Clica no primeiro botão ao carregar
+  if (botoes.length > 0) {
+    const primeira = botoes[0];
+    primeira.classList.add('active');
+    quadro.src = primeira.dataset.arquivo;
+  }
+})();
+</script>
+</body>
+</html>

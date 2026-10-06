@@ -1,0 +1,18 @@
+{
+  "nome": "Extensão de teste",
+  "versao": "2",
+  "descricao": "O gabarito: a extensão mais simples que exercita a camada inteira — estilo, uma tela própria, ponte, decorador e um comando no Acesso rápido. Copie esta pasta e comece daqui.",
+  "prefixo": "tst",
+  "tipos": ["1", "2", "3"],
+  "acrescenta": [
+    { "recurso": "tela", "id": "tst.gabarito", "lugar": "configuracoes.subaba",
+      "rotulo": "Extensão de teste — o gabarito", "icone": "◇",
+      "arquivo": "frontend/telas/gabarito.js" },
+    { "recurso": "marca", "id": "tst.marca", "lugar": "editor.decorador",
+      "arquivo": "frontend/encaixes/decorador.js" },
+    { "recurso": "comando", "id": "tst.comandos", "lugares": ["acesso-rapido.comandos"],
+      "arquivo": "frontend/encaixes/comandos.js",
+      "teclas": { "dizer-ola": "Ctrl+Alt+T" } }
+  ],
+  "escreve_fora": []
+}

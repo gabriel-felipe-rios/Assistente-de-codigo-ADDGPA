@@ -1,0 +1,66 @@
+/* ═══ TRABALHOS → área Agentes ═════════════════════════════════════════════
+   O cadastro de cada agente: campos, combos, cartão, ferramentas.
+
+   ⚠️ AS AÇÕES POR ITEM (o ✕ e os irmãos dele) NÃO ESTÃO AQUI — estão em
+   `trabalhos-agentes-acoes.css`, que vem DEPOIS na cascata de `style.css`.
+   Elas redefinem `.ag-combo` e `.ag-card-h`, declarados neste arquivo, e
+   dependem de vir por último. Mover aquele import para antes deste quebra o
+   layout dos itens sem nenhum erro em lugar nenhum.                        */
+/* ── Área Agentes ── */
+.ag-h3 { margin-top: 20px; }
+.ag-campo { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
+.ag-campo label { font-size: 12px; font-weight: 600; }
+.ag-combos { display: flex; flex-wrap: wrap; gap: 7px; }
+.ag-combo {
+  padding: 6px 11px; border-radius: 6px; font-size: 12px; cursor: pointer;
+  border: 1px solid rgba(var(--white-rgb), .13); background: rgba(var(--black-rgb), .18);
+  transition: border-color var(--t), background var(--t);
+}
+.ag-combo:hover { border-color: rgba(var(--white-rgb), .28); }
+.ag-combo.on { border-color: var(--green); background: rgba(var(--green-rgb), .12); }
+.ag-combo.ag-novo { border-style: dashed; color: var(--text-muted); }
+.ag-cmd { opacity: .6; margin-left: 3px; }
+.ag-aviso { color: var(--yellow-soft); }
+
+.ag-card {
+  border: 1px solid rgba(var(--white-rgb), .09); border-left-width: 3px;
+  border-radius: var(--radius); padding: 13px; margin-bottom: 12px;
+  background: rgba(var(--black-rgb), .12);
+}
+.ag-card-h { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+.ag-nome {
+  flex: 1; min-width: 0; background: var(--surface-dark);
+  border: 1px solid rgba(var(--white-rgb), .12); border-radius: 5px;
+  color: var(--text); padding: 5px 9px; font-family: inherit; font-size: 12.5px;
+  font-weight: 600; outline: none;
+}
+.ag-nome:focus { border-color: var(--blue); }
+/* O tipo é LEITURA, e a aparência diz isso: sem moldura de campo, sem cursor
+   de texto. Um seletor aqui sugeriria uma configuração que não existe. */
+/* O papel virou SELETOR: era leitura, e o usuário queria trocá-lo. Fica com a
+   mesma altura e o mesmo peso do campo de nome ao lado, para a linha do
+   cabeçalho do cartão não ficar com dois controles de tamanhos diferentes. */
+.ag-tipo-sel {
+  flex-shrink: 0; padding: 5px 8px; border-radius: var(--radius); font-size: 12px;
+  background: var(--surface-dark); color: var(--text);
+  border: 1px solid rgba(var(--white-rgb), .14); cursor: pointer;
+}
+.ag-tipo-sel:focus { border-color: var(--blue); outline: none; }
+
+.ag-tipo {
+  font-size: 11px; color: var(--text-muted); padding: 4px 9px; border-radius: 5px;
+  background: rgba(var(--white-rgb), .06); white-space: nowrap; cursor: help;
+}
+.ag-prompt, .ag-dep {
+  background: var(--surface-dark); border: 1px solid rgba(var(--white-rgb), .12);
+  border-radius: 5px; color: var(--text); padding: 7px 9px;
+  font-size: 11.5px; font-family: 'Consolas', monospace; outline: none; resize: vertical;
+}
+.ag-dep { font-family: inherit; }
+.ag-prompt:focus, .ag-dep:focus { border-color: var(--blue); }
+.ag-ferrs { display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px; }
+.ag-ferr {
+  padding: 2px 7px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 10px;
+  background: rgba(var(--teal-rgb), .16); color: var(--mint);
+}
+.ag-pe { display: flex; gap: 8px; margin-top: 14px; }

@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "papel_da_pasta": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Uma ou duas frases sobre o propósito da pasta inteira. Não cita o caminho."
+    }
+  },
+  "required": ["papel_da_pasta"],
+  "additionalProperties": false
+}

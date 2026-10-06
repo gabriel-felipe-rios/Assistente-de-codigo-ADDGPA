@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Abas verticais -->
+<!-- Rail de ícones à esquerda -> painel da aba ativa -> área central -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Abas verticais</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex}
+.rail{width:52px;background:var(--superficie-escura);border-right:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0}
+.ric{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--texto-secundario);font-size:14px}
+.ric.on{background:var(--primaria);color:var(--fundo)}
+.painel{width:220px;background:var(--superficie);border-right:1px solid var(--superficie-hover);flex-shrink:0;display:flex;flex-direction:column;padding:12px 10px;gap:3px}
+.ptit{font-weight:700;font-size:13px;margin-bottom:6px}
+.pitem{padding:6px 8px;border-radius:5px;color:var(--texto-secundario)}
+.pitem.on{background:var(--superficie-hover);color:var(--texto)}
+.center{flex:1;min-width:0;display:flex;flex-direction:column;padding:16px 18px;gap:10px}
+.h1{font-size:17px;font-weight:700}
+.linha{color:var(--texto-secundario);max-width:640px}
+.acoes{display:flex;gap:8px;margin-top:4px}
+</style></head><body>
+<div class="rail">
+  <div class="ric on">▤</div><div class="ric">◎</div><div class="ric">✎</div><div class="ric">☰</div>
+  <div style="flex:1"></div><div class="ric">⚙</div>
+</div>
+<div class="painel">
+  <div class="ptit">Arquivos</div>
+  <div class="rot" style="padding:4px 8px">Recentes</div>
+  <div class="pitem on">Relatório anual</div><div class="pitem">Contrato de serviço</div>
+  <div class="pitem">Notas da reunião</div><div class="pitem">Planilha de custos</div>
+</div>
+<div class="center">
+  <div class="rot">Conteúdo</div>
+  <div class="h1">Relatório anual</div>
+  <div class="linha">O painel da aba ativa fica sempre visível ao lado do rail, e só ele troca quando o ícone muda.</div>
+  <div class="linha">A área central mostra o item aberto, com largura livre.</div>
+  <div class="acoes"><button class="bt">Abrir</button><button class="bt sec">Duplicar</button><button class="bt neg">Excluir</button></div>
+</div>
+</body></html>

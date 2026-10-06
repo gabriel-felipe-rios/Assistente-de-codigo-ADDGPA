@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "definicao": {
+      "type": "string",
+      "description": "Uma frase, no máximo 25 palavras, dizendo o que o termo significa NESTE projeto. Sem aspas, sem título, sem repetir o termo isolado."
+    },
+    "topico": {
+      "type": "string",
+      "enum": ["Tela", "Processo", "Peça do código", "Dado", "Estado", "Configuração", "Integração", "Conceito"],
+      "description": "O tópico do termo, da lista fixa."
+    }
+  },
+  "required": ["definicao", "topico"],
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "paralelas_rotinas": 3,
+  "ignorar_so_espaco": true,
+  "ignorar_so_comentario": false,
+  "espelho_similaridade_pct": 95,
+  "resumo_pastas_similaridade_pct": 95,
+  "pedaco_tokens": 512,
+  "teto_proporcional_base": 1500,
+  "teto_proporcional_fator": 0.5,
+  "limite_sintese_chars": 800,
+  "limite_texto_chars": 400,
+  "limite_atribuicoes": 30,
+  "limite_tags": 15,
+  "limite_termos_por_arquivo": 30
+}

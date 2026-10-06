@@ -1,0 +1,81 @@
+{
+  "nome": "Alto contraste",
+  "descricao": "Paleta de acessibilidade: preto puro, branco puro e acentos saturados. Máxima legibilidade, sem tons intermediários sutis.",
+  "instrucao": "Use estas cores exatamente. Bordas SEMPRE visíveis e sólidas (1px #FFFFFF ou #5A5A5A), nunca translúcidas. Border-radius padrão: 4px. Estado de foco deve ter contorno de 2px bem visível.",
+  "cores": {
+    "fundo": {
+      "hex": "#000000",
+      "uso": "Fundo principal da aplicação — preto puro"
+    },
+    "superficie": {
+      "hex": "#141414",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#282828",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#000000",
+      "uso": "Topbar e barra de abas — separadas do fundo por borda, não por cor"
+    },
+    "texto": {
+      "hex": "#FFFFFF",
+      "uso": "Todo texto principal — branco puro"
+    },
+    "texto_secundario": {
+      "hex": "#C4C4C4",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#FFD400",
+      "apelido": "amarelo",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#D9B300",
+      "apelido": "amarelo (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#00E676",
+      "apelido": "verde",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#00B85E",
+      "apelido": "verde (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#FF3B30",
+      "apelido": "vermelho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#D42B22",
+      "apelido": "vermelho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#00B0FF",
+      "apelido": "azul",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#008FCC",
+      "apelido": "azul (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#5A5A5A",
+      "apelido": "cinza de borda",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#FFFFFF",
+      "apelido": "cinza de borda (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

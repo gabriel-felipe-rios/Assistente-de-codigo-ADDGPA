@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Rascunho de estrutura: Assistente em passos -->
+<!-- Trilha de etapas no topo -> cartão central com o formulário do passo atual -> barra de navegação Voltar/Avançar -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Assistente em passos</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida.
+   Elas existem para o arquivo continuar legível aberto sozinho no navegador. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+.rot{color:var(--texto-secundario);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.bt{background:var(--primaria);color:var(--fundo);border:0;border-radius:5px;
+    padding:6px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+.bt.sec{background:transparent;color:var(--utilitaria);border:1px solid var(--utilitaria)}
+.bt.neg{background:var(--negativa);color:var(--fundo)}
+.bt.pos{background:var(--positiva);color:var(--fundo)}
+body{display:flex;flex-direction:column;align-items:center}
+.trilha{width:100%;background:var(--superficie-escura);border-bottom:1px solid var(--superficie-hover);display:flex;justify-content:center;gap:26px;padding:12px 0;flex-shrink:0}
+.etapa{display:flex;align-items:center;gap:7px;color:var(--texto-secundario);font-size:11.5px}
+.etapa .n{width:20px;height:20px;border-radius:50%;border:1px solid var(--texto-secundario);display:flex;align-items:center;justify-content:center;font-size:10px}
+.etapa.feita{color:var(--positiva)}
+.etapa.feita .n{background:var(--positiva);border-color:var(--positiva);color:var(--fundo)}
+.etapa.on{color:var(--texto)}
+.etapa.on .n{background:var(--primaria);border-color:var(--primaria);color:var(--fundo)}
+.corpo{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:24px 0;width:100%}
+.cartao{width:420px;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:11px}
+.h1{font-size:15px;font-weight:700}
+.ajuda{color:var(--texto-secundario)}
+.campo{height:32px;background:var(--superficie-escura);border:1px solid var(--superficie-hover);border-radius:6px;display:flex;align-items:center;padding:0 9px;color:var(--texto-secundario)}
+.campo.foco{border-color:var(--primaria)}
+.nav{width:100%;background:var(--superficie-escura);border-top:1px solid var(--superficie-hover);display:flex;justify-content:space-between;padding:10px 18px;flex-shrink:0}
+</style></head><body>
+<div class="trilha">
+  <div class="etapa feita"><span class="n">✓</span>Conta</div>
+  <div class="etapa on"><span class="n">2</span>Endereço</div>
+  <div class="etapa"><span class="n">3</span>Pagamento</div>
+  <div class="etapa"><span class="n">4</span>Revisão</div>
+</div>
+<div class="corpo"><div class="cartao">
+  <div class="rot">Passo 2 de 4</div>
+  <div class="h1">Onde você recebe</div>
+  <div class="ajuda">Só o passo atual aparece. Nada do que vem depois é mostrado aqui.</div>
+  <div class="rot">Rua e número</div><div class="campo foco">Av. Central, 1200</div>
+  <div class="rot">Cidade</div><div class="campo">Selecione…</div>
+</div></div>
+<div class="nav"><button class="bt sec">← Voltar</button><button class="bt">Avançar →</button></div>
+</body></html>

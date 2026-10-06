@@ -1,0 +1,81 @@
+{
+  "nome": "Vermelho carmesim",
+  "descricao": "Paleta intensa com vermelhos profundos e vinho. Fundo quase preto avermelhado, acentos em carmesim, coral e dourado.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.08). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#1A1113",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#271A1D",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#332326",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#120B0D",
+      "uso": "Topbar, barra de abas — mais escuro para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#F5E6E8",
+      "uso": "Todo texto principal — branco levemente rosado"
+    },
+    "texto_secundario": {
+      "hex": "#B08D93",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#D92D3F",
+      "apelido": "carmesim",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#B31F30",
+      "apelido": "carmesim (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#F0705E",
+      "apelido": "coral",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#D25546",
+      "apelido": "coral (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#8C1F35",
+      "apelido": "vinho",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#6E1728",
+      "apelido": "vinho (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#D9A441",
+      "apelido": "dourado",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#B88A31",
+      "apelido": "dourado (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#C97B8A",
+      "apelido": "rosa seco",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#A85F6D",
+      "apelido": "rosa seco (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+TIPO 1 · TELA PRÓPRIA — ganha uma tela só dela: uma aba nova, ou uma sub-aba
+dentro de uma aba que já existe.
+Recursos deste tipo: Tela · Opções.
+
+- Declare cada tela na lista "acrescenta" com "recurso": "tela", o "id" com o
+  prefixo, o "rotulo" (o texto do botão, até 40 caracteres), um "icone"
+  opcional (glifo, nunca emoji), o "arquivo" que a desenha e o "lugar":
+  "aba.nova" para uma aba nova, ou "{aba}.subaba" para uma sub-aba —
+  projeto, assistente, arquivos, inicio-arquivos, automacao, analise, mapas,
+  backups, trabalhos, inspetor ou configuracoes. Documentação e Acervo não
+  aceitam sub-aba de extensão.
+- O arquivo da tela registra a função de desenho com
+  xtRegistrarTela(EU.slug, EU.tela, (container, ctx) => { … }); ctx.projeto é
+  null na tela de Projetos. "tela" e "lugar" chegam no dataset — nunca os
+  escreva à mão.
+- A função é chamada na primeira vez que a tela aparece, e de novo quando o
+  projeto mudou — não a cada clique. Desenhe DENTRO do container que o programa
+  entrega; ao desligar, a tela some inteira, e o xtDesmontar roda antes, para
+  você desfazer o que pendurou lá dentro.
+- Estado que a tela precisa guardar vai em files/ da própria pasta.
+- Siga o desenho do programa: as classes e os tokens de cor que ele já usa,
+  nunca cor escrita à mão.

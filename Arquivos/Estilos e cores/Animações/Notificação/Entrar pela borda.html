@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- Animação: Notificação · Entrar pela borda -->
+<!-- A demonstração roda em laço; a regra escrita abaixo dela é o que vai ao modelo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>Notificação — Entrar pela borda</title><style>
+/* Paleta de reserva — o Designer troca estas variáveis pela paleta escolhida. */
+:root{
+  --fundo:#1B1B1B; --superficie:#272727; --superficie-hover:#323232; --superficie-escura:#141414;
+  --texto:#E8E8E8; --texto-secundario:#9B9B9B;
+  --primaria:#B8B8B8; --positiva:#A0A0A0; --negativa:#7C7C7C; --especial:#8E8E8E; --utilitaria:#6C6C6C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);height:100vh;overflow:hidden;padding:12px;
+     display:flex;flex-direction:column;gap:10px;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px;line-height:1.45}
+h1{font-size:13.5px;font-weight:700;flex-shrink:0}
+h1 small{display:block;font-weight:400;font-size:11px;color:var(--texto-secundario);margin-top:2px}
+.palco{flex:1;min-height:0;background:var(--superficie-escura);border:1px solid var(--superficie-hover);
+       border-radius:9px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.regra{flex-shrink:0;background:var(--superficie);border:1px solid var(--superficie-hover);border-radius:9px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:4px}
+.regra .tt{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-secundario);font-weight:700}
+.regra dl{display:grid;grid-template-columns:104px 1fr;gap:3px 10px;font-size:11px}
+.regra dt{color:var(--texto-secundario)}
+.regra dd.nunca{color:var(--negativa)}
+/* Acessibilidade: quem pediu menos movimento vê o estado final, sem transição. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+.tela{position:absolute;inset:0;padding:12px;color:var(--texto-secundario);font-size:11px}
+.av{position:absolute;right:12px;bottom:12px;width:200px;background:var(--superficie);
+    border:1px solid var(--superficie-hover);border-left:3px solid var(--positiva);border-radius:0 8px 8px 0;
+    padding:8px 10px;font-size:11px;animation:nb 3.6s cubic-bezier(.22,.61,.36,1) infinite}
+@keyframes nb{0%{opacity:0;transform:translateX(calc(100% + 12px))}
+  10%,80%{opacity:1;transform:none}
+  90%,100%{opacity:0;transform:translateX(calc(100% + 12px))}}</style></head><body>
+<h1>Entrar pela borda<small>O aviso desliza da borda mais próxima, fica um tempo e sai pelo mesmo caminho.</small></h1>
+<div class="palco">
+<div class="tela">Conteúdo da página, sem deslocamento nenhum.</div>
+<div class="av">Relatório salvo em Documentos.</div>
+</div>
+<div class="regra"><span class="tt">Regra</span><dl><dt>Duração</dt><dd>240 ms para entrar e para sair; permanência mínima de 4 s</dd><dt>Curva</dt><dd>cubic-bezier(.22,.61,.36,1)</dd><dt>O que anima</dt><dd>translate do aviso a partir da borda, junto da opacidade</dd><dt>O que nunca anima</dt><dd class="nunca">não use para erro — erro não sai sozinho; e nunca empilhe mais de três avisos ao mesmo tempo</dd></dl></div>
+</body></html>

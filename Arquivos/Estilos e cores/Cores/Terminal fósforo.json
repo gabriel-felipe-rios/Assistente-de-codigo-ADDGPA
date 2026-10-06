@@ -1,0 +1,81 @@
+{
+  "nome": "Terminal fósforo",
+  "descricao": "Paleta escura de terminal antigo. Fundo quase preto esverdeado, texto verde-fósforo e acentos de alta saturação. Feita para ferramentas técnicas.",
+  "instrucao": "Use estas cores exatamente. Bordas entre seções: rgba(255,255,255,0.07). Border-radius padrão: 8px.",
+  "cores": {
+    "fundo": {
+      "hex": "#030A05",
+      "uso": "Fundo principal da aplicação"
+    },
+    "superficie": {
+      "hex": "#0A1710",
+      "uso": "Cards, painéis, sidebars — elementos sobre o fundo"
+    },
+    "superficie_hover": {
+      "hex": "#12281B",
+      "uso": "Hover de elementos com cor superficie"
+    },
+    "superficie_escura": {
+      "hex": "#000000",
+      "uso": "Topbar, barra de abas — tom de contraste para criar hierarquia"
+    },
+    "texto": {
+      "hex": "#B9FFCE",
+      "uso": "Todo texto principal"
+    },
+    "texto_secundario": {
+      "hex": "#4E8F66",
+      "uso": "Texto de suporte: datas, metadados, placeholders"
+    },
+    "primaria": {
+      "hex": "#2BFF88",
+      "apelido": "fósforo",
+      "uso": "Ação primária, foco, borda de seleção ativa"
+    },
+    "primaria_hover": {
+      "hex": "#5BFFA5",
+      "apelido": "fósforo (hover)",
+      "uso": "Hover da ação primária"
+    },
+    "positiva": {
+      "hex": "#A6FF4D",
+      "apelido": "lima",
+      "uso": "Confirmação, destaque positivo, badges de sucesso"
+    },
+    "positiva_hover": {
+      "hex": "#BFFF7A",
+      "apelido": "lima (hover)",
+      "uso": "Hover da confirmação"
+    },
+    "negativa": {
+      "hex": "#FF4B3E",
+      "apelido": "alerta",
+      "uso": "Deletar, rejeitar, erro"
+    },
+    "negativa_hover": {
+      "hex": "#FF7268",
+      "apelido": "alerta (hover)",
+      "uso": "Hover da ação destrutiva"
+    },
+    "especial": {
+      "hex": "#35E0D0",
+      "apelido": "ciano",
+      "uso": "Destaque especial, aba ativa de modo especial"
+    },
+    "especial_hover": {
+      "hex": "#5FEBDE",
+      "apelido": "ciano (hover)",
+      "uso": "Hover do destaque especial"
+    },
+    "utilitaria": {
+      "hex": "#1E5C38",
+      "apelido": "musgo",
+      "uso": "Exportar, copiar, ações secundárias"
+    },
+    "utilitaria_hover": {
+      "hex": "#2C7C4E",
+      "apelido": "musgo (hover)",
+      "uso": "Hover das ações secundárias"
+    }
+  }
+}

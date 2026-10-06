@@ -1,0 +1,16 @@
+{
+  "nome": "Sombra difusa",
+  "descricao": "Sombra ampla e suave por baixo, sem borda. Levanta o elemento do fundo de forma discreta.",
+  "instrucao": "Material de superfície. Aplique nos elementos listados em 'aplica_em' e em nenhum outro; as cores continuam vindo da paleta — a textura só muda o acabamento.",
+  "aplica_em": [
+    "cartões",
+    "menus suspensos",
+    "modais",
+    "painéis flutuantes"
+  ],
+  "nao_use_em": [
+    "elementos encostados na borda da tela",
+    "listas muito densas"
+  ],
+  "css": "background: var(--superficie);\nborder: 1px solid color-mix(in srgb, var(--texto) 7%, transparent);\nbox-shadow: 0 10px 28px -8px color-mix(in srgb, var(--superficie-escura) 85%, transparent);"
+}

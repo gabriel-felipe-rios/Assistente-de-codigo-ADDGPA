@@ -1,0 +1,142 @@
+/* ═══ CONFIGURAÇÕES → Plugins e Launchers ══════════════════════════════════
+   As duas categorias que listam pasta, e as duas árvores que elas desenham.
+
+   ⚠️ SÃO DUAS ÁRVORES PARECIDAS E SEPARADAS, e a duplicação é deliberada: um
+   plugin é uma pasta descartável (`External/plugins/{categoria}/{nome}/`) e um
+   launcher não. Unificar as duas classes faria uma mudança de layout numa
+   arrastar a outra junto, e elas não têm por que andar iguais.              */
+/* ══════════════════════ Categoria "Plugins" ══
+   Uma linha por pasta com `plugin.json` em External/plugins/: alça de
+   arrastar, o `nome` do manifesto (a ordem arrastada continua gravada pelo
+   nome DA PASTA), a descrição, o tipo, o erro do manifesto se houver, os dois
+   checkboxes de local e o Interruptor de ligar/desligar. A ordem é arrastável — mesmo padrão de "Ordem das abas"
+   (`.taborder-pill`/`.taborder-handle`, `tab-order.js`), adaptado para uma
+   lista de UMA coluna em vez de pílulas que quebram em fileiras. */
+.plugin-lista { display: flex; flex-direction: column; }
+.plugin-item {
+  display: flex; align-items: center; gap: 16px; padding: 13px 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06); flex-wrap: wrap;
+  transition: background var(--t), border-color var(--t);
+}
+.plugin-item:last-child { border-bottom: none; }
+.plugin-item.dragging { opacity: 0.4; border-color: var(--blue); }
+.plugin-handle {
+  cursor: grab; color: var(--text-muted); font-size: 16px; flex-shrink: 0;
+  width: 20px; text-align: center; user-select: none;
+}
+.plugin-item.dragging .plugin-handle { cursor: grabbing; }
+.plugin-info { flex: 1; min-width: 160px; }
+.plugin-nome { font-size: 13.5px; font-weight: 600; color: var(--text); font-family: 'Cascadia Code','Consolas',monospace; }
+.plugin-tipo { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: capitalize; }
+/* O que o `plugin.json` diz: a descrição quebra linha; o erro do manifesto na
+   cor de erro, como o `.xt-ficha-erro` da extensão. */
+.plugin-descricao { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; overflow-wrap: anywhere; }
+.plugin-erro { font-size: 11.5px; color: var(--red); margin-top: 4px; line-height: 1.5; overflow-wrap: anywhere; }
+/* O Interruptor desabilitado (`.toggle-pill.desabilitado`, extensoes-do-programa.css)
+   corta o ponteiro; aqui ele volta só para o `title` explicar o porquê — o
+   clique é barrado em `config-plugins.js`. */
+.plugin-item .toggle-pill.desabilitado { pointer-events: auto; }
+.plugin-onde { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.plugin-check { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.plugin-check input { accent-color: var(--blue); width: 14px; height: 14px; }
+.plugins-vazio { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+
+/* ══════════════════════ Categoria "Launchers" ══
+   Reaproveita .plugin-lista/.plugin-item/etc. acima (mesma forma de linha);
+   só acrescenta o ícone real do Windows extraído no backend. */
+.atalho-externo-icone { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; }
+
+/* A aba (tela principal / dentro do projeto) — barra de busca + alternador
+   de visualização (grade/lista) no topo, itens embaixo. Sem sub-abas: cada
+   atalho é um item direto, não uma tela própria. */
+.atalho-externo-barra {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+.atalho-externo-arvore { flex: 1; min-height: 0; overflow-y: auto; }
+.atalho-externo-busca {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid rgba(var(--white-rgb),0.12);
+  border-radius: 6px; padding: 4px 10px; flex: 1; max-width: 260px;
+}
+.atalho-externo-busca svg { opacity: 0.5; flex-shrink: 0; color: var(--text-muted); }
+.atalho-externo-busca input {
+  background: transparent; border: none; outline: none; width: 100%;
+  color: var(--text); font-family: inherit; font-size: 12.5px;
+}
+.atalho-externo-busca:focus-within { border-color: var(--blue); }
+.atalho-externo-vis { display: flex; gap: 2px; flex-shrink: 0; }
+.atalho-externo-vis-btn {
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid rgba(var(--white-rgb),0.12); border-radius: 6px;
+  color: var(--text-muted); cursor: pointer; font-size: 13px; transition: background var(--t), color var(--t), border-color var(--t);
+}
+.atalho-externo-vis-btn:hover { color: var(--text); }
+.atalho-externo-vis-btn.active { color: var(--blue); border-color: var(--blue); background: rgba(var(--white-rgb),0.04); }
+
+/* Visualização "grade" (padrão) — ícone grande, um bloco por atalho. */
+.atalho-externo-itens { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px; }
+.atalho-externo-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 84px; padding: 10px 6px; border: 1px solid transparent; border-radius: 8px;
+  background: none; cursor: pointer; text-align: center; font: inherit;
+  transition: background var(--t), border-color var(--t);
+}
+.atalho-externo-item:hover { border-color: var(--blue); background: rgba(var(--white-rgb),0.04); }
+.atalho-externo-item .atalho-externo-icone { width: 32px; height: 32px; }
+.atalho-externo-item .atalho-externo-nome { font-size: 11px; color: var(--text-muted); word-break: break-word; }
+
+/* Visualização "lista" — uma linha por atalho, ícone pequeno ao lado do
+   nome, alinhado à esquerda em vez de centralizado. */
+.atalho-externo-itens.atalho-externo-itens-lista {
+  flex-direction: column; flex-wrap: nowrap; gap: 0; padding: 4px 16px 16px;
+}
+.atalho-externo-itens-lista .atalho-externo-item {
+  flex-direction: row; align-items: center; justify-content: flex-start;
+  width: 100%; gap: 10px; padding: 8px 6px; text-align: left; border-radius: 6px;
+}
+.atalho-externo-itens-lista .atalho-externo-item .atalho-externo-icone { width: 20px; height: 20px; }
+.atalho-externo-itens-lista .atalho-externo-item .atalho-externo-nome { font-size: 12.5px; word-break: normal; }
+
+/* ── Árvore em Configurações › Launchers ──
+   Pasta/subpasta: só um título com alça de arrastar (entre si, dentro do
+   mesmo nível) — nunca um Interruptor ou checkbox, isso é só dos arquivos
+   (`.plugin-item`, reaproveitado sem mudança). O corpo recua do mesmo
+   jeito que na aba, pela mesma razão (empilha sozinho por aninhamento). */
+.atalho-externo-pastas-nivel { display: flex; flex-direction: column; margin-bottom: 4px; }
+.atalho-externo-pasta-config.dragging { opacity: 0.4; }
+.atalho-externo-pasta-titulo {
+  display: flex; align-items: center; gap: 10px; padding: 8px 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+.atalho-externo-pasta-handle {
+  cursor: grab; color: var(--text-muted); font-size: 16px; flex-shrink: 0;
+  width: 20px; text-align: center; user-select: none;
+}
+.atalho-externo-pasta-config.dragging .atalho-externo-pasta-handle { cursor: grabbing; }
+.atalho-externo-pasta-nome { font-size: 13px; font-weight: 600; color: var(--text); }
+.atalho-externo-pasta-corpo { margin-left: 14px; padding-left: 12px; }
+
+/* ── Árvore em Configurações › Plugins ──
+   Mesmo desenho de Launchers, acima — categoria: só um título com alça de
+   arrastar (entre si, dentro do mesmo nível), nunca Interruptor ou
+   checkbox, isso é só do plugin (`.plugin-item`, sem mudança nenhuma —
+   inclusive o `.dragging` dele, reaproveitado como está). `.plugins-itens-
+   nivel` é só o agrupador que dá ao arraste de PLUGIN o mesmo escopo por
+   nível que `.plugins-pastas-nivel` já dá ao de categoria — sem estilo
+   próprio, os `.plugin-item` dentro dele têm a aparência de sempre. */
+.plugins-pastas-nivel { display: flex; flex-direction: column; margin-bottom: 4px; }
+.plugins-itens-nivel { display: flex; flex-direction: column; }
+.plugins-pasta-config.dragging { opacity: 0.4; }
+.plugins-pasta-titulo {
+  display: flex; align-items: center; gap: 10px; padding: 8px 4px;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06);
+}
+.plugins-pasta-handle {
+  cursor: grab; color: var(--text-muted); font-size: 16px; flex-shrink: 0;
+  width: 20px; text-align: center; user-select: none;
+}
+.plugins-pasta-config.dragging .plugins-pasta-handle { cursor: grabbing; }
+.plugins-pasta-nome { font-size: 13px; font-weight: 600; color: var(--text); }
+.plugins-pasta-corpo { margin-left: 14px; padding-left: 12px; }
